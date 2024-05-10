@@ -1,0 +1,8 @@
+{
+  "extends": ["next", "next/core-web-vitals"],
+  "parserOptions": {
+    "babelOptions": {
+      "presets": ["@babel/preset-env", "@babel/preset-react"]
+    }
+  }
+}
