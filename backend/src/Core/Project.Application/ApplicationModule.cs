@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Project.Application.Services;
 using Project.Infrastructure.Abstracts;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,9 @@ namespace Project.Application
         protected override void Load(ContainerBuilder builder)
         {
             base.Load(builder);
+            builder.RegisterType<FakeIdentityService>()
+                .As<IIdentityService>()
+                .InstancePerLifetimeScope();
          
         }
     }
