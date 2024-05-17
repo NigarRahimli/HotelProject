@@ -1,5 +1,7 @@
 ﻿using Autofac;
+using Project.Application;
 using Project.DataAccessLayer;
+using Project.Repository;
 
 namespace Project.Api.DI
 {
@@ -11,6 +13,10 @@ namespace Project.Api.DI
             //builder.RegisterModule<DataAccessModule>();
             //more than one
             builder.RegisterAssemblyModules(typeof(DataAccessModule).Assembly);
+            //builder.RegisterAssemblyModules(typeof(ApplicationModule).Assembly);
+
+            builder.RegisterAssemblyTypes(typeof(IRepositoryReference).Assembly)
+                .AsImplementedInterfaces();
 
         }
     }
