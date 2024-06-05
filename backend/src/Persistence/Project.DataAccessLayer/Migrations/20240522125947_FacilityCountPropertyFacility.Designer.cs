@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Project.DataAccessLayer.Contexts;
 
@@ -11,9 +12,11 @@ using Project.DataAccessLayer.Contexts;
 namespace Project.DataAccessLayer.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240522125947_FacilityCountPropertyFacility")]
+    partial class FacilityCountPropertyFacility
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,42 +24,6 @@ namespace Project.DataAccessLayer.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
-
-            modelBuilder.Entity("Project.Domain.Models.Entities.Amenity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime");
-
-                    b.Property<int?>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime");
-
-                    b.Property<int?>("DeletedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("LastModifiedAt")
-                        .HasColumnType("datetime");
-
-                    b.Property<int?>("LastModifiedBy")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Amenities", (string)null);
-                });
 
             modelBuilder.Entity("Project.Domain.Models.Entities.Description", b =>
                 {
@@ -239,9 +206,6 @@ namespace Project.DataAccessLayer.Migrations
                     b.Property<int>("DescriptionId")
                         .HasColumnType("int");
 
-                    b.Property<int>("GuestNum")
-                        .HasColumnType("int");
-
                     b.Property<int>("KindId")
                         .HasColumnType("int");
 
@@ -263,42 +227,6 @@ namespace Project.DataAccessLayer.Migrations
                     b.HasIndex("KindId");
 
                     b.ToTable("Property");
-                });
-
-            modelBuilder.Entity("Project.Domain.Models.Entities.Safety", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime");
-
-                    b.Property<int?>("CreatedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("DeletedAt")
-                        .HasColumnType("datetime");
-
-                    b.Property<int?>("DeletedBy")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime?>("LastModifiedAt")
-                        .HasColumnType("datetime");
-
-                    b.Property<int?>("LastModifiedBy")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Safeties", (string)null);
                 });
 
             modelBuilder.Entity("Project.Domain.Models.Entities.FacilityCount", b =>

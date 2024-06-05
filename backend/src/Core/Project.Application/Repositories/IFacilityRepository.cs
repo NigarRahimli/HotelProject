@@ -3,7 +3,7 @@ using Project.Infrastructure.Abstracts;
 
 namespace Project.Application.Repositories
 {
-    public interface IDescriptionRepository : IAsyncRepository<Description>
+    public interface IFacilityRepository:IAsyncRepository<Facility>
     {
     }
 }

@@ -1,0 +1,63 @@
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Project.Application.Modules.AmenitiesModule.Commands.AmenityAddCommand;
+using Project.Application.Modules.AmenitiesModule.Commands.AmenityEditCommand;
+using Project.Application.Modules.AmenitiesModule.Commands.AmenityRemoveCommand;
+using Project.Application.Modules.AmenitiesModule.Queries.AmenityGetAllQuery;
+using Project.Application.Modules.AmenitiesModule.Queries.AmenityGetByIdQuery;
+
+namespace Project.Api.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class AmenitiesController : ControllerBase
+    {
+        private readonly IMediator mediator;
+
+        public AmenitiesController(IMediator mediator)
+        {
+            this.mediator = mediator;
+        }
+
+        [HttpGet("{id:int:min(1)}")]
+        public async Task<IActionResult> GetById([FromRoute] AmenityGetByIdRequest request)
+        {
+            var entity = await mediator.Send(request);
+            return Ok(entity);
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll([FromRoute] AmenityGetAllRequest request)
+        {
+            var entity = await mediator.Send(request);
+            return Ok(entity);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Add(AmenityAddRequest request)
+        {
+
+            var entity = await mediator.Send(request);
+            return CreatedAtAction(nameof(GetById), new { entity.Id }, entity);
+        }
+
+        [HttpPut("{id:int:min(1)}")]
+        public async Task<IActionResult> Edit([FromRoute] int id, [FromBody] AmenityEditRequest request)
+        {
+            request.Id = id;
+            var entity = await mediator.Send(request);
+            return Ok(entity);
+        }
+
+
+        [HttpDelete("{id:int:min(1)}")]
+        public async Task<IActionResult> Remove([FromRoute] AmenityRemoveRequest request)
+        {
+            await mediator.Send(request);
+            return NoContent();
+        }
+
+    }
+}
