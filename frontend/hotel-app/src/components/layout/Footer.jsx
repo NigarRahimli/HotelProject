@@ -20,11 +20,13 @@ function Footer() {
               href="#"
               className="flex items-center text-center content-center "
             >
-              <img
-                src="./images/sendbtn.png"
-                alt="menu"
-                className="lg:w-[52px] lg:h-[52px]"
+           <div className="p-[12px] bg-[#9A9A9A] hover:bg-[#484848] rounded-full w-[52px] h-[52px] transition-all duration-300">
+            <img
+                src="./icons/send.png"
+                alt="send"
+                className="w-[28px] h-[28px] "
               />
+            </div>
             </a>
           </div>
         </div>
@@ -33,7 +35,7 @@ function Footer() {
         <div className=" bg-[#EFF0F2] pt-[86px]">
           <div className="cats flex flex-col text-center gap-y-[25px] lg:text-left lg:flex-row mx-auto content-center  px-[10px] sm:w-[620px] md:w-[728px] lg:w-[994px] xl:w-[1210px]  pb-[180px] gap-x-[65px]">
             <div className="flex flex-col items-center  lg:items-start">
-              <a href="#" className="flex items-center lg:items-start text-center ">
+              <a href="#" className="flex items-center lg:items-start text-center hover:font-bold hover:text-black">
                 <img
                   src="/images/logo.png"
                   alt="menu"
@@ -49,20 +51,20 @@ function Footer() {
             <div className="text-[#484848]">
               <p className="text-[18px] font-extrabold">COMPANY</p>
               <ul className="text-[15px] flex flex-col gap-y-[20px] pt-[30px] font-medium">
-                <li> <a href="#">About us</a></li>
-                <li><a href="#">Legal Information</a></li>
-                <li><a href="#">Contact Us</a></li>
-                <li><a href="#">Blogs</a></li>
+                <li> <a href="#" className="hover:font-bold hover:text-black">About us</a></li>
+                <li><a href="#" className="hover:font-bold hover:text-black">Legal Information</a></li>
+                <li><a href="#" className="hover:font-bold hover:text-black">Contact Us</a></li>
+                <li><a href="#" className="hover:font-bold hover:text-black">Blogs</a></li>
               </ul>
             </div>
             <div className="text-[#484848]">
               <p className="text-[18px] font-extrabold">HELP CENTER</p>
               <ul className="text-[15px] flex flex-col gap-y-[20px] pt-[30px] font-medium">
-                <li><a href="#">Find a Property</a></li>
-                <li><a href="#">How To Host?</a></li>
-                <li><a href="#">Why Us?</a></li>
-                <li><a href="#">FAQs</a></li>
-                <li><a href="#">Rental Guides</a></li>
+                <li><a href="#" className="hover:font-bold hover:text-black">Find a Property</a></li>
+                <li><a href="#" className="hover:font-bold hover:text-black">How To Host?</a></li>
+                <li><a href="#" className="hover:font-bold hover:text-black">Why Us?</a></li>
+                <li><a href="#" className="hover:font-bold hover:text-black">FAQs</a></li>
+                <li><a href="#" className="hover:font-bold hover:text-black">Rental Guides</a></li>
               </ul>
             </div>
             <div className="text-[#484848]">
@@ -72,23 +74,20 @@ function Footer() {
                 <li>Email: company@email.com</li>
                 <li>Location: 100 Smart Street, LA, USA</li>
                 <li className="flex lg:mx-0 mx-auto w-[171px] gap-x-[24px]">
-               <a href="#"><img src="./images/fb.png" alt="" className="" /></a>   
-                 <a href="#"><img src="./images/twitter.png" alt="" /></a> 
-                 <a href="#"> <img src="./images/insta.png" alt="" /></a>
-                 <a href="#"><img src="./images/linkedin.png" alt="" /></a> 
+                  <a href="#" className="hover:text-black"><img src="./images/fb.png" alt="" className="" /></a>   
+                  <a href="#" className="hover:text-black"><img src="./images/twitter.png" alt="" /></a> 
+                  <a href="#" className="hover:text-black"> <img src="./images/insta.png" alt="" /></a>
+                  <a href="#" className="hover:text-black"><img src="./images/linkedin.png" alt="" /></a> 
                 </li>
               </ul>
             </div>
           </div>
-     
         </div>
         <div className="  bg-[#EFF0F2] border-[#E0E2E6]  border-t-[1px] ">
-        <div className="copyright text-[#484848] text-[10px] lg:text-[15px] flex justify-between  px-[10px] mx-auto font-semibold  sm:w-[620px] md:w-[728px] lg:w-[994px] xl:w-[1210px]  py-[30px]">
-<p>© 2022 | All rights reserved</p>
-<p>Created with love by Nigar Rahimli</p>
-
-        </div>
-
+          <div className="copyright text-[#484848] text-[10px] lg:text-[15px] flex justify-between  px-[10px] mx-auto font-semibold  sm:w-[620px] md:w-[728px] lg:w-[994px] xl:w-[1210px]  py-[30px]">
+            <p>© 2022 | All rights reserved</p>
+            <p>Created with love by Nigar Rahimli</p>
+          </div>
         </div>
       </div>
     </div>
