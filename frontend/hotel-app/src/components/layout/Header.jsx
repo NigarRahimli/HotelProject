@@ -1,4 +1,3 @@
-import Image from "next/image";
 import React, { useState, useEffect, useRef } from "react";
 
 function Header() {
@@ -19,7 +18,7 @@ function Header() {
   }, []);
 
   return (
-    <div className="bg-[#EFF0F2] py-[12px]">
+    <div className="bg-[#EFF0F2] py-[12px] ">
       <div className="font-montserrat mx-auto font-semibold flex justify-between px-[10px] gap-x-[5px]  sm:w-[620px] md:w-[728px] lg:w-[994px] xl:w-[1210px]">
         <a href="./" className="flex items-center text-center md:w-[88px] xl:w-[108px] xl:h-[43px] xl:mr-[140px]">
           <img
@@ -52,7 +51,7 @@ function Header() {
               className=" w-[36px] h-[36px]"
             />
           </a>
-          <div className={`options text-end bg-white flex flex-col gap-y-[10px] text-[#484848] font-medium  text-[14px] rounded-[6px] shadow lg:w-[180px] w-[190px] p-[15px] absolute transition-opacity duration-300 ${isMenuOpen ? 'opacity-100 visible top-[30px] right-[10px] xl:top-[40px] xl:right-[10px]' : 'opacity-0 invisible'}`}>
+          <div className={`options text-end bg-white flex flex-col gap-y-[10px]  top-[30px] right-[10px] xl:top-[40px] xl:right-[10px] text-[#484848] font-medium  text-[14px] rounded-[6px] shadow lg:w-[180px] z-50 w-[190px] p-[15px] absolute transition-opacity duration-300 ${isMenuOpen ? 'opacity-100 visible ' : 'opacity-0 invisible'}`}>
             <a href="#" className="hover:text-black hover:font-bold">Sign up</a>
             <a href="#" className="hover:text-black hover:font-bold">Login</a>
             <a href="#" className="hover:text-black hover:font-bold">Help center</a>

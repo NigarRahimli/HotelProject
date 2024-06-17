@@ -5,7 +5,7 @@ function Footer() {
   return (
     <div className="font-montserrat bg-[#E8EAEC] pt-[12px]">
       <div className=" font-montserrat mx-auto font-semibold flex justify-between px-[10px] gap-x-[5px]  sm:w-[620px] md:w-[728px] lg:w-[994px] xl:w-[1210px] py-[33px]">
-        <div className="news   flex justify-center gap-x-[68px]">
+        <div className="news  mx-auto flex  flex-col justify-center gap-x-[68px] gap-y-[15px] md:flex-row">
           <div className="text text-[#484848]">
             <p className="font-bold text-[18px]">NEWSLETTER</p>
             <p className="font-medium text-[14px]">Stay Upto Date</p>
@@ -33,7 +33,7 @@ function Footer() {
       </div>
       <div>
         <div className=" bg-[#EFF0F2] pt-[86px]">
-          <div className="cats flex flex-col text-center gap-y-[25px] lg:text-left lg:flex-row mx-auto content-center  px-[10px] sm:w-[620px] md:w-[728px] lg:w-[994px] xl:w-[1210px]  pb-[180px] gap-x-[65px]">
+          <div className="cats flex flex-col text-center gap-y-[25px] lg:text-left lg:flex-row mx-auto content-center  pr-[10px] sm:w-[620px] md:w-[728px] lg:w-[994px] xl:w-[1210px]  pb-[180px] gap-x-[65px]">
             <div className="flex flex-col items-center  lg:items-start">
               <a href="#" className="flex items-center lg:items-start text-center hover:font-bold hover:text-black">
                 <img
