@@ -6,7 +6,6 @@ namespace Project.Domain.Models.Entities
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public int MyProperty { get; set; }
         public int GuestNum { get; set; }
         public int DescriptionId { get; set; }
         public int LocationId { get; set; }
