@@ -5,6 +5,7 @@ using Project.Application.Modules.PropertiesModule.Commands.PropertyEditCommand;
 using Project.Application.Modules.PropertiesModule.Commands.PropertyRemoveCommand;
 using Project.Application.Modules.PropertiesModule.Queries.PropertyGetAllQuery;
 using Project.Application.Modules.PropertiesModule.Queries.PropertyGetByIdQuery;
+using Project.Application.Modules.PropertiesModule.Queries.PropertyPagedQuery;
 
 namespace Project.Api.Controllers
 {
@@ -34,6 +35,14 @@ namespace Project.Api.Controllers
             return Ok(entity);
         }
 
+
+        [HttpGet("{page:int:min(1)}/size/{size:int:min(2)}")]
+        public async Task<IActionResult> GetPaged([FromRoute] PropertyPagedRequest request)
+        {
+            var response = await mediator.Send(request);
+
+            return Ok(response);
+        }
 
         [HttpPost]
         public async Task<IActionResult> Add(PropertyAddRequest request) {

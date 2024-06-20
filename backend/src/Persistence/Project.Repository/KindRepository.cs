@@ -1,6 +1,4 @@
-﻿
-
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Project.Application.Repositories;
 using Project.Domain.Models.Entities;
 using Project.Infrastructure.Concretes;

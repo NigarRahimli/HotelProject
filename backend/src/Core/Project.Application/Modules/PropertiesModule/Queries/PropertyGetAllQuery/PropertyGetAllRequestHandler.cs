@@ -8,15 +8,15 @@ namespace Project.Application.Modules.PropertiesModule.Queries.PropertyGetAllQue
 {
     class PropertyGetAllRequestHandler : IRequestHandler<PropertyGetAllRequest, IEnumerable<Property>>
     {
-        private readonly IPropertyRepository PropertyRepository;
+        private readonly IPropertyRepository propertyRepository;
 
         public PropertyGetAllRequestHandler(IPropertyRepository PropertyRepository)
         {
-            this.PropertyRepository = PropertyRepository;
+            this.propertyRepository = propertyRepository;
         }
         public async Task<IEnumerable<Property>> Handle(PropertyGetAllRequest request, CancellationToken cancellationToken)
         {
-            var entities = await PropertyRepository.GetAll(m => m.DeletedBy == null).ToListAsync(cancellationToken);
+            var entities = await propertyRepository.GetAll(m => m.DeletedBy == null).ToListAsync(cancellationToken);
             return entities;
         }
     }

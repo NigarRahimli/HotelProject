@@ -1,11 +1,10 @@
 ﻿using Autofac;
+using FluentValidation.AspNetCore;
 using Project.Application.Services;
 using Project.Infrastructure.Abstracts;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using NetTopologySuite.Geometries;
+using NetTopologySuite;
+
 
 namespace Project.Application
 {
@@ -13,11 +12,21 @@ namespace Project.Application
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterInstance(NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326))
+                .As<GeometryFactory>()
+                .SingleInstance();
+
+
+
             base.Load(builder);
             builder.RegisterType<FakeIdentityService>()
                 .As<IIdentityService>()
                 .InstancePerLifetimeScope();
-         
+
+            builder.RegisterType<ValidatorInterceptor>()
+             .As<IValidatorInterceptor>()
+             .SingleInstance();
+
         }
     }
 }
