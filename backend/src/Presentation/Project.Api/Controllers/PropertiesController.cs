@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Project.Application.Modules.PropertiesModule.Commands.PropertyAddCommand;
 using Project.Application.Modules.PropertiesModule.Commands.PropertyEditCommand;
 using Project.Application.Modules.PropertiesModule.Commands.PropertyRemoveCommand;
+using Project.Application.Modules.PropertiesModule.Queries.PropertyGetAllLatestQuery;
+using Project.Application.Modules.PropertiesModule.Queries.PropertyGetAllNearbyQuery;
 using Project.Application.Modules.PropertiesModule.Queries.PropertyGetAllQuery;
 using Project.Application.Modules.PropertiesModule.Queries.PropertyGetByIdQuery;
 using Project.Application.Modules.PropertiesModule.Queries.PropertyPagedQuery;
@@ -35,6 +37,21 @@ namespace Project.Api.Controllers
             return Ok(entity);
         }
 
+        [HttpGet("nearby")]
+        public async Task<IActionResult> GetNearby([FromBody] PropertyGetAllNearbyRequest request)
+        {
+            var response = await mediator.Send(request);
+
+            return Ok(response);
+        }
+
+        [HttpGet("latest/{take:int:min(1)}")]
+        public async Task<IActionResult> GetLatest([FromRoute] PropertyGetAllLatestRequest request)
+        {
+            var response = await mediator.Send(request);
+
+            return Ok(response);
+        }
 
         [HttpGet("{page:int:min(1)}/size/{size:int:min(2)}")]
         public async Task<IActionResult> GetPaged([FromRoute] PropertyPagedRequest request)

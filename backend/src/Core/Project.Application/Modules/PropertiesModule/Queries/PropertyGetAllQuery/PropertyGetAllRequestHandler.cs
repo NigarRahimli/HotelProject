@@ -10,7 +10,7 @@ namespace Project.Application.Modules.PropertiesModule.Queries.PropertyGetAllQue
     {
         private readonly IPropertyRepository propertyRepository;
 
-        public PropertyGetAllRequestHandler(IPropertyRepository PropertyRepository)
+        public PropertyGetAllRequestHandler(IPropertyRepository propertyRepository)
         {
             this.propertyRepository = propertyRepository;
         }

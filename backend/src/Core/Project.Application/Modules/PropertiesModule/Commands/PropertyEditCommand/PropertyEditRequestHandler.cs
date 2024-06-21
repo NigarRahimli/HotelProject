@@ -69,7 +69,8 @@ namespace Project.Application.Modules.PropertiesModule.Commands.PropertyEditComm
 
                 location = new Location
                 {
-                    Coordinates = geometryFactory.CreatePoint(new Coordinate((double)request.Longitude, (double)request.Latitude)),
+                    Latitude = (double)request.Latitude,
+                    Longitude=(double)request.Longitude,
                     Address = request.Address,
                     City = request.City,
                     State = request.State,

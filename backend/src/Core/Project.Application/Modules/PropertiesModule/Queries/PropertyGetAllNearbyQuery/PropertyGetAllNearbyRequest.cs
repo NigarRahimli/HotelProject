@@ -8,9 +8,11 @@ using System.Threading.Tasks;
 
 namespace Project.Application.Modules.PropertiesModule.Queries.PropertyGetAllNearbyQuery
 {
-    public class PropertyGetAllNearbyRequest : IRequest<IEnumerable<PropertyNearbyDto>>
+    public class PropertyGetAllNearbyRequest : IRequest<IEnumerable<PropertyWithHeartDto>>
     {
-        public Point UserLocation { get; set; }
-        public int Number;
+        public double Latitude { get; set; }
+        public double Longitude { get; set; }
+       
+        public int Number { get; set; }
     }
 }

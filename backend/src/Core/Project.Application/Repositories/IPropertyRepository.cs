@@ -7,6 +7,6 @@ namespace Project.Application.Repositories
 {
     public interface IPropertyRepository : IAsyncRepository<Property>
     {
-        IQueryable<Property> GetNearbyPropertiesAsync(Point userLocation);
+     IEnumerable<Property> GetNearbyProperties(double lattitude, double longitude, int maxDistanceMeters,int take );
     }
 }

@@ -41,7 +41,8 @@ namespace Project.Application.Modules.PropertiesModule.Commands.PropertyAddComma
                 State = request.State,
                 Country = request.Country,
                 ZipCode = request.ZipCode,
-                Coordinates = new Point(request.Latitude, request.Longitude) { SRID = 4326 }
+                Longitude =  request.Longitude,
+                Latitude = request.Latitude
             };
             await locationRepository.AddAsync(location, cancellationToken);
             await locationRepository.SaveAsync(cancellationToken);

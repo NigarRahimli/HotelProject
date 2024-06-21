@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.Application.Modules.PropertiesModule.Queries.PropertyGetAllNearbyQuery
+namespace Project.Application.Modules.PropertiesModule.Queries
 {
-    public class PropertyNearbyDto
+    public class PropertyWithHeartDto
     {
         public int PropertyId { get; set; }
         public string Name { get; set; }

@@ -27,9 +27,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Repository", "src\P
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Api", "src\Presentation\Project.Api\Project.Api.csproj", "{73521597-D24A-474E-857B-D2DDB3713A42}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.DataAccessLayer", "src\Persistence\Project.DataAccessLayer\Project.DataAccessLayer.csproj", "{2567A9A3-6F1B-487D-B250-77BCDC776B5A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.DataAccessLayer", "src\Persistence\Project.DataAccessLayer\Project.DataAccessLayer.csproj", "{2567A9A3-6F1B-487D-B250-77BCDC776B5A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project.Infrastructure", "src\Persistence\Project.Infrastructure\Project.Infrastructure.csproj", "{6750EDF0-7B8A-4A85-9195-F0AFF19FBD8E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Project.Infrastructure", "src\Persistence\Project.Infrastructure\Project.Infrastructure.csproj", "{6750EDF0-7B8A-4A85-9195-F0AFF19FBD8E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
