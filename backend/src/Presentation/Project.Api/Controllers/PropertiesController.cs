@@ -45,8 +45,8 @@ namespace Project.Api.Controllers
             return Ok(response);
         }
 
-        [HttpGet("latest/{take:int:min(1)}")]
-        public async Task<IActionResult> GetLatest([FromRoute] PropertyGetAllLatestRequest request)
+        [HttpGet("latest")]
+        public async Task<IActionResult> GetLatest([FromBody] PropertyGetAllLatestRequest request)
         {
             var response = await mediator.Send(request);
 

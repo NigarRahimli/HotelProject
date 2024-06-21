@@ -13,6 +13,7 @@ namespace Project.Application.Modules.PropertiesModule.Queries
         public string City { get; set; }
         public string Country { get; set; }
         public string Address { get; set; }
+        public bool IsLiked { get; set; }
 
     }
 }
