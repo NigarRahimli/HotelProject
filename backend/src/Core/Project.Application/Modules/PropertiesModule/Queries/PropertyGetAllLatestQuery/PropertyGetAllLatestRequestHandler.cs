@@ -10,15 +10,18 @@ public class PropertyGetAllLatestRequestHandler : IRequestHandler<PropertyGetAll
     private readonly IPropertyRepository propertyRepository;
     private readonly ILocationRepository locationRepository;
     private readonly IFUserRepository userRepository;
+    private readonly IPropertyImageRepository propertyImageRepository;
 
     public PropertyGetAllLatestRequestHandler(
         IPropertyRepository propertyRepository,
         ILocationRepository locationRepository,
-        IFUserRepository userRepository)
+        IFUserRepository userRepository,
+        IPropertyImageRepository propertyImageRepository)
     {
         this.propertyRepository = propertyRepository;
         this.locationRepository = locationRepository;
         this.userRepository = userRepository;
+        this.propertyImageRepository = propertyImageRepository;
     }
 
     public async Task<IEnumerable<PropertyWithHeartDto>> Handle(PropertyGetAllLatestRequest request, CancellationToken cancellationToken)
@@ -29,8 +32,7 @@ public class PropertyGetAllLatestRequestHandler : IRequestHandler<PropertyGetAll
             .Take(request.Take)
             .ToListAsync(cancellationToken);
 
-        var likedPropertyIds = await userRepository
-            .GetLikedPropertyIdsAsync(request.UserId, cancellationToken);
+        
 
         var latestDtoList = new List<PropertyWithHeartDto>();
         foreach (var property in properties)
@@ -39,21 +41,34 @@ public class PropertyGetAllLatestRequestHandler : IRequestHandler<PropertyGetAll
             {
                 var locationDetails = await locationRepository.GetLocationDetailsAsync(property.LocationId, cancellationToken);
 
-                var latestDto = new PropertyWithHeartDto
-                {
-                    PropertyId = property.Id,
-                    Name = property.Name,
-                    City = locationDetails.City,
-                    Country = locationDetails.Country,
-                    Address = locationDetails.Address,
-                    IsLiked = likedPropertyIds.Contains(property.Id)
-                };
+                var propertyImageDetails = await propertyImageRepository.GetPropertyImageDetailsAsync(property.Id, cancellationToken);
+                var firstPropertyImage = propertyImageDetails.FirstOrDefault();
+                var isLiked = await userRepository.IsPropertyLikedByUserAsync(request.UserId, property.Id, cancellationToken);
 
-                latestDtoList.Add(latestDto);
+                var latestDto = new PropertyWithHeartDto
+                    {
+                        PropertyId = property.Id,
+                        Name = property.Name,
+                        City = locationDetails.City,
+                        Country = locationDetails.Country,
+                        Address = locationDetails.Address,
+                        IsLiked = isLiked,
+                        Image = firstPropertyImage?.Image,
+                        Url = firstPropertyImage?.Url
+                    };
+
+                    latestDtoList.Add(latestDto);
+           
+           
             }
             catch (NotFoundException ex)
             {
                 throw new Exception($"Failed to get location details for property with ID {property.Id}: {ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                // Handle other exceptions related to property image details retrieval
+                throw new Exception($"Error retrieving property image details for property with ID {property.Id}: {ex.Message}");
             }
         }
 

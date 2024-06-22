@@ -4,7 +4,7 @@ namespace Project.Infrastructure.Abstracts
 {
     public interface IFileService
     {
-        Task<string> UploadAsync(IFormFile file);
-        Task<string> ChangeFileAsync(string oldFilePath, IFormFile file);
+        Task<IEnumerable<string>> UploadAsync(IEnumerable<IFormFile> files);
+        Task<IEnumerable<string>> ChangeFileAsync(IEnumerable<string> oldFileNames, IEnumerable<IFormFile> newFiles);
     }
 }

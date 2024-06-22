@@ -18,5 +18,12 @@ namespace Project.Repository
               .Select(like => like.PropertyId)
               .ToListAsync(cancellationToken);
         }
+
+        public async Task<bool> IsPropertyLikedByUserAsync(int userId, int propertyId, CancellationToken cancellationToken)
+        {
+               return await db.Set<Like>()
+                    .AnyAsync(ul => ul.UserId == userId && ul.PropertyId == propertyId, cancellationToken);
+            }
+        }
     }
-}
+

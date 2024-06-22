@@ -2,8 +2,7 @@
 using FluentValidation.AspNetCore;
 using Project.Application.Services;
 using Project.Infrastructure.Abstracts;
-using NetTopologySuite.Geometries;
-using NetTopologySuite;
+using Resume.Application.Services;
 
 
 namespace Project.Application
@@ -12,11 +11,6 @@ namespace Project.Application
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterInstance(NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326))
-                .As<GeometryFactory>()
-                .SingleInstance();
-
-
 
             base.Load(builder);
             builder.RegisterType<FakeIdentityService>()
@@ -27,6 +21,9 @@ namespace Project.Application
              .As<IValidatorInterceptor>()
              .SingleInstance();
 
+            builder.RegisterType<FileService>()
+                .As<IFileService>()
+                .InstancePerLifetimeScope();
         }
     }
 }

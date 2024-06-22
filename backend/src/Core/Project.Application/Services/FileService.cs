@@ -1,10 +1,14 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 using Project.Infrastructure.Abstracts;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading.Tasks;
 
 namespace Resume.Application.Services
 {
-    class FileService : IFileService
+    public class FileService : IFileService
     {
         private readonly IHostEnvironment env;
 
@@ -13,36 +17,54 @@ namespace Resume.Application.Services
             this.env = env;
         }
 
-        public async Task<string> UploadAsync(IFormFile file)
+        public async Task<IEnumerable<string>> UploadAsync(IEnumerable<IFormFile> files)
         {
-            string extension = Path.GetExtension(file.FileName); //.jpg
-            string randomFileName = $"{Guid.NewGuid()}{extension}";
-            string fullName = Path.Combine(env.ContentRootPath, "wwwroot", "uploads", "images", randomFileName);
-            var fileInfo = new FileInfo(fullName);
+            var uploadedFileNames = new List<string>();
 
-            if (fileInfo.Directory?.Exists != true)
-                fileInfo.Directory?.Create();
-
-            using (var fs = new FileStream(fileInfo.FullName, FileMode.Create, FileAccess.Write))
+            foreach (var file in files)
             {
-                await file.CopyToAsync(fs);
+                string extension = Path.GetExtension(file.FileName); //.jpg
+                string randomFileName = $"{Guid.NewGuid()}{extension}";
+                string fullName = Path.Combine(env.ContentRootPath, "wwwroot", "uploads", "images", randomFileName);
+                var fileInfo = new FileInfo(fullName);
+
+                if (fileInfo.Directory?.Exists != true)
+                    fileInfo.Directory?.Create();
+
+                using (var fs = new FileStream(fileInfo.FullName, FileMode.Create, FileAccess.Write))
+                {
+                    await file.CopyToAsync(fs);
+                }
+
+                uploadedFileNames.Add(randomFileName);
             }
 
-            return randomFileName;
+            return uploadedFileNames;
         }
 
-        public Task<string> ChangeFileAsync(string oldFileName, IFormFile file)
+        public async Task<IEnumerable<string>> ChangeFileAsync(IEnumerable<string> oldFileNames, IEnumerable<IFormFile> newFiles)
         {
-            string oldFilePath = Path.Combine(env.ContentRootPath, "wwwroot", "uploads", "images", oldFileName);
+            var uploadedFileNames = new List<string>();
 
-            if (File.Exists(oldFilePath))
+            foreach (var oldFileName in oldFileNames)
             {
-                string archiveFilePath = Path.Combine(env.ContentRootPath, "wwwroot", "uploads", "images", $"archive-{oldFileName}");
+                string oldFilePath = Path.Combine(env.ContentRootPath, "wwwroot", "uploads", "images", oldFileName);
 
-                File.Move(oldFilePath, archiveFilePath);
+                if (File.Exists(oldFilePath))
+                {
+                    string archiveFilePath = Path.Combine(env.ContentRootPath, "wwwroot", "uploads", "images", $"archive-{oldFileName}");
+
+                    File.Move(oldFilePath, archiveFilePath);
+                }
             }
 
-            return UploadAsync(file);
+            foreach (var file in newFiles)
+            {
+                var uploadedFileName = await UploadAsync(new List<IFormFile> { file });
+                uploadedFileNames.AddRange(uploadedFileName);
+            }
+
+            return uploadedFileNames;
         }
     }
 }

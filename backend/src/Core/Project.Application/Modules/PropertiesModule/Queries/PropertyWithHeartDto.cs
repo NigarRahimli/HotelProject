@@ -14,6 +14,8 @@ namespace Project.Application.Modules.PropertiesModule.Queries
         public string Country { get; set; }
         public string Address { get; set; }
         public bool IsLiked { get; set; }
+        public string Image { get; set; }
+        public string Url { get; set; }
 
     }
 }

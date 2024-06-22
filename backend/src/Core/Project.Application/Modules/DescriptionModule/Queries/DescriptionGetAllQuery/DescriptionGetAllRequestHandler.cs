@@ -8,15 +8,15 @@ namespace Project.Application.Modules.DescriptionsModule.Queries.DescriptionGetA
 {
     class DescriptionGetAllRequestHandler : IRequestHandler<DescriptionGetAllRequest, IEnumerable<Description>>
     {
-        private readonly IDescriptionRepository DescriptionRepository;
+        private readonly IDescriptionRepository descriptionRepository;
 
-        public DescriptionGetAllRequestHandler(IDescriptionRepository DescriptionRepository)
+        public DescriptionGetAllRequestHandler(IDescriptionRepository descriptionRepository)
         {
-            this.DescriptionRepository = DescriptionRepository;
+            this.descriptionRepository = descriptionRepository;
         }
         public async Task<IEnumerable<Description>> Handle(DescriptionGetAllRequest request, CancellationToken cancellationToken)
         {
-            var entities = await DescriptionRepository.GetAll(m => m.DeletedBy == null).ToListAsync(cancellationToken);
+            var entities = await descriptionRepository.GetAll(m => m.DeletedBy == null).ToListAsync(cancellationToken);
             return entities;
         }
     }
