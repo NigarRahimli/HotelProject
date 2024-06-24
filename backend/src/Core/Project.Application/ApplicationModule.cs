@@ -2,20 +2,17 @@
 using Project.Application.Services;
 using Project.Infrastructure.Abstracts;
 using FluentValidation.AspNetCore;
-using Project.Application.Services;
-using Project.Infrastructure.Abstracts;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Resume.Application.Services;
-
 
 namespace Project.Application
 {
-    public class ApplicationModule:Module
+    public class ApplicationModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {
-
-
             base.Load(builder);
+
             builder.RegisterType<JwtService>()
                 .As<IJwtService>()
                 .InstancePerLifetimeScope();
@@ -33,12 +30,16 @@ namespace Project.Application
                 .InstancePerLifetimeScope();
 
             builder.RegisterType<ValidatorInterceptor>()
-             .As<IValidatorInterceptor>()
-             .SingleInstance();
+                .As<IValidatorInterceptor>()
+                .SingleInstance();
 
             builder.RegisterType<FileService>()
                 .As<IFileService>()
                 .InstancePerLifetimeScope();
+
+            builder.RegisterType<ActionContextAccessor>()
+                .As<IActionContextAccessor>()
+                .SingleInstance();
         }
     }
 }

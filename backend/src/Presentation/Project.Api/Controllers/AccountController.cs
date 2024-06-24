@@ -8,6 +8,7 @@ using System.Security.Claims;
 using Project.Application.Modules.AccountModule.Commands.SignupCommand;
 using Resume.Application.Modules.AccountModule.Commands.SigninCommand;
 using Resume.Application.Modules.AccountModule.Commands.TokenRefreshCommand;
+using Project.Application.Modules.AccountModule.Commands.EmailConfirmationCommand;
 
 namespace Project.Api.Controllers
 {
@@ -74,6 +75,13 @@ namespace Project.Api.Controllers
         {
             await mediator.Send(request);
             return Ok(new { message = "Signup successful. Please check your email to confirm your account." });
+        }
+
+        [HttpGet("confirm-email")]
+        public async Task<IActionResult> ConfirmEmail([FromQuery]EmailConfirmationRequest request)
+        {
+            await mediator.Send(request);
+            return Ok(new { message = "Email confirmation successful." });
         }
 
         [HttpPost("refresh-token")]

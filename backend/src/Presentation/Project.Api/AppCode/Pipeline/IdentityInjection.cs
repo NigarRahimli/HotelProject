@@ -1,14 +1,11 @@
-﻿using Azure.Core;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
 using Project.Api.AppCode.Pipeline;
-using Project.Application.Services;
 using Project.Domain.Models.Entities.Membership;
-using Project.Infrastructure.Abstracts;
 using Project.Infrastructure.Common;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;

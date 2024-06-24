@@ -1,8 +1,6 @@
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Project.Api.AppCode.DI;
 using Project.Api.AppCode.Pipeline;
