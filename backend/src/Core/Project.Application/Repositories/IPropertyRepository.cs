@@ -1,5 +1,4 @@
-﻿using NetTopologySuite.Geometries;
-using Project.Domain.Models.Entities;
+﻿using Project.Domain.Models.Entities;
 using Project.Infrastructure.Abstracts;
 
 

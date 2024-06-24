@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using NetTopologySuite.Geometries;
 using Project.Application.Repositories;
 using Project.Domain.Models.Entities;
 using Project.Infrastructure.Exceptions;

@@ -1,10 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using Project.Domain.Models.Entities.Membership;
 using Project.Infrastructure.Abstracts;
 
 
 namespace Project.DataAccessLayer.Contexts
 {
-     class DataContext:DbContext
+     class DataContext : IdentityDbContext<AppUser, AppRole, int, AppUserClaim, AppUserRole, AppUserLogin, AppRoleClaim, AppUserToken>
     {
         private readonly IIdentityService identityService;
 

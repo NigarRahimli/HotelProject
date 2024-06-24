@@ -3,9 +3,9 @@ using Project.Application;
 using Project.DataAccessLayer;
 using Project.Repository;
 
-namespace Project.Api.DI
+namespace Project.Api.AppCode.DI
 {
-     class ProjectModule:Module
+    class ProjectModule : Module
     {
         protected override void Load(ContainerBuilder builder)
         {

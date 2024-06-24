@@ -1,5 +1,4 @@
-﻿using NetTopologySuite.Geometries;
-using Project.Infrastructure.Concretes;
+﻿using Project.Infrastructure.Concretes;
 
 namespace Project.Domain.Models.Entities
 {

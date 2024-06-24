@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using NetTopologySuite.Geometries;
 using Project.Application.Repositories;
 using Project.Domain.Models.Entities;
 using Project.Infrastructure.Exceptions;
@@ -15,20 +14,20 @@ namespace Project.Application.Modules.PropertiesModule.Commands.PropertyEditComm
         private readonly ILocationRepository locationRepository;
         private readonly IKindRepository kindRepository;
         private readonly IDescriptionRepository descriptionRepository;
-        private readonly GeometryFactory geometryFactory;
+
 
         public PropertyEditRequestHandler(
             IPropertyRepository propertyRepository,
             ILocationRepository locationRepository,
             IKindRepository kindRepository,
-            IDescriptionRepository descriptionRepository,
-            GeometryFactory geometryFactory)
+            IDescriptionRepository descriptionRepository
+         )
         {
             this.propertyRepository = propertyRepository;
             this.locationRepository = locationRepository;
             this.kindRepository = kindRepository;
             this.descriptionRepository = descriptionRepository;
-            this.geometryFactory = geometryFactory;
+            
         }
 
         public async Task<Property> Handle(PropertyEditRequest request, CancellationToken cancellationToken)

@@ -1,7 +1,7 @@
 ﻿using Autofac;
 using Autofac.Extensions.DependencyInjection;
 
-namespace Project.Api.DI
+namespace Project.Api.AppCode.DI
 {
     class ProjectServiceProviderFactory : AutofacServiceProviderFactory
     {
