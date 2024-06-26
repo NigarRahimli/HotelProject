@@ -26,7 +26,6 @@ namespace Project.Api.AppCode.Pipeline
             this.next = next;
         }
 
-
         public async Task Invoke(HttpContext context)
         {
             try
@@ -90,11 +89,31 @@ namespace Project.Api.AppCode.Pipeline
                             message = "refresh_token_expired"
                         };
                         break;
+                    case EntityAlreadyExistsException eaEx:
+                        statusCode = StatusCodes.Status400BadRequest;
+                        response = new
+                        {
+                            error = true,
+                            message = eaEx.Message
+                        };
+                        break;
+                    case EntityCreationFailedException ecfEx:
+                        statusCode = StatusCodes.Status500InternalServerError;
+                        response = new
+                        {
+                            error = true,
+                            message = ecfEx.Message
+                        };
+                        break;
                     default:
+                        response = new
+                        {
+                            error = true,
+                            message = "An unexpected error occurred."
+                        };
                         break;
                 }
 
-                //context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
                 context.Response.StatusCode = statusCode;
                 var jsonBody = JsonConvert.SerializeObject(response, settings: jsonSettings);
                 await context.Response.WriteAsync(jsonBody);
@@ -106,9 +125,7 @@ namespace Project.Api.AppCode.Pipeline
     {
         public static IApplicationBuilder UseErrorHandling(this IApplicationBuilder app)
         {
-
             app.UseMiddleware<GlobalErrorHandlingMiddleware>();
-
             return app;
         }
     }

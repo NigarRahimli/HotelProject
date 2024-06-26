@@ -7,7 +7,6 @@ namespace Project.Application.Modules.PropertiesModule.Queries.PropertyGetAllNea
     {
         public double Latitude { get; set; }
         public double Longitude { get; set; }
-        public int Number { get; set; }
-        public int UserId { get; set; }
+        public int Take { get; set; }
     }
 }

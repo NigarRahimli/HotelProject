@@ -10,6 +10,5 @@ namespace Project.Application.Modules.PropertiesModule.Queries.PropertyGetAllLat
     public class PropertyGetAllLatestRequest : IRequest<IEnumerable<PropertyWithHeartDto>>
     {
         public int Take { get; set; }
-        public int UserId { get; set; }
     }
 }

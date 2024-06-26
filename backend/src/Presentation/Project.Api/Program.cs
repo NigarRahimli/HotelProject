@@ -1,11 +1,15 @@
+using Autofac.Core;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Project.Api.AppCode.DI;
 using Project.Api.AppCode.Pipeline;
 using Project.Application;
 using Project.Application.Services;
+using Project.DataAccessLayer;
 using Project.Infrastructure.Abstracts;
 using Project.Infrastructure.Common;
 using Project.Infrastructure.Configurations;
@@ -13,6 +17,7 @@ using Resume.Api.AppCode.Pipeline;
 
 var builder = WebApplication.CreateBuilder(args);
 //bax nedi
+builder.Services.AddHttpContextAccessor();
 builder.Host.UseServiceProviderFactory(new ProjectServiceProviderFactory());
 builder.Services.AddControllers();
 
@@ -20,19 +25,18 @@ builder.Services.AddDbContext<DbContext>(cfg =>
 {
     cfg.UseSqlServer(builder.Configuration.GetConnectionString("cString"), opt =>
     {
-
         opt.MigrationsHistoryTable("MigrationHistory");
     });
 });
 
-//builder.Services.AddControllers(cfg =>
-//{
-//    var policy = new AuthorizationPolicyBuilder()
-//                      .RequireAuthenticatedUser()
-//                      .Build();
+builder.Services.AddControllers(cfg =>
+{
+    var policy = new AuthorizationPolicyBuilder()
+                      .RequireAuthenticatedUser()
+                      .Build();
 
-//    cfg.Filters.Add(new AuthorizeFilter(policy));
-//});
+    cfg.Filters.Add(new AuthorizeFilter(policy));
+});
 
 builder.Services.AddSingleton(typeof(IPipelineBehavior<,>), typeof(HeaderBinderBehaviour<,>));
 builder.Services.Configure<EmailServiceOptions>(cfg => builder.Configuration.Bind(nameof(EmailServiceOptions), cfg))
@@ -43,11 +47,18 @@ builder.Services.Configure<CryptoServiceOptions>(cfg => builder.Configuration.Bi
 builder.Services.AddCustomIdentity(builder.Configuration);
 builder.Services.AddFluentValidationAutoValidation(cfg => cfg.DisableDataAnnotationsValidation = false);
 builder.Services.AddValidatorsFromAssemblyContaining<ApplicationModule>(includeInternalTypes: true);
-builder.Services.AddMediatR(cfg=> cfg.RegisterServicesFromAssemblyContaining<ApplicationModule>());
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<ApplicationModule>());
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<DataAccessModule>());
 builder.Services.AddAutoMapper(typeof(ApplicationModule).Assembly);
 
+//builder.Services.AddAuthentication();
+//builder.Services.AddAuthorization();
+
 var app = builder.Build();
-app.UseErrorHandling();
+
+//app.UseErrorHandling();
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 
 app.Run();

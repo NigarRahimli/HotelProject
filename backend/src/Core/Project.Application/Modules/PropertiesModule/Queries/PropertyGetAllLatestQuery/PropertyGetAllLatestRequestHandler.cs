@@ -9,13 +9,13 @@ public class PropertyGetAllLatestRequestHandler : IRequestHandler<PropertyGetAll
 {
     private readonly IPropertyRepository propertyRepository;
     private readonly ILocationRepository locationRepository;
-    private readonly IFUserRepository userRepository;
+    private readonly IUserRepository userRepository;
     private readonly IPropertyImageRepository propertyImageRepository;
 
     public PropertyGetAllLatestRequestHandler(
         IPropertyRepository propertyRepository,
         ILocationRepository locationRepository,
-        IFUserRepository userRepository,
+        IUserRepository userRepository,
         IPropertyImageRepository propertyImageRepository)
     {
         this.propertyRepository = propertyRepository;
@@ -32,7 +32,7 @@ public class PropertyGetAllLatestRequestHandler : IRequestHandler<PropertyGetAll
             .Take(request.Take)
             .ToListAsync(cancellationToken);
 
-        
+
 
         var latestDtoList = new List<PropertyWithHeartDto>();
         foreach (var property in properties)
@@ -43,23 +43,23 @@ public class PropertyGetAllLatestRequestHandler : IRequestHandler<PropertyGetAll
 
                 var propertyImageDetails = await propertyImageRepository.GetPropertyImageDetailsAsync(property.Id, cancellationToken);
                 var firstPropertyImage = propertyImageDetails.FirstOrDefault();
-                var isLiked = await userRepository.IsPropertyLikedByUserAsync(request.UserId, property.Id, cancellationToken);
+                var isLiked = await userRepository.IsPropertyLikedByUserAsync(property.Id, cancellationToken);
 
                 var latestDto = new PropertyWithHeartDto
-                    {
-                        PropertyId = property.Id,
-                        Name = property.Name,
-                        City = locationDetails.City,
-                        Country = locationDetails.Country,
-                        Address = locationDetails.Address,
-                        IsLiked = isLiked,
-                        Image = firstPropertyImage?.Image,
-                        Url = firstPropertyImage?.Url
-                    };
+                {
+                    PropertyId = property.Id,
+                    Name = property.Name,
+                    City = locationDetails.City,
+                    Country = locationDetails.Country,
+                    Address = locationDetails.Address,
+                    IsLiked = isLiked,
+                    Image = firstPropertyImage?.Image,
+                    Url = firstPropertyImage?.Url
+                };
 
-                    latestDtoList.Add(latestDto);
-           
-           
+                latestDtoList.Add(latestDto);
+
+
             }
             catch (NotFoundException ex)
             {
@@ -67,7 +67,7 @@ public class PropertyGetAllLatestRequestHandler : IRequestHandler<PropertyGetAll
             }
             catch (Exception ex)
             {
-                // Handle other exceptions related to property image details retrieval
+                
                 throw new Exception($"Error retrieving property image details for property with ID {property.Id}: {ex.Message}");
             }
         }

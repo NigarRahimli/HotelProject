@@ -1,20 +1,23 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Project.Domain.Models.Entities.Membership;
 using Project.Infrastructure.Abstracts;
+using Project.Infrastructure.Extensions;
 
 
 namespace Project.DataAccessLayer.Contexts
 {
-     class DataContext : IdentityDbContext<AppUser, AppRole, int, AppUserClaim, AppUserRole, AppUserLogin, AppRoleClaim, AppUserToken>
+    class DataContext : IdentityDbContext<AppUser, AppRole, int, AppUserClaim, AppUserRole, AppUserLogin, AppRoleClaim, AppUserToken>
     {
-        private readonly IIdentityService identityService;
 
-        public DataContext(DbContextOptions options, IIdentityService identityService) :base(options)
+        private readonly IHttpContextAccessor httpContextAccessor;
+
+        public DataContext(DbContextOptions options, IHttpContextAccessor httpContextAccessor) : base(options)
         {
-            this.identityService = identityService;
+            this.httpContextAccessor = httpContextAccessor;
         }
-      
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -33,13 +36,13 @@ namespace Project.DataAccessLayer.Contexts
                     switch (entry.State)
                     {
                         case EntityState.Added:
-                            entry.Entity.CreatedBy = identityService.GetPrincipialId();
+                            entry.Entity.CreatedBy = httpContextAccessor.HttpContext.GetUserIdExtension();
                             entry.Entity.CreatedAt = DateTime.UtcNow;
                             break;
                         case EntityState.Modified:
                             entry.Property(m => m.CreatedBy).IsModified = false;
                             entry.Property(m => m.CreatedAt).IsModified = false;
-                            entry.Entity.LastModifiedBy = identityService.GetPrincipialId();
+                            entry.Entity.LastModifiedBy = httpContextAccessor.HttpContext.GetUserIdExtension();
                             entry.Entity.LastModifiedAt = DateTime.UtcNow;
                             break;
                         case EntityState.Deleted:
@@ -48,7 +51,7 @@ namespace Project.DataAccessLayer.Contexts
                             entry.Property(m => m.CreatedAt).IsModified = false;
                             entry.Property(m => m.LastModifiedBy).IsModified = false;
                             entry.Property(m => m.LastModifiedAt).IsModified = false;
-                            entry.Entity.DeletedBy = identityService.GetPrincipialId();
+                            entry.Entity.DeletedBy = httpContextAccessor.HttpContext.GetUserIdExtension();
                             entry.Entity.DeletedAt = DateTime.UtcNow;
                             break;
                         default:
@@ -60,5 +63,5 @@ namespace Project.DataAccessLayer.Contexts
         }
 
     }
-   
+
 }

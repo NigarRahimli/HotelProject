@@ -9,9 +9,9 @@ public class PropertyGetAllNearbyRequestHandler : IRequestHandler<PropertyGetAll
     private readonly IPropertyRepository propertyRepository;
     private readonly IPropertyImageRepository propertyImageRepository;
     private readonly ILocationRepository locationRepository;
-    private readonly IFUserRepository userRepository;
+    private readonly IUserRepository userRepository;
 
-    public PropertyGetAllNearbyRequestHandler(IPropertyRepository propertyRepository, ILocationRepository locationRepository, IPropertyImageRepository propertyImageRepository, IFUserRepository userRepository)
+    public PropertyGetAllNearbyRequestHandler(IPropertyRepository propertyRepository, ILocationRepository locationRepository, IPropertyImageRepository propertyImageRepository, IUserRepository userRepository)
     {
         this.propertyRepository = propertyRepository;
         this.locationRepository = locationRepository;
@@ -21,10 +21,10 @@ public class PropertyGetAllNearbyRequestHandler : IRequestHandler<PropertyGetAll
 
     public async Task<IEnumerable<PropertyWithHeartDto>> Handle(PropertyGetAllNearbyRequest request, CancellationToken cancellationToken)
     {
-     
-        var propertiesQuery = propertyRepository.GetNearbyProperties(request.Latitude, request.Longitude, 1000000, request.Number);
 
-        
+        var propertiesQuery = propertyRepository.GetNearbyProperties(request.Latitude, request.Longitude, 1000000000, request.Take);
+
+
         if (propertiesQuery == null)
         {
             throw new Exception("Nearby property not found.");
@@ -40,7 +40,7 @@ public class PropertyGetAllNearbyRequestHandler : IRequestHandler<PropertyGetAll
 
                 var propertyImageDetails = await propertyImageRepository.GetPropertyImageDetailsAsync(property.Id, cancellationToken);
                 var firstPropertyImage = propertyImageDetails.FirstOrDefault();
-                var isLiked = await userRepository.IsPropertyLikedByUserAsync(request.UserId, property.Id, cancellationToken);
+                var isLiked = await userRepository.IsPropertyLikedByUserAsync(property.Id, cancellationToken);
 
                 var nearbyDto = new PropertyWithHeartDto
                 {
@@ -49,7 +49,7 @@ public class PropertyGetAllNearbyRequestHandler : IRequestHandler<PropertyGetAll
                     City = locationDetails.City,
                     Country = locationDetails.Country,
                     Address = locationDetails.Address,
-                    IsLiked=isLiked,
+                    IsLiked = isLiked,
                     Image = firstPropertyImage?.Image,
                     Url = firstPropertyImage?.Url
                 };
