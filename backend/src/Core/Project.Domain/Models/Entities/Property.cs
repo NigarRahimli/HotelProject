@@ -11,6 +11,7 @@
             public int LocationId { get; set; }
             public bool IsPetFriendly { get; set; }
             public int KindId { get; set; }
-              
-        }
+            public Double Rate { get; set; }
+
+    }
     }

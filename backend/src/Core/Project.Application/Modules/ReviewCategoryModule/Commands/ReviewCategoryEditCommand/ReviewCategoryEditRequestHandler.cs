@@ -19,7 +19,7 @@ namespace Project.Application.Modules.ReviewCategoriesModule.Commands.ReviewCate
         }
         public async Task<ReviewCategory> Handle(ReviewCategoryEditRequest request, CancellationToken cancellationToken)
         {
-            var entity=await ReviewCategoryRepository.GetAsync(m=>m.Id==request.Id);
+            var entity=await ReviewCategoryRepository.GetAsync(m=>m.Id==request.Id,cancellationToken);
 
             entity.Name=request.Name;
             await ReviewCategoryRepository.SaveAsync(cancellationToken);

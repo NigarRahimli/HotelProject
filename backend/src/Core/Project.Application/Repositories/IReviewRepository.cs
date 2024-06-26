@@ -10,5 +10,6 @@ namespace Project.Application.Repositories
 {
     public interface IReviewRepository : IAsyncRepository<Review>
     {
+        Task<double> GetAverageReview(int propertyId, CancellationToken cancellationToken);
     }
 }

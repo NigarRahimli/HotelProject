@@ -21,7 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Modules\ReviewsModule\Queries\" />
     <Folder Include="Modules\RoleModule\Queries\" />
   </ItemGroup>
 

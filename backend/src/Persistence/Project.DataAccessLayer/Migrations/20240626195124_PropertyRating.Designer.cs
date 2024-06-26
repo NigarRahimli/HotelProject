@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Project.DataAccessLayer.Contexts;
 
@@ -11,9 +12,11 @@ using Project.DataAccessLayer.Contexts;
 namespace Project.DataAccessLayer.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240626195124_PropertyRating")]
+    partial class PropertyRating
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -586,10 +589,10 @@ namespace Project.DataAccessLayer.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar");
 
-                    b.Property<double>("Rate")
+                    b.Property<int>("Rate")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("float")
-                        .HasDefaultValue(0.0);
+                        .HasColumnType("int")
+                        .HasDefaultValue(0);
 
                     b.HasKey("Id");
 
@@ -599,10 +602,7 @@ namespace Project.DataAccessLayer.Migrations
 
                     b.HasIndex("LocationId");
 
-                    b.ToTable("Properties", null, t =>
-                        {
-                            t.HasCheckConstraint("CK_Property_Rate", "[Rate] >= 0 AND [Rate] <= 5");
-                        });
+                    b.ToTable("Properties", (string)null);
                 });
 
             modelBuilder.Entity("Project.Domain.Models.Entities.PropertyImage", b =>
