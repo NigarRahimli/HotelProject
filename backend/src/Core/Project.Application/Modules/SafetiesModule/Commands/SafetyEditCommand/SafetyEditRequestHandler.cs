@@ -23,7 +23,8 @@ namespace Project.Application.Modules.SafetiesModule.Commands.SafetyEditCommand
             entity.Name=request.Name;
             if (request.Image is not null)
             {
-                entity.IconUrl = await fileService.ChangeSingleFileAsync(entity.IconUrl, request.Image);
+                var icon= await fileService.ChangeSingleFileAsync(entity.IconUrl, request.Image);
+                entity.IconUrl = icon.Url;
             }
             await safetyRepository.SaveAsync(cancellationToken);
 

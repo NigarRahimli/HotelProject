@@ -27,4 +27,8 @@
     <ProjectReference Include="..\..\Persistence\Project.Repository\Project.Repository.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\uploads\profile\" />
+  </ItemGroup>
+
 </Project>

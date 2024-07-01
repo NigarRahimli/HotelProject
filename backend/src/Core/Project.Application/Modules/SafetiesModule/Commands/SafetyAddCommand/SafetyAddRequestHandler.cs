@@ -20,12 +20,11 @@ namespace Project.Application.Modules.SafetiesModule.Commands.SafetyAddCommand
         public async Task<Safety> Handle(SafetyAddRequest request, CancellationToken cancellationToken)
         {
 
-            var entity = new Safety
-            {
-                Name = request.Name,
-                IconUrl = await fileService.UploadSingleAsync(request.Image)
+            var entity = new Safety();
 
-            };
+            entity.Name = request.Name;
+            var icon = await fileService.UploadSingleAsync(request.Image);
+            entity.IconUrl = icon.Url;
             await safetyRepository.AddAsync(entity, cancellationToken);
             await safetyRepository.SaveAsync(cancellationToken);
 

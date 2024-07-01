@@ -9,6 +9,9 @@ using Project.Application.Modules.AccountModule.Commands.SignupCommand;
 using Resume.Application.Modules.AccountModule.Commands.SigninCommand;
 using Resume.Application.Modules.AccountModule.Commands.TokenRefreshCommand;
 using Project.Application.Modules.AccountModule.Commands.EmailConfirmationCommand;
+using Project.Application.Modules.AccountModule.Commands.UploadProfilePhotoCommand;
+using Project.Application.Modules.AccountModule.Commands.EditProfilePhotoCommand;
+using Project.Application.Modules.AccountModule.Commands.RemoveProfilePhotoCommand;
 
 namespace Project.Api.Controllers
 {
@@ -76,6 +79,33 @@ namespace Project.Api.Controllers
             await mediator.Send(request);
             return Ok(new { message = "Signup successful. Please check your email to confirm your account." });
         }
+
+        [HttpPut("uploadImg")]
+        [AllowAnonymous]
+        public async Task<IActionResult> UploadImg([FromForm]UploadProfilePhotoRequest request)
+        {
+            await mediator.Send(request);
+            return Ok(new { message = "Profile image uploaded" });
+        }
+
+        [HttpPut("changeImg")]
+        [AllowAnonymous]
+        public async Task<IActionResult> EditImg([FromForm] EditProfilePhotoRequest request)
+        {
+            await mediator.Send(request);
+            return Ok(new { message = "Profile image changed" });
+        }
+
+        [HttpDelete("removeImg")]
+        [AllowAnonymous]
+        public async Task<IActionResult> RemoveImg([FromRoute]RemoveProfilePhotoRequest request)
+        {
+            await mediator.Send(request);
+            return Ok(new { message = "Profile image removed" });
+        }
+
+
+
 
         [HttpGet("confirm-email")]
         public async Task<IActionResult> ConfirmEmail([FromQuery]EmailConfirmationRequest request)

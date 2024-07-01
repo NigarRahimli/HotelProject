@@ -28,7 +28,7 @@ namespace Project.Application.Modules.AmenitiesModule.Commands.AmenityEditComman
             entity.Name=request.Name;
             if (request.Image is not null)
             {
-                entity.IconUrl = await fileService.ChangeSingleFileAsync(entity.IconUrl, request.Image);
+              var imageName=await fileService.ChangeSingleFileAsync(entity.IconUrl, request.Image);
             }
             await AmenityRepository.SaveAsync(cancellationToken);
 

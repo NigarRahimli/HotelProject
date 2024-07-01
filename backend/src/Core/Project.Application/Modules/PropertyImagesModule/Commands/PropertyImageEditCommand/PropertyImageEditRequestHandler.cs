@@ -27,18 +27,18 @@ namespace Project.Application.Modules.PropertyImagesModule.Commands.PropertyImag
             var oldFileNames = existingImages.Select(image => image.Image).ToList();
 
 
-            var uploadedFileNames = await fileService.ChangeFileAsync(oldFileNames, request.Images);
+            var uploadedFiles = await fileService.ChangeFileAsync(oldFileNames, request.Images);
            
             foreach (var image in existingImages)
             {
                 propertyImageRepository.Edit(image); 
             }
 
-            var propertyImages = uploadedFileNames.Select(fileName => new PropertyImage
+            var propertyImages = uploadedFiles.Select(file => new PropertyImage
             {
                 PropertyId = request.PropertyId,
-                Image = fileName,
-                Url = $"/uploads/images/{fileName}",
+                Image = file.FileName,
+                Url = file.Url,
             }).ToList();
 
             foreach (var propertyImage in propertyImages)

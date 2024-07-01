@@ -19,12 +19,12 @@ namespace Project.Application.Modules.PropertyImagesModule.Commands.PropertyImag
 
         public async Task<IEnumerable<PropertyImage>> Handle(PropertyImagesAddRequest request, CancellationToken cancellationToken)
         {
-            var uploadedFileNames = await fileService.UploadAsync(request.Images);
-            var propertyImages = uploadedFileNames.Select(fileName => new PropertyImage
+            var uploadedFiles = await fileService.UploadAsync(request.Images);
+            var propertyImages = uploadedFiles.Select(file => new PropertyImage
             {
                 PropertyId = request.PropertyId,
-                Image = fileName,
-                Url = $"/uploads/images/{fileName}"
+                Image = file.FileName,
+                Url = file.Url,
             }).ToList();
 
             foreach (var propertyImage in propertyImages)

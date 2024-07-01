@@ -26,8 +26,8 @@ namespace Project.DataAccessLayer.Configurations.Membership
             builder.Property(m => m.LockoutEnabled).HasColumnType("bit").IsRequired();
             builder.Property(m => m.AccessFailedCount).HasColumnType("int").IsRequired();
 
-            
-            builder.Property(m => m.ProfileImgUrl).HasColumnType("nvarchar").HasMaxLength(255).IsRequired();
+
+            builder.Property(m => m.ProfileImgUrl).HasColumnType("nvarchar").HasMaxLength(255);
 
             builder.HasKey(m => m.Id);
             builder.ToTable("Users", "Membership");

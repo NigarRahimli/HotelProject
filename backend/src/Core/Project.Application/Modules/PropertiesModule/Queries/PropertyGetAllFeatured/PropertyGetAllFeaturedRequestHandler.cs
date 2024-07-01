@@ -1,8 +1,10 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using Project.Application.Modules.PropertiesModule.Queries;
 using Project.Application.Modules.PropertiesModule.Queries.PropertyGetAllFeatured;
 using Project.Application.Repositories;
 using Project.Infrastructure.Exceptions;
+using Project.Infrastructure.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Threading;
@@ -17,19 +19,23 @@ namespace Project.Application.Modules.PropertiesModule.Handlers
         private readonly IPropertyImageRepository propertyImageRepository;
         private readonly IUserRepository userRepository;
         private readonly IFacilityRepository facilityRepository;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
         public PropertyGetAllFeaturedRequestHandler(
             IPropertyRepository propertyRepository,
             ILocationRepository locationRepository,
             IPropertyImageRepository propertyImageRepository,
             IUserRepository userRepository,
-            IFacilityRepository facilityRepository)
+            IFacilityRepository facilityRepository,
+            IHttpContextAccessor httpContextAccessor
+            )
         {
             this.propertyRepository = propertyRepository;
             this.locationRepository = locationRepository;
             this.propertyImageRepository = propertyImageRepository;
             this.userRepository = userRepository;
             this.facilityRepository = facilityRepository;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<IEnumerable<PropertyFeaturedDto>> Handle(PropertyGetAllFeaturedRequest request, CancellationToken cancellationToken)
@@ -49,7 +55,8 @@ namespace Project.Application.Modules.PropertiesModule.Handlers
                     var propertyImageDetails = await propertyImageRepository.GetPropertyImageDetailsAsync(property.Id, cancellationToken);
                     var facilitiesDetails = await facilityRepository.GetFacilitiesByPropertyIdAsync(property.Id, cancellationToken);
                     var isLiked = await userRepository.IsPropertyLikedByUserAsync(property.Id, cancellationToken);
-
+                    var user = await userRepository.GetAsync(x => x.Id == httpContextAccessor.HttpContext.GetUserIdExtension());
+                    
                     var featuredDto = new PropertyFeaturedDto
                     {
                         PropertyId = property.Id,
@@ -58,7 +65,7 @@ namespace Project.Application.Modules.PropertiesModule.Handlers
                         Country = locationDetails.Country,
                         Address = locationDetails.Address,
                         IsLiked = isLiked,
-                        ProfileImgUrl ="fix", 
+                        ProfileImgUrl =user.ProfileImgUrl, 
                         PropertyImageDetails = propertyImageDetails,
                         FacilitiesDetails = facilitiesDetails,
                         MinPrice = property.MinPrice,

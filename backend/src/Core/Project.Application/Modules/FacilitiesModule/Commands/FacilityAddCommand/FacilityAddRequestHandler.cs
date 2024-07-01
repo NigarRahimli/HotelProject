@@ -18,12 +18,14 @@ namespace Project.Application.Modules.FacilitiesModule.Commands.FacilityAddComma
         }
         public async Task<Facility> Handle(FacilityAddRequest request, CancellationToken cancellationToken)
         {
-            
-            var entity = new Facility
-            {
-                Name = request.Name,
-                IconUrl = await fileService.UploadSingleAsync(request.Image)
-        };
+
+            var entity = new Facility();
+
+            entity.Name = request.Name;
+            var icon = await fileService.UploadSingleAsync(request.Image);
+            entity.IconUrl=icon.Url;
+
+      
             await facilityRepository.AddAsync(entity, cancellationToken);
             await facilityRepository.SaveAsync(cancellationToken);
 

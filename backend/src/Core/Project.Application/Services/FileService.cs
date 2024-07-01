@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Hosting;
 using Project.Infrastructure.Abstracts;
 
-
 namespace Resume.Application.Services
 {
     public class FileService : IFileService
@@ -14,9 +13,9 @@ namespace Resume.Application.Services
             this.env = env;
         }
 
-        public async Task<IEnumerable<string>> UploadAsync(IEnumerable<IFormFile> files, string subDirectory = "images")
+        public async Task<IEnumerable<(string FileName, string Url)>> UploadAsync(IEnumerable<IFormFile> files, string subDirectory = "images")
         {
-            var uploadedFileNames = new List<string>();
+            var uploadedFiles = new List<(string FileName, string Url)>();
 
             foreach (var file in files)
             {
@@ -33,21 +32,22 @@ namespace Resume.Application.Services
                     await file.CopyToAsync(fs);
                 }
 
-                uploadedFileNames.Add(randomFileName);
+                string fileUrl = $"/uploads/{subDirectory}/{randomFileName}";
+                uploadedFiles.Add((randomFileName, fileUrl));
             }
 
-            return uploadedFileNames;
+            return uploadedFiles;
         }
 
-        public async Task<string> UploadSingleAsync(IFormFile file, string subDirectory = "icons")
+        public async Task<(string FileName, string Url)> UploadSingleAsync(IFormFile file, string subDirectory = "icons")
         {
-            var uploadedFileNames = await UploadAsync(new List<IFormFile> { file }, subDirectory);
-            return uploadedFileNames.FirstOrDefault();
+            var uploadedFiles = await UploadAsync(new List<IFormFile> { file }, subDirectory);
+            return uploadedFiles.FirstOrDefault();
         }
 
-        public async Task<IEnumerable<string>> ChangeFileAsync(IEnumerable<string> oldFileNames, IEnumerable<IFormFile> newFiles, string subDirectory = "images")
+        public async Task<IEnumerable<(string FileName, string Url)>> ChangeFileAsync(IEnumerable<string> oldFileNames, IEnumerable<IFormFile> newFiles, string subDirectory = "images")
         {
-            var uploadedFileNames = new List<string>();
+            var uploadedFiles = new List<(string FileName, string Url)>();
 
             foreach (var oldFileName in oldFileNames)
             {
@@ -63,17 +63,17 @@ namespace Resume.Application.Services
 
             foreach (var file in newFiles)
             {
-                var uploadedFileName = await UploadAsync(new List<IFormFile> { file }, subDirectory);
-                uploadedFileNames.AddRange(uploadedFileName);
+                var uploadedFile = await UploadAsync(new List<IFormFile> { file }, subDirectory);
+                uploadedFiles.AddRange(uploadedFile);
             }
 
-            return uploadedFileNames;
+            return uploadedFiles;
         }
 
-        public async Task<string> ChangeSingleFileAsync(string oldFileName, IFormFile newFile, string subDirectory = "icons")
+        public async Task<(string FileName, string Url)> ChangeSingleFileAsync(string oldFileName, IFormFile newFile, string subDirectory = "icons")
         {
-            var uploadedFileNames = await ChangeFileAsync(new List<string> { oldFileName }, new List<IFormFile> { newFile }, subDirectory);
-            return uploadedFileNames.FirstOrDefault();
+            var uploadedFiles = await ChangeFileAsync(new List<string> { oldFileName }, new List<IFormFile> { newFile }, subDirectory);
+            return uploadedFiles.FirstOrDefault();
         }
     }
 }

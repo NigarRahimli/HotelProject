@@ -23,9 +23,11 @@ namespace Resume.Application.Modules.AccountModule.Commands.SigninCommand
         {
             var user = await userManager.FindByEmailAsync(request.UserName);
 
+            
             if (user is null)
                 throw new UserNotFoundException();
 
+            user.ProfileImgUrl = "default/profile_avatar.png";
             var hasher = new PasswordHasher<AppUser>();
 
 

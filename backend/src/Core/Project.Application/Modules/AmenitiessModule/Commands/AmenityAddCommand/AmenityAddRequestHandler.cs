@@ -19,11 +19,12 @@ namespace Project.Application.Modules.AmenitiesModule.Commands.AmenityAddCommand
         }
         public async Task<Amenity> Handle(AmenityAddRequest request, CancellationToken cancellationToken)
         {
-            var entity = new Amenity
-            {
-                Name = request.Name,
-                IconUrl = await fileService.UploadSingleAsync(request.Image)
-            };
+
+            var entity = new Amenity();
+            entity.Name= request.Name;
+            var file = await fileService.UploadSingleAsync(request.Image);
+            entity.IconUrl = file.Url.ToString();
+           
             await amenityRepository.AddAsync(entity, cancellationToken);
             await amenityRepository.SaveAsync(cancellationToken);
 
