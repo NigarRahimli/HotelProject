@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using Project.Application.Modules.PropertiesModule.Commands.PropertyAddCommand;
 using Project.Application.Modules.PropertiesModule.Commands.PropertyEditCommand;
 using Project.Application.Modules.PropertiesModule.Commands.PropertyRemoveCommand;
+using Project.Application.Modules.PropertiesModule.Queries.PropertyGetAllFeatured;
 using Project.Application.Modules.PropertiesModule.Queries.PropertyGetAllLatestQuery;
 using Project.Application.Modules.PropertiesModule.Queries.PropertyGetAllNearbyQuery;
 using Project.Application.Modules.PropertiesModule.Queries.PropertyGetAllQuery;
+using Project.Application.Modules.PropertiesModule.Queries.PropertyGetAllTopRated;
 using Project.Application.Modules.PropertiesModule.Queries.PropertyGetByIdQuery;
 using Project.Application.Modules.PropertiesModule.Queries.PropertyPagedQuery;
 
@@ -45,8 +47,26 @@ namespace Project.Api.Controllers
             return Ok(response);
         }
 
-        [HttpGet("latest")]
-        public async Task<IActionResult> GetLatest([FromBody] PropertyGetAllLatestRequest request)
+        [HttpGet("latest/{take:int:min(1)}")]
+        public async Task<IActionResult> GetLatest([FromRoute] PropertyGetAllLatestRequest request)
+        {
+            var response = await mediator.Send(request);
+
+            return Ok(response);
+        }
+
+
+        [HttpGet("rated/{take:int:min(1)}")]
+        public async Task<IActionResult> GetTopRated([FromRoute] PropertyGetAllTopRatedRequest request)
+        {
+            var response = await mediator.Send(request);
+
+            return Ok(response);
+        }
+
+
+        [HttpGet("featured/{take:int:min(1)}")]
+        public async Task<IActionResult> GetFeatured([FromRoute] PropertyGetAllFeaturedRequest request)
         {
             var response = await mediator.Send(request);
 

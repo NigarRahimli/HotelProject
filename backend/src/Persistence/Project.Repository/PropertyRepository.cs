@@ -1,7 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿
+using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Project.Application.Repositories;
 using Project.Domain.Models.Entities;
 using Project.Infrastructure.Concretes;
+using Project.Infrastructure.Exceptions;
 
 
 namespace Project.Repository
@@ -11,8 +14,37 @@ namespace Project.Repository
         public PropertyRepository(DbContext db) : base(db)
         {
         }
+        public async Task<IEnumerable<Property>> GetPropertiesWithMostFeatured(int take, CancellationToken cancellationToken)
+        {
+            var propertiesWithMostFacilities = await db.Set<FacilityCount>()
+                .GroupBy(fc => fc.PropertyId)
+                .Select(g => new
+                {
+                    PropertyId = g.Key,
+                    FacilityCount = g.Count(),
+                    FacilitySumCount = g.Sum(fc => fc.Count)
+                })
+                .OrderByDescending(p => p.FacilityCount)
+                .ThenByDescending(p => p.FacilitySumCount)
+                .Take(take)
+                .ToListAsync(cancellationToken);
 
-        public IEnumerable<Property> GetNearbyProperties(double latitude, double longitude, int maxDistanceMeters, int take)
+            if (!propertiesWithMostFacilities.Any())
+            {
+                throw new NotFoundException($"{nameof(Property)} not found");
+            }
+
+            var propertyIds = propertiesWithMostFacilities.Select(p => p.PropertyId).ToList();
+            var properties = await db.Set<Property>()
+                .Where(p => propertyIds.Contains(p.Id))
+                .ToListAsync(cancellationToken);
+
+            var sortedProperties = propertyIds.Select(id => properties.First(p => p.Id == id)).ToList();
+
+            return sortedProperties;
+        }
+    
+    public IEnumerable<Property> GetNearbyProperties(double latitude, double longitude, int maxDistanceMeters, int take)
         {
            
             var lat1 = latitude * Math.PI / 180.0;

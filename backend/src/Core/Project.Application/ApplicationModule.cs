@@ -25,9 +25,7 @@ namespace Project.Application
                 .As<IEmailService>()
                 .InstancePerLifetimeScope();
 
-            builder.RegisterType<FakeIdentityService>()
-                .As<IIdentityService>()
-                .InstancePerLifetimeScope();
+         
 
             builder.RegisterType<ValidatorInterceptor>()
                 .As<IValidatorInterceptor>()

@@ -2,12 +2,13 @@
 using Microsoft.EntityFrameworkCore;
 using Project.Application.Repositories;
 using Project.Domain.Models.Entities;
+using Project.Domain.Models.Entities.Membership;
 using Project.Infrastructure.Concretes;
 using Project.Infrastructure.Extensions;
 
 namespace Project.Repository
 {
-    class UserRepository : AsyncRepository<User>, IUserRepository
+    class UserRepository : AsyncRepository<AppUser>, IUserRepository
     {
         private readonly IHttpContextAccessor contextAccessor;
         public UserRepository(DbContext db, IHttpContextAccessor contextAccessor) : base(db)
@@ -19,7 +20,7 @@ namespace Project.Repository
         {
             var userId = contextAccessor.HttpContext.GetUserIdExtension();
             return await db.Set<Like>()
-              .Where(like => like.UserId == userId)
+              .Where(like => like.UserId == userId )
               .Select(like => like.PropertyId)
               .ToListAsync(cancellationToken);
         }

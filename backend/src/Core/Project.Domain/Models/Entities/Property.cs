@@ -10,8 +10,11 @@
             public int DescriptionId { get; set; }
             public int LocationId { get; set; }
             public bool IsPetFriendly { get; set; }
+            public float LongPrice { get; set; }
+            public float MedPrice { get; set; }
+            public float MinPrice { get; set; }
             public int KindId { get; set; }
-            public Double Rate { get; set; }
+            public double Rate { get; set; }
 
     }
     }

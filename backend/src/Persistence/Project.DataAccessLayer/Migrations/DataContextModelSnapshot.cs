@@ -42,6 +42,11 @@ namespace Project.DataAccessLayer.Migrations
                     b.Property<int?>("DeletedBy")
                         .HasColumnType("int");
 
+                    b.Property<string>("IconUrl")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar");
+
                     b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("datetime");
 
@@ -118,6 +123,11 @@ namespace Project.DataAccessLayer.Migrations
                     b.Property<int?>("DeletedBy")
                         .HasColumnType("int");
 
+                    b.Property<string>("IconUrl")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar");
+
                     b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("datetime");
 
@@ -136,11 +146,11 @@ namespace Project.DataAccessLayer.Migrations
 
             modelBuilder.Entity("Project.Domain.Models.Entities.FacilityCount", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
+                    b.Property<int>("PropertyId")
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<int>("FacilityId")
+                        .HasColumnType("int");
 
                     b.Property<int>("Count")
                         .ValueGeneratedOnAdd()
@@ -159,8 +169,11 @@ namespace Project.DataAccessLayer.Migrations
                     b.Property<int?>("DeletedBy")
                         .HasColumnType("int");
 
-                    b.Property<int>("FacilityId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("datetime");
@@ -168,14 +181,9 @@ namespace Project.DataAccessLayer.Migrations
                     b.Property<int?>("LastModifiedBy")
                         .HasColumnType("int");
 
-                    b.Property<int>("PropertyId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
+                    b.HasKey("PropertyId", "FacilityId");
 
                     b.HasIndex("FacilityId");
-
-                    b.HasIndex("PropertyId");
 
                     b.ToTable("FacilityCounts", (string)null);
                 });
@@ -415,6 +423,11 @@ namespace Project.DataAccessLayer.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("ProfileImgUrl")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar");
+
                     b.Property<string>("SecurityStamp")
                         .IsRequired()
                         .HasMaxLength(400)
@@ -581,6 +594,15 @@ namespace Project.DataAccessLayer.Migrations
                     b.Property<int>("LocationId")
                         .HasColumnType("int");
 
+                    b.Property<double>("LongPrice")
+                        .HasColumnType("float");
+
+                    b.Property<double>("MedPrice")
+                        .HasColumnType("float");
+
+                    b.Property<double>("MinPrice")
+                        .HasColumnType("float");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(100)
@@ -601,6 +623,8 @@ namespace Project.DataAccessLayer.Migrations
 
                     b.ToTable("Properties", null, t =>
                         {
+                            t.HasCheckConstraint("CK_Property_Prices", "[LongPrice] >= [MinPrice] AND [LongPrice] >= [MedPrice] AND [MedPrice] >= [MinPrice]");
+
                             t.HasCheckConstraint("CK_Property_Rate", "[Rate] >= 0 AND [Rate] <= 5");
                         });
                 });
@@ -754,6 +778,11 @@ namespace Project.DataAccessLayer.Migrations
                     b.Property<int?>("DeletedBy")
                         .HasColumnType("int");
 
+                    b.Property<string>("IconUrl")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar");
+
                     b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("datetime");
 
@@ -768,22 +797,6 @@ namespace Project.DataAccessLayer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Safeties", (string)null);
-                });
-
-            modelBuilder.Entity("Project.Domain.Models.Entities.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("Project.Domain.Models.Entities.FacilityCount", b =>
@@ -809,7 +822,7 @@ namespace Project.DataAccessLayer.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("Project.Domain.Models.Entities.User", null)
+                    b.HasOne("Project.Domain.Models.Entities.Membership.AppUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.NoAction)

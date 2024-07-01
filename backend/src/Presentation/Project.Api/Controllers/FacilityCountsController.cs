@@ -36,7 +36,7 @@ namespace Project.Api.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Add(FacilityCountAddRequest request) {
+        public async Task<IActionResult> Add([FromBody] FacilityCountAddRequest request) {
         
         var entity=await mediator.Send(request);
         return CreatedAtAction(nameof(GetById), new {entity.Id},entity);

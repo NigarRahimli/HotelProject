@@ -5,6 +5,7 @@ using Project.Application.Modules.FacilitiesModule.Commands.FacilityEditCommand;
 using Project.Application.Modules.FacilitiesModule.Commands.FacilityRemoveCommand;
 using Project.Application.Modules.FacilitiesModule.Queries.FacilityGetAllQuery;
 using Project.Application.Modules.FacilitiesModule.Queries.FacilityGetByIdQuery;
+using Project.Application.Modules.FacilitiesModule.Queries.FacilityGetByPropertyIdQuery;
 
 namespace Project.Api.Controllers
 {
@@ -25,6 +26,12 @@ namespace Project.Api.Controllers
             var entity = await mediator.Send(request);
             return Ok(entity);
         }
+        [HttpGet("byproperty/{propertyid:int:min(1)}")]
+        public async Task<IActionResult> GetByPropertyId([FromRoute] FacilityGetByPropertyIdRequest request)
+        {
+            var entity = await mediator.Send(request);
+            return Ok(entity);
+        }
 
 
         [HttpGet]
@@ -36,7 +43,7 @@ namespace Project.Api.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Add(FacilityAddRequest request)
+        public async Task<IActionResult> Add([FromForm] FacilityAddRequest request)
         {
 
             var entity = await mediator.Send(request);
@@ -44,7 +51,7 @@ namespace Project.Api.Controllers
         }
 
         [HttpPut("{id:int:min(1)}")]
-        public async Task<IActionResult> Edit([FromRoute] int id, [FromBody] FacilityEditRequest request)
+        public async Task<IActionResult> Edit([FromRoute] int id, [FromForm] FacilityEditRequest request)
         {
             request.Id = id;
             var entity = await mediator.Send(request);

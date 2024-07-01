@@ -36,7 +36,7 @@ namespace Project.Api.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> Add(AmenityAddRequest request)
+        public async Task<IActionResult> Add([FromForm]AmenityAddRequest request)
         {
 
             var entity = await mediator.Send(request);
@@ -44,7 +44,7 @@ namespace Project.Api.Controllers
         }
 
         [HttpPut("{id:int:min(1)}")]
-        public async Task<IActionResult> Edit([FromRoute] int id, [FromBody] AmenityEditRequest request)
+        public async Task<IActionResult> Edit([FromRoute] int id, [FromForm] AmenityEditRequest request)
         {
             request.Id = id;
             var entity = await mediator.Send(request);

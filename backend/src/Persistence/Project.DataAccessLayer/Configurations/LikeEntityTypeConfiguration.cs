@@ -1,11 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
 using Project.Domain.Models.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Project.Domain.Models.Entities.Membership;
 
 namespace Project.DataAccessLayer.Configurations
 {
@@ -21,7 +17,7 @@ namespace Project.DataAccessLayer.Configurations
             builder.Property(l => l.PropertyId)
                    .HasColumnType("int");
 
-            builder.HasOne<User>()
+            builder.HasOne<AppUser>()
                    .WithMany()
                    .HasPrincipalKey(m => m.Id)
                    .HasForeignKey(m => m.UserId)

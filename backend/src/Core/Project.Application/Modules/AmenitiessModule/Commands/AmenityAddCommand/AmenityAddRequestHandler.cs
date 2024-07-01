@@ -1,27 +1,31 @@
 ﻿using MediatR;
 using Project.Application.Repositories;
 using Project.Domain.Models.Entities;
+using Project.Infrastructure.Abstracts;
+using Resume.Application.Services;
 
 namespace Project.Application.Modules.AmenitiesModule.Commands.AmenityAddCommand
 {
     class AmenityAddRequestHandler : IRequestHandler<AmenityAddRequest, Amenity>
     {
-        private readonly IAmenityRepository AmenityRepository;
+        private readonly IAmenityRepository amenityRepository;
+        private readonly IFileService fileService;
 
-        public AmenityAddRequestHandler(IAmenityRepository AmenityRepository)
+
+        public AmenityAddRequestHandler(IAmenityRepository amenityRepository, IFileService fileService)
         {
-            this.AmenityRepository = AmenityRepository;
+            this.amenityRepository = amenityRepository;
+            this.fileService = fileService;
         }
         public async Task<Amenity> Handle(AmenityAddRequest request, CancellationToken cancellationToken)
         {
             var entity = new Amenity
             {
                 Name = request.Name,
-                CreatedAt = DateTime.UtcNow,
-                CreatedBy = 1
+                IconUrl = await fileService.UploadSingleAsync(request.Image)
             };
-            await AmenityRepository.AddAsync(entity, cancellationToken);
-            await AmenityRepository.SaveAsync(cancellationToken);
+            await amenityRepository.AddAsync(entity, cancellationToken);
+            await amenityRepository.SaveAsync(cancellationToken);
 
             return entity;
         }

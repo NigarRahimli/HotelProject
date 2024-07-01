@@ -20,29 +20,27 @@ namespace Project.Application.Modules.PropertyImagesModule.Commands.PropertyImag
 
         public async Task<IEnumerable<PropertyImage>> Handle(PropertyImageEditRequest request, CancellationToken cancellationToken)
         {
-            // Step 1: Mark existing images as deleted
-            var existingImages = propertyImageRepository.GetAll(x=>x.PropertyId== request.PropertyId);
 
+            var existingImages = propertyImageRepository.GetAll(x => x.PropertyId == request.PropertyId).ToList();
+
+ 
+            var oldFileNames = existingImages.Select(image => image.Image).ToList();
+
+
+            var uploadedFileNames = await fileService.ChangeFileAsync(oldFileNames, request.Images);
+           
             foreach (var image in existingImages)
             {
-
-                image.DeletedBy = request.UserId;
-                image.DeletedAt = DateTime.UtcNow;
-                 propertyImageRepository.Edit(image);
+                propertyImageRepository.Edit(image); 
             }
 
-           
-            var uploadedFileNames = await fileService.UploadAsync(request.Images);
             var propertyImages = uploadedFileNames.Select(fileName => new PropertyImage
             {
                 PropertyId = request.PropertyId,
                 Image = fileName,
                 Url = $"/uploads/images/{fileName}",
-                CreatedBy = request.UserId,
-                CreatedAt = DateTime.UtcNow
             }).ToList();
 
-            
             foreach (var propertyImage in propertyImages)
             {
                 await propertyImageRepository.AddAsync(propertyImage, cancellationToken);

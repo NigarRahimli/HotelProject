@@ -6,11 +6,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.Application.Modules.SafetiesModule.Commands.SafetyEditCommand
+namespace Project.Application.Modules.LocationsModule.Queries.LocationGetByIdQuery
 {
-    public class SafetyEditRequest : IRequest<Safety>
+    public class LocationGetByIdRequest:IRequest<Location>
     {
         public int Id { get; set; }
-        public string Name { get; set; }
     }
 }

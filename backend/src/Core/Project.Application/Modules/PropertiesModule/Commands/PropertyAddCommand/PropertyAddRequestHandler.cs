@@ -1,7 +1,9 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Http;
 using Project.Application.Repositories;
 using Project.Domain.Models.Entities;
 using Project.Infrastructure.Exceptions;
+using Project.Infrastructure.Extensions;
 
 namespace Project.Application.Modules.PropertiesModule.Commands.PropertyAddCommand
 {
@@ -11,13 +13,16 @@ namespace Project.Application.Modules.PropertiesModule.Commands.PropertyAddComma
         private readonly ILocationRepository locationRepository;
         private readonly IKindRepository kindRepository;
         private readonly IDescriptionRepository descriptionRepository;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
-        public PropertyAddRequestHandler(IPropertyRepository propertyRepository, ILocationRepository locationRepository, IKindRepository kindRepository, IDescriptionRepository descriptionRepository)
+
+        public PropertyAddRequestHandler(IPropertyRepository propertyRepository, ILocationRepository locationRepository, IKindRepository kindRepository, IDescriptionRepository descriptionRepository, IHttpContextAccessor httpContextAccessor)
         {
             this.propertyRepository = propertyRepository;
             this.locationRepository = locationRepository;
             this.kindRepository = kindRepository;
             this.descriptionRepository = descriptionRepository;
+            this.httpContextAccessor = httpContextAccessor;
         }
         public async Task<Property> Handle(PropertyAddRequest request, CancellationToken cancellationToken)
         {
@@ -33,19 +38,12 @@ namespace Project.Application.Modules.PropertiesModule.Commands.PropertyAddComma
             {
                 throw new NotFoundException($"{nameof(Kind)} with {request.KindId} not found");
             }
-            var location = new Domain.Models.Entities.Location
+            var location = await locationRepository.GetAsync(m => m.Id == request.KindId, cancellationToken);
+            if (location == null)
             {
-                Address = request.Address,
-                City = request.City,
-                State = request.State,
-                Country = request.Country,
-                ZipCode = request.ZipCode,
-                Longitude =  request.Longitude,
-                Latitude = request.Latitude
-            };
-            await locationRepository.AddAsync(location, cancellationToken);
-            await locationRepository.SaveAsync(cancellationToken);
-
+                throw new NotFoundException($"{nameof(Location)} with {request.LocationId} not found");
+            }
+            var userId=httpContextAccessor.HttpContext.GetUserIdExtension();
             var property = new Property
             {
                 Name = request.Name,
@@ -53,9 +51,12 @@ namespace Project.Application.Modules.PropertiesModule.Commands.PropertyAddComma
                 GuestNum=request.GuestNum,
                 KindId= request.KindId,
                 CreatedAt = DateTime.UtcNow,
-                LocationId = location.Id,
+                LocationId = request.LocationId,
                 IsPetFriendly=request.IsPetFriendly,
-                CreatedBy = 1
+                LongPrice=request.LongPrice,
+                MedPrice=request.MedPrice,
+                MinPrice=request.MinPrice,
+                CreatedBy = userId
             };
             await propertyRepository.AddAsync(property, cancellationToken);
             await propertyRepository.SaveAsync(cancellationToken);

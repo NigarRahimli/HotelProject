@@ -1,10 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Hosting;
 using Project.Infrastructure.Abstracts;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading.Tasks;
+
 
 namespace Resume.Application.Services
 {
@@ -17,7 +14,7 @@ namespace Resume.Application.Services
             this.env = env;
         }
 
-        public async Task<IEnumerable<string>> UploadAsync(IEnumerable<IFormFile> files)
+        public async Task<IEnumerable<string>> UploadAsync(IEnumerable<IFormFile> files, string subDirectory = "images")
         {
             var uploadedFileNames = new List<string>();
 
@@ -25,7 +22,7 @@ namespace Resume.Application.Services
             {
                 string extension = Path.GetExtension(file.FileName); //.jpg
                 string randomFileName = $"{Guid.NewGuid()}{extension}";
-                string fullName = Path.Combine(env.ContentRootPath, "wwwroot", "uploads", "images", randomFileName);
+                string fullName = Path.Combine(env.ContentRootPath, "wwwroot", "uploads", subDirectory, randomFileName);
                 var fileInfo = new FileInfo(fullName);
 
                 if (fileInfo.Directory?.Exists != true)
@@ -42,17 +39,23 @@ namespace Resume.Application.Services
             return uploadedFileNames;
         }
 
-        public async Task<IEnumerable<string>> ChangeFileAsync(IEnumerable<string> oldFileNames, IEnumerable<IFormFile> newFiles)
+        public async Task<string> UploadSingleAsync(IFormFile file, string subDirectory = "icons")
+        {
+            var uploadedFileNames = await UploadAsync(new List<IFormFile> { file }, subDirectory);
+            return uploadedFileNames.FirstOrDefault();
+        }
+
+        public async Task<IEnumerable<string>> ChangeFileAsync(IEnumerable<string> oldFileNames, IEnumerable<IFormFile> newFiles, string subDirectory = "images")
         {
             var uploadedFileNames = new List<string>();
 
             foreach (var oldFileName in oldFileNames)
             {
-                string oldFilePath = Path.Combine(env.ContentRootPath, "wwwroot", "uploads", "images", oldFileName);
+                string oldFilePath = Path.Combine(env.ContentRootPath, "wwwroot", "uploads", subDirectory, oldFileName);
 
                 if (File.Exists(oldFilePath))
                 {
-                    string archiveFilePath = Path.Combine(env.ContentRootPath, "wwwroot", "uploads", "images", $"archive-{oldFileName}");
+                    string archiveFilePath = Path.Combine(env.ContentRootPath, "wwwroot", "uploads", subDirectory, $"archive-{oldFileName}");
 
                     File.Move(oldFilePath, archiveFilePath);
                 }
@@ -60,11 +63,17 @@ namespace Resume.Application.Services
 
             foreach (var file in newFiles)
             {
-                var uploadedFileName = await UploadAsync(new List<IFormFile> { file });
+                var uploadedFileName = await UploadAsync(new List<IFormFile> { file }, subDirectory);
                 uploadedFileNames.AddRange(uploadedFileName);
             }
 
             return uploadedFileNames;
+        }
+
+        public async Task<string> ChangeSingleFileAsync(string oldFileName, IFormFile newFile, string subDirectory = "icons")
+        {
+            var uploadedFileNames = await ChangeFileAsync(new List<string> { oldFileName }, new List<IFormFile> { newFile }, subDirectory);
+            return uploadedFileNames.FirstOrDefault();
         }
     }
 }

@@ -9,6 +9,5 @@ namespace Project.Application.Modules.PropertyImagesModule.Commands.PropertyImag
     {
         public int PropertyId { get; set; }
         public IEnumerable<IFormFile> Images { get; set; }
-        public int UserId { get; set; }
     }
 }

@@ -49,44 +49,22 @@ namespace Project.Application.Modules.PropertiesModule.Commands.PropertyEditComm
             {
                 throw new NotFoundException($"{nameof(Kind)} with {request.KindId} not found");
             }
-
-            Location location;
-            if (request.LocationId > 0)
+            var location = await locationRepository.GetAsync(m => m.Id == request.LocationId, cancellationToken);
+            if (kind == null)
             {
-                location = await locationRepository.GetAsync(m => m.Id == request.LocationId, cancellationToken);
-                if (location == null)
-                {
-                    throw new NotFoundException($"{nameof(Location)} with {request.LocationId} not found");
-                }
+                throw new NotFoundException($"{nameof(Location)} with {request.LocationId} not found");
             }
-            else
-            {
-                if (request.Longitude == null || request.Latitude == null)
-                {
-                    throw new Exception("Longitude and Latitude cannot be null");
-                }
 
-                location = new Location
-                {
-                    Latitude = (double)request.Latitude,
-                    Longitude=(double)request.Longitude,
-                    Address = request.Address,
-                    City = request.City,
-                    State = request.State,
-                    Country = request.Country,
-                    ZipCode = request.ZipCode
-                };
-
-                await locationRepository.AddAsync(location, cancellationToken);
-                await locationRepository.SaveAsync(cancellationToken);
-            }
 
             property.Name = request.Name;
             property.KindId = request.KindId;
             property.DescriptionId = request.DescriptionId;
             property.GuestNum = request.GuestNum;
             property.IsPetFriendly = request.IsPetFriendly;
-            property.LocationId = location.Id;
+            property.LocationId = request.LocationId;
+            property.LongPrice = request.LongPrice;
+            property.MedPrice = request.MedPrice;
+            property.MinPrice= request.MinPrice;
 
             await propertyRepository.SaveAsync(cancellationToken);
 
