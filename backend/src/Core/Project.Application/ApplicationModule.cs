@@ -25,8 +25,6 @@ namespace Project.Application
                 .As<IEmailService>()
                 .InstancePerLifetimeScope();
 
-         
-
             builder.RegisterType<ValidatorInterceptor>()
                 .As<IValidatorInterceptor>()
                 .SingleInstance();
@@ -38,6 +36,7 @@ namespace Project.Application
             builder.RegisterType<ActionContextAccessor>()
                 .As<IActionContextAccessor>()
                 .SingleInstance();
+          
         }
     }
 }

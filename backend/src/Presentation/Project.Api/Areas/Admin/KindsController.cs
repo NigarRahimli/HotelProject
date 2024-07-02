@@ -8,6 +8,7 @@ using Project.Application.Modules.KindsModule.Queries.KindGetAllQuery;
 using Project.Application.Modules.KindsModule.Queries.KindGetByIdQuery;
 
 
+
 namespace Project.Api.Areas.Admin
 {
     [Route("api/admin/[controller]")]
