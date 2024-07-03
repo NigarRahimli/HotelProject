@@ -13,14 +13,16 @@ namespace Project.Application.Modules.PropertiesModule.Queries.PropertyPagedQuer
     public class PropertyPagedRequestHandler : IRequestHandler<PropertyPagedRequest, IPaginate<PropertyDto>>
     {
         private readonly IPropertyRepository propertyRepository;
+        private readonly ILocationRepository locationRepository;
         private readonly IReservationRepository reservationRepository;
         private readonly IMapper mapper;
 
-        public PropertyPagedRequestHandler(IPropertyRepository propertyRepository, IMapper mapper, IReservationRepository reservationRepository)
+        public PropertyPagedRequestHandler(IPropertyRepository propertyRepository, IMapper mapper, IReservationRepository reservationRepository, ILocationRepository locationRepository)
         {
             this.propertyRepository = propertyRepository;
             this.mapper = mapper;
             this.reservationRepository = reservationRepository;
+            this.locationRepository = locationRepository;
         }
 
         public async Task<IPaginate<PropertyDto>> Handle(PropertyPagedRequest request, CancellationToken cancellationToken)
@@ -34,10 +36,19 @@ namespace Project.Application.Modules.PropertiesModule.Queries.PropertyPagedQuer
                 query = query.Where(m => m.KindId == request.KindId.Value);
             }
 
-            if (request.GuestNum.HasValue)
+            IQueryable<int> locationIdsQuery = null;
+            if (!string.IsNullOrEmpty(request.CityName))
             {
-                query = query.Where(m => m.GuestNum >= request.GuestNum.Value);
+                locationIdsQuery = locationRepository
+                    .GetAll(l => l.City == request.CityName)
+                    .Select(l => l.Id);
             }
+            if (locationIdsQuery != null)
+            {
+                query = query.Where(p => locationIdsQuery.Contains(p.LocationId));
+            }
+
+         
 
             if (request.CheckInTime.HasValue && request.CheckOutTime.HasValue)
             {
@@ -47,7 +58,12 @@ namespace Project.Application.Modules.PropertiesModule.Queries.PropertyPagedQuer
                 query = query.Where(m => !overlappingPropertyIds.Contains(m.Id));
             }
 
-        
+            if (request.GuestNum.HasValue)
+            {
+                query = query.Where(m => m.GuestNum >= request.GuestNum.Value);
+            }
+
+
 
             var paginatedProperties = await query.OrderByDescending(m => m.Id).ToPaginateAsync(request, cancellationToken);
 

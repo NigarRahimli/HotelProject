@@ -11,6 +11,7 @@ namespace Project.Application.Modules.PropertiesModule.Queries.PropertyPagedQuer
         public DateTime? CheckOutTime { get; set; }
         public int? GuestNum { get; set; }
         public int? KindId { get; set; }
+        public string? CityName { get; set; }
 
     }
 }
