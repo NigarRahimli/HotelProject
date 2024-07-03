@@ -12,39 +12,50 @@ namespace Project.Application.Modules.PropertiesModule.Queries.PropertyPagedQuer
 {
     public class PropertyPagedRequestHandler : IRequestHandler<PropertyPagedRequest, IPaginate<PropertyDto>>
     {
-        private readonly IPropertyRepository PropertyRepository;
+        private readonly IPropertyRepository propertyRepository;
         private readonly IReservationRepository reservationRepository;
         private readonly IMapper mapper;
 
         public PropertyPagedRequestHandler(IPropertyRepository propertyRepository, IMapper mapper, IReservationRepository reservationRepository)
         {
-            PropertyRepository = propertyRepository;
+            this.propertyRepository = propertyRepository;
             this.mapper = mapper;
             this.reservationRepository = reservationRepository;
         }
 
         public async Task<IPaginate<PropertyDto>> Handle(PropertyPagedRequest request, CancellationToken cancellationToken)
         {
-            var paginatedProperties = await PropertyRepository
-                    .GetAll(m => m.DeletedBy == null).OrderByDescending(m => m.Id).ToPaginateAsync(request, cancellationToken); ;
-         
+           
+            var query = propertyRepository.GetAll(m => m.DeletedBy == null);
+
+            
+            if (request.KindId.HasValue)
+            {
+                query = query.Where(m => m.KindId == request.KindId.Value);
+            }
+
+            if (request.GuestNum.HasValue)
+            {
+                query = query.Where(m => m.GuestNum >= request.GuestNum.Value);
+            }
+
             if (request.CheckInTime.HasValue && request.CheckOutTime.HasValue)
             {
-              
                 var overlappingReservations = await reservationRepository.GetOverlappingReservationsAsync(request.CheckInTime.Value, request.CheckOutTime.Value);
-
                 var overlappingPropertyIds = overlappingReservations.Select(r => r.PropertyId);
 
-                 paginatedProperties = await PropertyRepository
-                    .GetAll(m => m.DeletedBy == null && !overlappingPropertyIds.Contains(m.Id))
-                    .OrderByDescending(m => m.Id)
-                    .ToPaginateAsync(request, cancellationToken);
+                query = query.Where(m => !overlappingPropertyIds.Contains(m.Id));
             }
-            
 
+        
+
+            var paginatedProperties = await query.OrderByDescending(m => m.Id).ToPaginateAsync(request, cancellationToken);
+
+          
             var dto = mapper.Map<Paginate<PropertyDto>>(paginatedProperties);
 
             return dto;
         }
     }
-    }
+
+}

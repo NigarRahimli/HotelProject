@@ -9,5 +9,8 @@ namespace Project.Application.Modules.PropertiesModule.Queries.PropertyPagedQuer
     {
         public DateTime? CheckInTime { get; set; }
         public DateTime? CheckOutTime { get; set; }
+        public int? GuestNum { get; set; }
+        public int? KindId { get; set; }
+
     }
 }
