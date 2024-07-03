@@ -7,5 +7,7 @@ namespace Project.Application.Modules.PropertiesModule.Queries.PropertyPagedQuer
 {
     public class PropertyPagedRequest : Pageable, IPageable, IRequest<IPaginate<PropertyDto>>
     {
+        public DateTime? CheckInTime { get; set; }
+        public DateTime? CheckOutTime { get; set; }
     }
 }

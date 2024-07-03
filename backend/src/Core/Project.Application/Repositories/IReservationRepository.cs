@@ -5,5 +5,6 @@ namespace Project.Application.Repositories
 {
     public interface IReservationRepository : IAsyncRepository<Reservation>
     {
+        Task<IEnumerable<Reservation>> GetOverlappingReservationsAsync(DateTime checkInTime, DateTime checkOutTime);
     }
 }

@@ -73,9 +73,12 @@ namespace Project.Api.Controllers
             return Ok(response);
         }
 
-        [HttpGet("{page:int:min(1)}/size/{size:int:min(2)}")]
-        public async Task<IActionResult> GetPaged([FromRoute] PropertyPagedRequest request)
+        [HttpPost("{page:int:min(1)}/size/{size:int:min(2)}")]
+        public async Task<IActionResult> GetPaged(int page, int size, [FromBody] PropertyPagedRequest request)
         {
+            request.Page = page;
+            request.Size = size;
+
             var response = await mediator.Send(request);
 
             return Ok(response);
