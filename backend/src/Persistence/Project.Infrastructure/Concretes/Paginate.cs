@@ -6,7 +6,7 @@ namespace Project.Infrastructure.Concretes
     public class Paginate<T> : IPaginate<T>
            where T : class
     {
-        public IEnumerable<T> Items { get; internal set; }
+        public IEnumerable<T> Items { get;  set; }
 
         public int Page { get; set; }
 

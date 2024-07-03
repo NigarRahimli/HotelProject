@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Project.Application.Modules.PropertiesModule.Queries;
 using Project.Application.Repositories;
 using Project.Infrastructure.Exceptions;
 using Microsoft.EntityFrameworkCore;

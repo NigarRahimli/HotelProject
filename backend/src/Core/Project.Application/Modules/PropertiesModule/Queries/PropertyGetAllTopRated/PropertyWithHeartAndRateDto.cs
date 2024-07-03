@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.Application.Modules.PropertiesModule.Queries
+namespace Project.Application.Modules.PropertiesModule.Queries.PropertyGetAllTopRated
 {
     public class PropertyWithHeartAndRateDto
     {

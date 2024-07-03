@@ -1,10 +1,6 @@
 ﻿    using Project.Application.Modules.FacilitiesModule.Queries;
     using Project.Application.Modules.PropertyImagesModule.Query.PropertyImagesGetByPropertyIdQuery;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
+   
 
     namespace Project.Application.Modules.PropertiesModule.Queries
     {
