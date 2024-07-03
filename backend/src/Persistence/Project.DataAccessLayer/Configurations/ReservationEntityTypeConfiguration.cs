@@ -16,6 +16,7 @@ namespace Project.DataAccessLayer.Configurations
 
             builder.Property(m => m.CheckInTime).HasColumnType("datetime").IsRequired();
             builder.Property(m => m.CheckOutTime).HasColumnType("datetime").IsRequired();
+            builder.Property(m => m.IsApproved).HasColumnType("bool").IsRequired();
      
 
             builder.Property(m => m.UserId).HasColumnType("int").IsRequired();

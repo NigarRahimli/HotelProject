@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using Project.Infrastructure.Common;
 using Stripe;
-using System.Threading.Tasks;
+
 
 public class StripePaymentService : IStripePaymentService
 {

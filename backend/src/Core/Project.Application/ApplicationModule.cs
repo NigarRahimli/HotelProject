@@ -21,6 +21,10 @@ namespace Project.Application
                 .As<ICryptoService>()
                 .InstancePerLifetimeScope();
 
+            builder.RegisterType<StripePaymentService>()
+             .As<IStripePaymentService>()
+             .InstancePerLifetimeScope();
+
             builder.RegisterType<EmailService>()
                 .As<IEmailService>()
                 .InstancePerLifetimeScope();

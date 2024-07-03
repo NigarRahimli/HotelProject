@@ -43,6 +43,7 @@ builder.Services.Configure<EmailServiceOptions>(cfg => builder.Configuration.Bin
                 .AddSingleton<IEmailService, EmailService>();
 
 builder.Services.Configure<CryptoServiceOptions>(cfg => builder.Configuration.Bind(nameof(CryptoServiceOptions), cfg));
+builder.Services.Configure<StripeServiceOptions>(cfg => builder.Configuration.Bind(nameof(StripeServiceOptions), cfg));
 
 builder.Services.AddCustomIdentity(builder.Configuration);
 builder.Services.AddFluentValidationAutoValidation(cfg => cfg.DisableDataAnnotationsValidation = false);

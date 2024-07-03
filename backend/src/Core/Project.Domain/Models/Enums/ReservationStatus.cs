@@ -4,7 +4,6 @@
     {
         Upcoming,
         Past,
-        Rejected,
-        Approved
+
     }
 }

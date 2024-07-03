@@ -9,7 +9,7 @@ namespace Project.Domain.Models.Entities
         public string Name { get; set; }
         public DateTime CheckInTime { get; set; }
         public DateTime CheckOutTime { get; set; }
-  
+        public bool IsApproved { get; set; }
         public int UserId { get; set; } 
         public int HostId { get; set; } 
         public int PropertyId { get; set; } 
