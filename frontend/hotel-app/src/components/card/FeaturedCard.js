@@ -1,27 +1,13 @@
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import React from "react";
-
-const steps = [
-  {
-    imgPath: "https://via.placeholder.com/400x255?text=Image+1",
-  },
-  {
-    imgPath: "https://via.placeholder.com/400x255?text=Image+2",
-  },
-  {
-    imgPath: "https://via.placeholder.com/400x255?text=Image+3",
-  },
-  {
-    imgPath: "https://via.placeholder.com/400x255?text=Image+4",
-  },
-];
+import { baseUrl } from "@/components/constant";
 
 const FeaturedCard = ({
   propertyImages,
   isFavourite,
   name,
-  adress,
+  address,
   city,
   country,
   amenities,
@@ -29,7 +15,7 @@ const FeaturedCard = ({
   maxPrice
 }) => {
   const [activeStep, setActiveStep] = React.useState(0);
-  const maxSteps = steps.length;
+  const maxSteps = propertyImages.length;
 
   React.useEffect(() => {
     const interval = setInterval(() => {
@@ -41,6 +27,7 @@ const FeaturedCard = ({
   const handleStepChange = (step) => {
     setActiveStep(step);
   };
+
   return (
     <div>
       <Box
@@ -66,7 +53,7 @@ const FeaturedCard = ({
           }}
         >
           <img
-            src={steps[activeStep].imgPath}
+            src={propertyImages[activeStep]}
             alt={`step ${activeStep + 1}`}
             style={{ width: "100%", height: "100%" }}
           />
@@ -84,7 +71,7 @@ const FeaturedCard = ({
             mt: 1,
           }}
         >
-          {[...Array(maxSteps)].map((_, index) => (
+          {propertyImages.map((_, index) => (
             <Box
               key={index}
               onClick={() => handleStepChange(index)}
@@ -106,28 +93,25 @@ const FeaturedCard = ({
         </Box>
 
         <img
-          src={
-            isFavourite ? "./icons/full_heart.png" : "./icons/empty_heart.png"
-          }
+          src={isFavourite ? "./icons/full_heart.png" : "./icons/empty_heart.png"}
           className="absolute right-[15px] top-[15px] cursor-pointer"
         />
-        <p className=" font-semibold text-[18px] text-[#9A9A9A] absolute left-[20px] bottom-[15px]">
-          $ {minPrice} - {maxPrice} USD
+        <p className="font-semibold text-[18px] text-[#9A9A9A] absolute left-[20px] bottom-[15px]">
+          ${minPrice} - ${maxPrice} USD
         </p>
       </Box>
 
       <div>
-        <h1 className=" font-bold text-[#484848] text-[18px] mt-[30px]">
+        <h1 className="font-bold text-[#484848] text-[18px] mt-[30px]">
           {name}
         </h1>
-        <p className="font-medium text-[#9A9A9A] text-[14px ] py-[7px]">
-          {" "}
-          {adress}, {city}, {country}{" "}
+        <p className="font-medium text-[#9A9A9A] text-[14px] py-[7px]">
+          {address}, {city}, {country}
         </p>
-        <div className="amenities flex  gap-x-[20px]">
+        <div className="amenities flex gap-x-[20px]">
           {amenities.map((amenity) => (
             <div key={amenity.id} className="flex items-center mr-[4px]">
-              <img src={amenity.iconUrl} alt={amenity.name} className=" mr-1" />
+              <img src={amenity.iconUrl} alt={amenity.name} className="mr-1" />
               <span className="font-semibold text-[#484848] text-[16px]">
                 {amenity.count}
               </span>
