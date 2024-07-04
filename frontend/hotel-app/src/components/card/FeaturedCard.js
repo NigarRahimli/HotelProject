@@ -17,7 +17,17 @@ const steps = [
   },
 ];
 
-const FeaturedCard = ({ imgSrc, userSrc, isFavourite, name, location, amenities }) => {
+const FeaturedCard = ({
+  propertyImages,
+  isFavourite,
+  name,
+  adress,
+  city,
+  country,
+  amenities,
+  minPrice,
+  maxPrice
+}) => {
   const [activeStep, setActiveStep] = React.useState(0);
   const maxSteps = steps.length;
 
@@ -96,22 +106,31 @@ const FeaturedCard = ({ imgSrc, userSrc, isFavourite, name, location, amenities 
         </Box>
 
         <img
-          src="./icons/empty_heart.png"
-          className=" cursor-pointer absolute top-[20px] right-[20px]"
+          src={
+            isFavourite ? "./icons/full_heart.png" : "./icons/empty_heart.png"
+          }
+          className="absolute right-[15px] top-[15px] cursor-pointer"
         />
         <p className=" font-semibold text-[18px] text-[#9A9A9A] absolute left-[20px] bottom-[15px]">
-          $ 1000 - 5000 USD
+          $ {minPrice} - {maxPrice} USD
         </p>
       </Box>
 
       <div>
-        <h1 className=" font-bold text-[#484848] text-[18px] mt-[30px]">{name}</h1>
-        <p className="font-medium text-[#9A9A9A] text-[14px ] py-[7px]">{location}</p>
+        <h1 className=" font-bold text-[#484848] text-[18px] mt-[30px]">
+          {name}
+        </h1>
+        <p className="font-medium text-[#9A9A9A] text-[14px ] py-[7px]">
+          {" "}
+          {adress}, {city}, {country}{" "}
+        </p>
         <div className="amenities flex  gap-x-[20px]">
           {amenities.map((amenity) => (
             <div key={amenity.id} className="flex items-center mr-[4px]">
               <img src={amenity.iconUrl} alt={amenity.name} className=" mr-1" />
-              <span className="font-semibold text-[#484848] text-[16px]">{amenity.count}</span>
+              <span className="font-semibold text-[#484848] text-[16px]">
+                {amenity.count}
+              </span>
             </div>
           ))}
         </div>

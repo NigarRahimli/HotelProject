@@ -5,9 +5,13 @@ import FeaturedCard from "@/components/card/FeaturedCard";
 import StarCard from "@/components/card/StarCard";
 import ArticleCard from "@/components/card/ArticleCard";
 import { baseUrl, colors } from "@/components/constant";
+import LatestProperties from "@/components/sections/LatestProperties";
+import NearbyProperties from "@/components/sections/NearbyProperties";
+import TopRatedProperties from "@/components/sections/TopRatedProperties";
+import FeaturedProperties from "@/components/sections/FeaturedProperties";
 function Index() {
   const [kinds, setKinds] = useState([]);
-  const [activeKind, setActiveKind] = useState(null); // State to track the active kind
+  const [activeKind, setActiveKind] = useState(null);
 
   useEffect(() => {
     fetch(`${baseUrl}/api/kinds`)
@@ -19,75 +23,6 @@ function Index() {
   const handleKindClick = (id) => {
     setActiveKind(id);
   };
-
-  const [latestProperties, setLatestProperties] = useState([]);
-  const [latestLoading, setLatestLoading] = useState(true);
-  const [latestError, setLatestError] = useState(null);
-
-  useEffect(() => {
-    const fetchLatestProperties = async () => {
-      try {
-        const response = await fetch(`${baseUrl}/api/properties/latest/4`);
-        const data = await response.json();
-        setLatestProperties(data);
-      } catch (error) {
-        setLatestError("Error fetching latest properties");
-      } finally {
-        setLatestLoading(false);
-      }
-    };
-
-    fetchLatestProperties();
-  }, []);
-
-  const [properties, setProperties] = useState([]);
-  const [nearbyLoading, setNearbyLoading] = useState(true);
-  const [nearbyError, setNearbyError] = useState(null);
-
-  useEffect(() => {
-    const fetchProperties = async (latitude, longitude) => {
-      try {
-        const response = await fetch(`${baseUrl}/api/properties/nearby`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            Latitude: latitude,
-            Longitude: longitude,
-            Take: 4,
-          }),
-        });
-        const data = await response.json();
-        setProperties(data);
-      } catch (error) {
-        setNearbyError("Error fetching nearby properties");
-      } finally {
-        setNearbyLoading(false);
-      }
-    };
-
-    const getLocation = () => {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            const { latitude, longitude } = position.coords;
-            fetchProperties(latitude, longitude);
-          },
-          (error) => {
-            console.error("Error getting location:", error);
-            setNearbyError("Unable to retrieve location");
-            setNearbyLoading(false);
-          }
-        );
-      } else {
-        setNearbyError("Geolocation is not supported by this browser.");
-        setNearbyLoading(false);
-      }
-    };
-
-    getLocation();
-  }, []);
 
   return (
     <Layout>
@@ -154,98 +89,9 @@ function Index() {
         </div>
       </div>
       <div className="mx-auto sm:w-[620px] md:w-[728px] lg:w-[994px] xl:w-[1210px]">
-      <div className="latest pt-[100px] mx-auto md:w-full w-[279px]">
-          <h1 className="font-bold text-[25px] text-[#484848] md:w-[339px] w-[279px] md:text-[36px]">
-            Latest on the Property Listing
-          </h1>
-          <div className="bg-[#484848] w-[140px] h-[6px] rounded-[3px] mt-[30px] mb-[60px]"></div>
-
-          {latestLoading ? (
-            <div>Loading...</div>
-          ) : latestError ? (
-            <div>{latestError}</div>
-          ) : (
-            <div className="flex gap-[30px] flex-wrap content-center items-center mx-auto">
-              {latestProperties.map((property) => (
-                <ListedCard
-                  key={property.propertyId}
-                  imgSrc={`${baseUrl}/${property.url}`}
-                  userSrc={`${baseUrl}/${property.hostProfileImgUrl}`}
-                  isFavourite={property.isLiked}
-                  name={property.name}
-                  adress={property.address}
-                  city={property.city}
-                  country={property.country}
-                />
-              ))}
-            </div>
-          )}
-        </div>
-    <div className="nearby pt-[100px] mx-auto md:w-full w-[279px]">
-          <h1 className="font-bold text-[25px] text-[#484848] md:w-[339px] w-[279px] md:text-[36px]">
-            Nearby Listed Properties
-          </h1>
-          <div className="bg-[#484848] w-[140px] h-[6px] rounded-[3px] mt-[30px] mb-[60px]"></div>
-
-          {nearbyLoading ? (
-            <div>Loading...</div>
-          ) : nearbyError ? (
-            <div>{nearbyError}</div>
-          ) : (
-            <div className="flex gap-[30px] flex-wrap content-center items-center mx-auto">
-              {properties.map((property) => (
-                <ListedCard
-                  key={property.propertyId}
-                  imgSrc={`${baseUrl}/${property.url}`}
-                  userSrc={`${baseUrl}/${property.hostProfileImgUrl}`}
-                  isFavourite={property.isLiked}
-                  name={property.name}
-                  adress={property.address}
-                  city={property.city}
-                  country={property.country}
-                />
-              ))}
-            </div>
-          )}
-        </div>
-        <div className="top pt-[100px] mx-auto md:w-full w-[279px]">
-          <h1 className="font-bold text-[25px] text-[#484848] md:w-[339px] w-[279px] md:text-[36px] ">
-            Top Rated Properties
-          </h1>
-          <div className="bg-[#484848] w-[140px] h-[6px] rounded-[3px] mt-[30px] mb-[60px]"></div>
-
-          <div className="flex gap-[30px] flex-wrap content-center items-center mx-auto">
-            <StarCard
-              imgSrc="https://images.crowdspring.com/blog/wp-content/uploads/2017/08/23163415/pexels-binyamin-mellish-106399.jpg"
-              userSrc="https://as2.ftcdn.net/v2/jpg/03/83/25/83/1000_F_383258331_D8imaEMl8Q3lf7EKU2Pi78Cn0R7KkW9o.jpg"
-              isFavourite="true"
-              name="Well Furnished Apartment"
-              location="100 Smart Street, LA, USA"
-            />
-
-            <StarCard
-              imgSrc="https://images.crowdspring.com/blog/wp-content/uploads/2017/08/23163415/pexels-binyamin-mellish-106399.jpg"
-              userSrc="https://as2.ftcdn.net/v2/jpg/03/83/25/83/1000_F_383258331_D8imaEMl8Q3lf7EKU2Pi78Cn0R7KkW9o.jpg"
-              isFavourite="true"
-              name="Well Furnished Apartment"
-              location="100 Smart Street, LA, USA"
-            />
-            <StarCard
-              imgSrc="https://images.crowdspring.com/blog/wp-content/uploads/2017/08/23163415/pexels-binyamin-mellish-106399.jpg"
-              userSrc="https://as2.ftcdn.net/v2/jpg/03/83/25/83/1000_F_383258331_D8imaEMl8Q3lf7EKU2Pi78Cn0R7KkW9o.jpg"
-              isFavourite="true"
-              name="Well Furnished Apartment"
-              location="100 Smart Street, LA, USA"
-            />
-            <StarCard
-              imgSrc="https://images.crowdspring.com/blog/wp-content/uploads/2017/08/23163415/pexels-binyamin-mellish-106399.jpg"
-              userSrc="https://as2.ftcdn.net/v2/jpg/03/83/25/83/1000_F_383258331_D8imaEMl8Q3lf7EKU2Pi78Cn0R7KkW9o.jpg"
-              isFavourite="true"
-              name="Well Furnished Apartment"
-              location="100 Smart Street, LA, USA"
-            />
-          </div>
-        </div>
+        <LatestProperties />
+        <NearbyProperties />
+        <TopRatedProperties />
 
         <div className=" host h-[395px] w-[279px] md:w-full mt-[80px] rounded-[12px] flex flex-col gap-y-[30px] py-[80px] px-[50px] mx-auto md:mx-0 bg-center bg-[url('/images/blue.jpg')] bg-no-repeat bg-origin-padding hover:bg-bottom">
           <h1 className="font-bold text-[25px] text-[#101010] md:w-[320px] w-full md:text-[38px] mx-auto md:mx-0 ">
@@ -262,120 +108,7 @@ function Index() {
           </a>
         </div>
 
-        <div className="featured pt-[100px] mx-auto md:w-full w-[279px]">
-          <h1 className="font-bold text-[25px] text-[#484848] md:w-[412px] w-[279px] md:text-[36px] ">
-            Featured Properties on our Listing
-          </h1>
-          <div className="bg-[#484848] w-[140px] h-[6px] rounded-[3px] mt-[30px] mb-[60px]"></div>
-
-          <div className="flex gap-[30px] flex-wrap content-center items-center mx-auto">
-            <div className="w-[300px]  xl:w-[382px]">
-              <FeaturedCard
-                imgSrc="https://images.crowdspring.com/blog/wp-content/uploads/2017/08/23163415/pexels-binyamin-mellish-106399.jpg"
-                userSrc="https://as2.ftcdn.net/v2/jpg/03/83/25/83/1000_F_383258331_D8imaEMl8Q3lf7EKU2Pi78Cn0R7KkW9o.jpg"
-                isFavourite="true"
-                name="Well Furnished Apartment"
-                location="100 Smart Street, LA, USA"
-                amenities={[
-                  {
-                    id: 1,
-                    iconUrl: "./icons/bed.png",
-                    count: 3,
-                  },
-                  {
-                    id: 2,
-                    iconUrl: "./icons/bath.png",
-                    count: 1,
-                  },
-                ]}
-              />
-            </div>
-            <div className="w-[300px]  xl:w-[382px]">
-              <FeaturedCard
-                imgSrc="https://images.crowdspring.com/blog/wp-content/uploads/2017/08/23163415/pexels-binyamin-mellish-106399.jpg"
-                userSrc="https://as2.ftcdn.net/v2/jpg/03/83/25/83/1000_F_383258331_D8imaEMl8Q3lf7EKU2Pi78Cn0R7KkW9o.jpg"
-                isFavourite="true"
-                name="Well Furnished Apartment"
-                location="100 Smart Street, LA, USA"
-                amenities={[
-                  {
-                    id: 1,
-                    iconUrl: "./icons/bed.png",
-                    count: 3,
-                  },
-                  {
-                    id: 2,
-                    iconUrl: "./icons/bath.png",
-                    count: 1,
-                  },
-                ]}
-              />
-            </div>
-            <div className="w-[300px]  xl:w-[382px]">
-              <FeaturedCard
-                imgSrc="https://images.crowdspring.com/blog/wp-content/uploads/2017/08/23163415/pexels-binyamin-mellish-106399.jpg"
-                userSrc="https://as2.ftcdn.net/v2/jpg/03/83/25/83/1000_F_383258331_D8imaEMl8Q3lf7EKU2Pi78Cn0R7KkW9o.jpg"
-                isFavourite="true"
-                name="Well Furnished Apartment"
-                location="100 Smart Street, LA, USA"
-                amenities={[
-                  {
-                    id: 1,
-                    iconUrl: "./icons/bed.png",
-                    count: 3,
-                  },
-                  {
-                    id: 2,
-                    iconUrl: "./icons/bath.png",
-                    count: 1,
-                  },
-                ]}
-              />
-            </div>
-            <div className="w-[300px]  xl:w-[382px]">
-              <FeaturedCard
-                imgSrc="https://images.crowdspring.com/blog/wp-content/uploads/2017/08/23163415/pexels-binyamin-mellish-106399.jpg"
-                userSrc="https://as2.ftcdn.net/v2/jpg/03/83/25/83/1000_F_383258331_D8imaEMl8Q3lf7EKU2Pi78Cn0R7KkW9o.jpg"
-                isFavourite="true"
-                name="Well Furnished Apartment"
-                location="100 Smart Street, LA, USA"
-                amenities={[
-                  {
-                    id: 1,
-                    iconUrl: "./icons/bed.png",
-                    count: 3,
-                  },
-                  {
-                    id: 2,
-                    iconUrl: "./icons/bath.png",
-                    count: 1,
-                  },
-                ]}
-              />
-            </div>
-            <div className="w-[300px] xl:w-[382px]">
-              <FeaturedCard
-                imgSrc="https://images.crowdspring.com/blog/wp-content/uploads/2017/08/23163415/pexels-binyamin-mellish-106399.jpg"
-                userSrc="https://as2.ftcdn.net/v2/jpg/03/83/25/83/1000_F_383258331_D8imaEMl8Q3lf7EKU2Pi78Cn0R7KkW9o.jpg"
-                isFavourite="true"
-                name="Well Furnished Apartment"
-                location="100 Smart Street, LA, USA"
-                amenities={[
-                  {
-                    id: 1,
-                    iconUrl: "./icons/bed.png",
-                    count: 3,
-                  },
-                  {
-                    id: 2,
-                    iconUrl: "./icons/bath.png",
-                    count: 1,
-                  },
-                ]}
-              />
-            </div>
-          </div>
-        </div>
+     <FeaturedProperties/>
         <div className="browse h-[395px] w-[279px] md:w-full mt-[80px] rounded-[12px] flex flex-col gap-y-[30px] py-[40px] px-[50px] mx-auto  md:mx-0 bg-center bg-[url('/images/violet.jpg')] bg-no-repeat bg-cover bg-origin-padding hover:bg-bottom">
           <h1 className="font-bold text-[25px] text-[#101010] md:w-[320px] w-full md:text-[38px] mx-auto md:mx-0 ">
             Browse For More Properties
