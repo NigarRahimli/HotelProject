@@ -1,37 +1,119 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Layout from "./Layout";
 import ListedCard from "@/components/card/ListedCard";
 import FeaturedCard from "@/components/card/FeaturedCard";
 import StarCard from "@/components/card/StarCard";
 import ArticleCard from "@/components/card/ArticleCard";
+import { baseUrl, colors } from "@/components/constant";
+function Index() {
+  const [kinds, setKinds] = useState([]);
+  const [activeKind, setActiveKind] = useState(null); // State to track the active kind
 
-function index() {
+  useEffect(() => {
+    fetch(`${baseUrl}/api/kinds`)
+      .then((response) => response.json())
+      .then((data) => setKinds(data))
+      .catch((error) => console.error("Error fetching kinds:", error));
+  }, []);
+
+  const handleKindClick = (id) => {
+    setActiveKind(id);
+  };
+
+  const [latestProperties, setLatestProperties] = useState([]);
+  const [latestLoading, setLatestLoading] = useState(true);
+  const [latestError, setLatestError] = useState(null);
+
+  useEffect(() => {
+    const fetchLatestProperties = async () => {
+      try {
+        const response = await fetch(`${baseUrl}/api/properties/latest/4`);
+        const data = await response.json();
+        setLatestProperties(data);
+      } catch (error) {
+        setLatestError("Error fetching latest properties");
+      } finally {
+        setLatestLoading(false);
+      }
+    };
+
+    fetchLatestProperties();
+  }, []);
+
+  const [properties, setProperties] = useState([]);
+  const [nearbyLoading, setNearbyLoading] = useState(true);
+  const [nearbyError, setNearbyError] = useState(null);
+
+  useEffect(() => {
+    const fetchProperties = async (latitude, longitude) => {
+      try {
+        const response = await fetch(`${baseUrl}/api/properties/nearby`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            Latitude: latitude,
+            Longitude: longitude,
+            Take: 4,
+          }),
+        });
+        const data = await response.json();
+        setProperties(data);
+      } catch (error) {
+        setNearbyError("Error fetching nearby properties");
+      } finally {
+        setNearbyLoading(false);
+      }
+    };
+
+    const getLocation = () => {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            fetchProperties(latitude, longitude);
+          },
+          (error) => {
+            console.error("Error getting location:", error);
+            setNearbyError("Unable to retrieve location");
+            setNearbyLoading(false);
+          }
+        );
+      } else {
+        setNearbyError("Geolocation is not supported by this browser.");
+        setNearbyLoading(false);
+      }
+    };
+
+    getLocation();
+  }, []);
+
   return (
     <Layout>
       <div className="w-[100%] h-[600px] bg-center bg-[url('/images/hotel.avif')] bg-no-repeat bg-origin-padding bg-cover pt-[100px] md:pt-[380px] mx-auto">
         <div className="find text-[#101010] flex items-center content-center gap-x-[30px] mx-auto w-[300px] md:w-[690px] lg:w-[794px] md:pl-[30px] ">
           <h1 className="font-bold text-[30px] md:text-[40px] ">FIND</h1>
-          <ul className=" text-[14px] md:text-[16px]  font-semibold flex items-center content-center gap-x-[10px]">
-            <li className="relative">
-              <h1 className="after:content-[''] after:absolute after:left-0 after:right-1/2 after:-bottom-1 after:border-b-2 after:border-black">
-                Rooms
-              </h1>
-            </li>
-            <li className="relative">
-              <h1 className="after:content-[''] after:absolute after:left-0 after:right-1/2 after:-bottom-1 after:border-b-2 after:border-black">
-                Flats
-              </h1>
-            </li>
-            <li className="relative">
-              <h1 className="after:content-[''] after:absolute after:left-0 after:right-1/2 after:-bottom-1 after:border-b-2 after:border-black">
-                Hostels
-              </h1>
-            </li>
-            <li className="relative">
-              <h1 className="after:content-[''] after:absolute after:left-0 after:right-1/2 after:-bottom-1 after:border-b-2 after:border-black">
-                Villas
-              </h1>
-            </li>
+          <ul className=" text-[14px] md:text-[16px] font-extrabold pt-[20px] sm:pt-0 flex flex-wrap items-center content-center gap-[10px] ">
+            {kinds.map((kind) => (
+              <li
+                key={kind.id}
+                className={`relative ${
+                  activeKind === kind.id
+                    ? "after:content-[''] after:absolute after:left-0 after:right-1/2 after:-bottom-1 after:border-b-2 after:border-black"
+                    : ""
+                }`}
+                onClick={() => handleKindClick(kind.id)}
+              >
+                <h1
+                  className={`${
+                    activeKind === kind.id ? "text-black" : "text-[#101010]"
+                  } cursor-pointer hover:text-black`}
+                >
+                  {kind.name.toUpperCase()}
+                </h1>
+              </li>
+            ))}
           </ul>
         </div>
         <div className="search bg-white rounded-[35px] w-[300px] md:w-[690px] lg:w-[794px] mx-auto mt-[15px] font-semibold p-[10px]  flex flex-col md:flex-row content-between gap-x-[10px] md:gap-x-[5px]">
@@ -72,81 +154,59 @@ function index() {
         </div>
       </div>
       <div className="mx-auto sm:w-[620px] md:w-[728px] lg:w-[994px] xl:w-[1210px]">
-        <div className="latest pt-[100px] mx-auto md:w-full w-[279px]">
-          <h1 className="font-bold text-[25px] text-[#484848] md:w-[339px] w-[279px] md:text-[36px] ">
+      <div className="latest pt-[100px] mx-auto md:w-full w-[279px]">
+          <h1 className="font-bold text-[25px] text-[#484848] md:w-[339px] w-[279px] md:text-[36px]">
             Latest on the Property Listing
           </h1>
           <div className="bg-[#484848] w-[140px] h-[6px] rounded-[3px] mt-[30px] mb-[60px]"></div>
 
-          <div className="flex gap-[30px] flex-wrap content-center items-center mx-auto">
-            <ListedCard
-              imgSrc="https://images.crowdspring.com/blog/wp-content/uploads/2017/08/23163415/pexels-binyamin-mellish-106399.jpg"
-              userSrc="https://as2.ftcdn.net/v2/jpg/03/83/25/83/1000_F_383258331_D8imaEMl8Q3lf7EKU2Pi78Cn0R7KkW9o.jpg"
-              isFavourite="true"
-              name="Well Furnished Apartment"
-              location="100 Smart Street, LA, USA"
-            />
-
-            <ListedCard
-              imgSrc="https://images.crowdspring.com/blog/wp-content/uploads/2017/08/23163415/pexels-binyamin-mellish-106399.jpg"
-              userSrc="https://as2.ftcdn.net/v2/jpg/03/83/25/83/1000_F_383258331_D8imaEMl8Q3lf7EKU2Pi78Cn0R7KkW9o.jpg"
-              isFavourite="true"
-              name="Well Furnished Apartment"
-              location="100 Smart Street, LA, USA"
-            />
-            <ListedCard
-              imgSrc="https://images.crowdspring.com/blog/wp-content/uploads/2017/08/23163415/pexels-binyamin-mellish-106399.jpg"
-              userSrc="https://as2.ftcdn.net/v2/jpg/03/83/25/83/1000_F_383258331_D8imaEMl8Q3lf7EKU2Pi78Cn0R7KkW9o.jpg"
-              isFavourite="true"
-              name="Well Furnished Apartment"
-              location="100 Smart Street, LA, USA"
-            />
-            <ListedCard
-              imgSrc="https://images.crowdspring.com/blog/wp-content/uploads/2017/08/23163415/pexels-binyamin-mellish-106399.jpg"
-              userSrc="https://as2.ftcdn.net/v2/jpg/03/83/25/83/1000_F_383258331_D8imaEMl8Q3lf7EKU2Pi78Cn0R7KkW9o.jpg"
-              isFavourite="true"
-              name="Well Furnished Apartment"
-              location="100 Smart Street, LA, USA"
-            />
-          </div>
+          {latestLoading ? (
+            <div>Loading...</div>
+          ) : latestError ? (
+            <div>{latestError}</div>
+          ) : (
+            <div className="flex gap-[30px] flex-wrap content-center items-center mx-auto">
+              {latestProperties.map((property) => (
+                <ListedCard
+                  key={property.propertyId}
+                  imgSrc={`${baseUrl}/${property.url}`}
+                  userSrc={`${baseUrl}/${property.hostProfileImgUrl}`}
+                  isFavourite={property.isLiked}
+                  name={property.name}
+                  adress={property.address}
+                  city={property.city}
+                  country={property.country}
+                />
+              ))}
+            </div>
+          )}
         </div>
-        <div className="nearby pt-[100px] mx-auto md:w-full w-[279px]">
-          <h1 className="font-bold text-[25px] text-[#484848] md:w-[339px] w-[279px] md:text-[36px] ">
+    <div className="nearby pt-[100px] mx-auto md:w-full w-[279px]">
+          <h1 className="font-bold text-[25px] text-[#484848] md:w-[339px] w-[279px] md:text-[36px]">
             Nearby Listed Properties
           </h1>
           <div className="bg-[#484848] w-[140px] h-[6px] rounded-[3px] mt-[30px] mb-[60px]"></div>
 
-          <div className="flex gap-[30px] flex-wrap content-center items-center mx-auto">
-            <ListedCard
-              imgSrc="https://images.crowdspring.com/blog/wp-content/uploads/2017/08/23163415/pexels-binyamin-mellish-106399.jpg"
-              userSrc="https://as2.ftcdn.net/v2/jpg/03/83/25/83/1000_F_383258331_D8imaEMl8Q3lf7EKU2Pi78Cn0R7KkW9o.jpg"
-              isFavourite="true"
-              name="Well Furnished Apartment"
-              location="100 Smart Street, LA, USA"
-            />
-
-            <ListedCard
-              imgSrc="https://images.crowdspring.com/blog/wp-content/uploads/2017/08/23163415/pexels-binyamin-mellish-106399.jpg"
-              userSrc="https://as2.ftcdn.net/v2/jpg/03/83/25/83/1000_F_383258331_D8imaEMl8Q3lf7EKU2Pi78Cn0R7KkW9o.jpg"
-              isFavourite="true"
-              name="Well Furnished Apartment"
-              location="100 Smart Street, LA, USA"
-            />
-            <ListedCard
-              imgSrc="https://images.crowdspring.com/blog/wp-content/uploads/2017/08/23163415/pexels-binyamin-mellish-106399.jpg"
-              userSrc="https://as2.ftcdn.net/v2/jpg/03/83/25/83/1000_F_383258331_D8imaEMl8Q3lf7EKU2Pi78Cn0R7KkW9o.jpg"
-              isFavourite="true"
-              name="Well Furnished Apartment"
-              location="100 Smart Street, LA, USA"
-            />
-            <ListedCard
-              imgSrc="https://images.crowdspring.com/blog/wp-content/uploads/2017/08/23163415/pexels-binyamin-mellish-106399.jpg"
-              userSrc="https://as2.ftcdn.net/v2/jpg/03/83/25/83/1000_F_383258331_D8imaEMl8Q3lf7EKU2Pi78Cn0R7KkW9o.jpg"
-              isFavourite="true"
-              name="Well Furnished Apartment"
-              location="100 Smart Street, LA, USA"
-            />
-          </div>
+          {nearbyLoading ? (
+            <div>Loading...</div>
+          ) : nearbyError ? (
+            <div>{nearbyError}</div>
+          ) : (
+            <div className="flex gap-[30px] flex-wrap content-center items-center mx-auto">
+              {properties.map((property) => (
+                <ListedCard
+                  key={property.propertyId}
+                  imgSrc={`${baseUrl}/${property.url}`}
+                  userSrc={`${baseUrl}/${property.hostProfileImgUrl}`}
+                  isFavourite={property.isLiked}
+                  name={property.name}
+                  adress={property.address}
+                  city={property.city}
+                  country={property.country}
+                />
+              ))}
+            </div>
+          )}
         </div>
         <div className="top pt-[100px] mx-auto md:w-full w-[279px]">
           <h1 className="font-bold text-[25px] text-[#484848] md:w-[339px] w-[279px] md:text-[36px] ">
@@ -404,4 +464,4 @@ function index() {
   );
 }
 
-export default index;
+export default Index;

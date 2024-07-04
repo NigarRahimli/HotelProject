@@ -3,7 +3,7 @@ import Layout from "./Layout";
 import FilterCard from "@/components/card/FilterCard";
 import PriceRangeSlider from "@/components/filter/PriceRangeSlider ";
 
-function Index() {
+function Properties() {
   const [isSidebarVisible, setSidebarVisible] = useState(false);
   const sidebarRef = useRef(null);
 
@@ -161,4 +161,4 @@ function Index() {
   );
 }
 
-export default Index;
+export default Properties;
