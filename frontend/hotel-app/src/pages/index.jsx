@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Layout from "./Layout";
-import ListedCard from "@/components/card/ListedCard";
-import FeaturedCard from "@/components/card/FeaturedCard";
-import StarCard from "@/components/card/StarCard";
 import ArticleCard from "@/components/card/ArticleCard";
 import { baseUrl, colors } from "@/components/constant";
 import LatestProperties from "@/components/sections/LatestProperties";
@@ -13,6 +10,10 @@ function Index() {
   const [kinds, setKinds] = useState([]);
   const [activeKind, setActiveKind] = useState(null);
 
+  function capitalizeFirstLetter(string) {
+    return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+  }
+  
   useEffect(() => {
     fetch(`${baseUrl}/api/kinds`)
       .then((response) => response.json())
@@ -45,7 +46,7 @@ function Index() {
                     activeKind === kind.id ? "text-black" : "text-[#101010]"
                   } cursor-pointer hover:text-black`}
                 >
-                  {kind.name.toUpperCase()}
+                {capitalizeFirstLetter( kind.name)}
                 </h1>
               </li>
             ))}

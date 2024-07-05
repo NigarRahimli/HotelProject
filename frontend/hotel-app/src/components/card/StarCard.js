@@ -5,7 +5,7 @@ const StarCard = ({
   userSrc,
   isFavourite,
   name,
-  adress,
+  address,
   city,
   country,
   star,
@@ -36,7 +36,7 @@ const StarCard = ({
           {name}
         </a>
         <a href="#" className="font-medium text-[13px] text-[#9A9A9A]">
-          {adress}, {city}, {country}
+          {address}, {city}, {country}
         </a>
       </div>
     </div>
