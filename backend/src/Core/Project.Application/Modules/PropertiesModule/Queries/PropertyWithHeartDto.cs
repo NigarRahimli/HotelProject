@@ -16,6 +16,7 @@ namespace Project.Application.Modules.PropertiesModule.Queries
         public bool IsLiked { get; set; }
         public string Image { get; set; }
         public string Url { get; set; }
-
+        public string HostProfileImgUrl { get; set; }
+        public int HostId { get; set; }
     }
 }

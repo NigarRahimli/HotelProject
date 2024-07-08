@@ -52,8 +52,8 @@ function Header() {
             />
           </a>
           <div className={`options text-end bg-white flex flex-col gap-y-[10px]  top-[30px] right-[10px] xl:top-[40px] xl:right-[10px] text-[#484848] font-medium  text-[14px] rounded-[6px] shadow lg:w-[180px] z-50 w-[190px] p-[15px] absolute transition-opacity duration-300 ${isMenuOpen ? 'opacity-100 visible ' : 'opacity-0 invisible'}`}>
-            <a href="#" className="hover:text-black hover:font-bold">Sign up</a>
-            <a href="#" className="hover:text-black hover:font-bold">Login</a>
+            <a href="./signup" className="hover:text-black hover:font-bold">Sign up</a>
+            <a href="./signin" className="hover:text-black hover:font-bold">Login</a>
             <a href="#" className="hover:text-black hover:font-bold">Help center</a>
             <a href="#" className="md:hidden border-t-[#d6d6d6] border-t-[1px] mt-[10px] pt-[10px] hover:text-black hover:font-bold">Find a Property</a>
             <a href="#" className="md:hidden hover:text-black hover:font-bold">Share Stories</a>

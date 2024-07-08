@@ -10,7 +10,7 @@ using Project.Application.Modules.AccountModule.Commands.EmailConfirmationComman
 
 namespace Project.Application.Modules.AccountModule.Commands.EmailConfirmationationCommand
 {
-    public class EmailConfirmationRequestHandler : IRequestHandler<EmailConfirmationRequest, Unit>
+    public class EmailConfirmationRequestHandler : IRequestHandler<EmailConfirmationRequest>
     {
         private readonly UserManager<AppUser> userManager;
         private readonly ICryptoService cryptoService;
@@ -21,7 +21,7 @@ namespace Project.Application.Modules.AccountModule.Commands.EmailConfirmationat
             this.cryptoService = cryptoService;
         }
 
-        public async Task<Unit> Handle(EmailConfirmationRequest request, CancellationToken cancellationToken)
+        public async Task Handle(EmailConfirmationRequest request, CancellationToken cancellationToken)
         {
             var decodedToken = cryptoService.Decrypt(request.Token);
             var tokenParts = decodedToken.Split('-');
@@ -49,7 +49,6 @@ namespace Project.Application.Modules.AccountModule.Commands.EmailConfirmationat
                 throw new BadRequestException("Email confirmation failed", errors);
             }
 
-            return Unit.Value;
         }
     }
 }

@@ -12,6 +12,12 @@ using Project.Application.Modules.AccountModule.Commands.EmailConfirmationComman
 using Project.Application.Modules.AccountModule.Commands.UploadProfilePhotoCommand;
 using Project.Application.Modules.AccountModule.Commands.EditProfilePhotoCommand;
 using Project.Application.Modules.AccountModule.Commands.RemoveProfilePhotoCommand;
+using Project.Application.Modules.AccountModule.Commands.SendPhoneConfirmationCommand;
+using Project.Application.Modules.AccountModule.Commands.ConfirmPhoneCommand;
+using Microsoft.AspNetCore.Identity.Data;
+using Project.Application.Modules.AccountModule.Commands.SendForgotPasswordEmailCommand;
+using Project.Application.Modules.AccountModule.Commands.ResetPasswordCommand;
+using System.Web;
 
 namespace Project.Api.Controllers
 {
@@ -105,13 +111,47 @@ namespace Project.Api.Controllers
         }
 
 
-
-
+        [AllowAnonymous]
         [HttpGet("confirm-email")]
         public async Task<IActionResult> ConfirmEmail([FromQuery]EmailConfirmationRequest request)
         {
             await mediator.Send(request);
             return Ok(new { message = "Email confirmation successful." });
+        }
+
+        [HttpPost("send-code")]
+        public async Task<IActionResult> RequestPhoneConfirmation(SendPhoneConfirmationRequest request)
+        {
+    
+                await mediator.Send(request);
+                return Ok("Confirmation code sent successfully.");
+          
+        }
+        [HttpPost("confirm-phone")]
+        public async Task<IActionResult> ConfirmPhone(ConfirmCodeRequest request)
+        {
+           
+                await mediator.Send(request);
+                return Ok("Phone number confirmed successfully.");
+        
+        }
+
+        [HttpPost]
+        [Route("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] SendForgotPasswordEmailRequest request)
+        {
+            await mediator.Send(request);
+            return Ok("Forgot pasword email was sent successfully.");
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetCurrentPasswordRequest request)
+        {
+            var decodedToken = HttpUtility.UrlDecode(request.Token);
+            request.Token = decodedToken;
+
+            await mediator.Send(request);
+            return Ok();
         }
 
         [HttpPost("refresh-token")]
@@ -121,5 +161,10 @@ namespace Project.Api.Controllers
             var response = await mediator.Send(request);
             return Ok(response);
         }
+
+
+
+
+
     }
 }

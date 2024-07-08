@@ -12,8 +12,9 @@
             public string Country { get; set; }
             public string Address { get; set; }
             public bool IsLiked { get; set; }
-            public string ProfileImgUrl { get; set; }
-            public IEnumerable<PropertyImageDetailsDto> PropertyImageDetails { get; set; }
+        public string HostProfileImgUrl { get; set; }
+        public int HostId { get; set; }
+        public IEnumerable<PropertyImageDetailsDto> PropertyImageDetails { get; set; }
             public IEnumerable<FacilityDetailDto> FacilitiesDetails { get; set; }
             public float MinPrice { get; set; }
             public float MaxPrice { get; set; }

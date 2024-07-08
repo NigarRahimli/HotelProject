@@ -43,7 +43,7 @@ public class PropertyGetAllTopRatedRequestHandler : IRequestHandler<PropertyGetA
                 var propertyImageDetails = await propertyImageRepository.GetPropertyImageDetailsAsync(property.Id, cancellationToken);
                 var firstPropertyImage = propertyImageDetails.FirstOrDefault();
                 var isLiked = await userRepository.IsPropertyLikedByUserAsync(property.Id, cancellationToken);
-
+                var user = await userRepository.GetAsync(x => x.Id == property.CreatedBy);
                 var latestDto = new PropertyWithHeartAndRateDto
                 {
                     PropertyId = property.Id,
@@ -54,7 +54,9 @@ public class PropertyGetAllTopRatedRequestHandler : IRequestHandler<PropertyGetA
                     IsLiked = isLiked,
                     Rate = property.Rate,
                     Image = firstPropertyImage?.Image,
-                    Url = firstPropertyImage?.Url
+                    Url = firstPropertyImage?.Url ?? "/uploads/default/property_avatar.jpg",
+                    HostId = property.CreatedBy.Value,
+                    HostProfileImgUrl = user.ProfileImgUrl
                 };
 
                 ratedDtoList.Add(latestDto);

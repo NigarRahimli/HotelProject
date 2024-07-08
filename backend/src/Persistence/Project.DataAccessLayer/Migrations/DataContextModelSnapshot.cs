@@ -416,6 +416,13 @@ namespace Project.DataAccessLayer.Migrations
                         .HasMaxLength(400)
                         .HasColumnType("varchar");
 
+                    b.Property<string>("PhoneConfirmationCode")
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar");
+
+                    b.Property<DateTime?>("PhoneConfirmationCodeGeneratedAt")
+                        .HasColumnType("datetime");
+
                     b.Property<string>("PhoneNumber")
                         .HasMaxLength(40)
                         .HasColumnType("varchar");

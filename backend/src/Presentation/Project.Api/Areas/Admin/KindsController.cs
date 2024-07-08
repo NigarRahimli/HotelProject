@@ -11,7 +11,7 @@ using Project.Application.Modules.KindsModule.Queries.KindGetByIdQuery;
 
 namespace Project.Api.Areas.Admin
 {
-    [Route("api/admin/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class KindsController : ControllerBase
     {
@@ -32,7 +32,7 @@ namespace Project.Api.Areas.Admin
 
 
         [HttpGet]
-        [Authorize("kinds.getall")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetAll([FromRoute] KindGetAllRequest request)
         {
             var entity = await mediator.Send(request);

@@ -1,0 +1,10 @@
+﻿
+namespace Project.Infrastructure.Common
+{
+    public class SmsServiceOptions
+    {
+        public string AccountSid { get; set; }
+        public string AuthToken { get; set; }
+        public string FromNumber { get; set; }
+    }
+}

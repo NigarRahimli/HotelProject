@@ -6,8 +6,14 @@ import {
   faEye,
   faEyeSlash,
 } from "@fortawesome/free-solid-svg-icons";
+import { useAuth } from "../components/AuthProvider";
+import { useRouter } from "next/router";
 
 function SignUp() {
+  const { signup } = useAuth();
+  const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showRequirements, setShowRequirements] = useState(false);
@@ -21,6 +27,7 @@ function SignUp() {
   });
   const [passwordError, setPasswordError] = useState("");
   const [confirmPasswordError, setConfirmPasswordError] = useState("");
+  const router = useRouter();
 
   const handlePasswordChange = (e) => {
     const newPassword = e.target.value;
@@ -61,7 +68,7 @@ function SignUp() {
     </div>
   );
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     let valid = true;
 
@@ -85,13 +92,18 @@ function SignUp() {
     }
 
     if (valid) {
-      // Submit form or perform any further actions
+      try {
+        await signup(name, surname, email, password, confirmPassword);
+        router.push("/");
+      } catch (error) {
+        setConfirmPasswordError(error.message);
+      }
     }
   };
 
   return (
     <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+      <div className="sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md lg:max-w-lg">
         <img
           alt="Your Company"
           src="/images/logo.png"
@@ -102,8 +114,52 @@ function SignUp() {
         </h2>
       </div>
 
-      <div className="mt-10  sm:mx-auto sm:w-full sm:max-w-sm">
-        <form onSubmit={handleSubmit} >
+      <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm md:max-w-md lg:max-w-lg">
+        <form onSubmit={handleSubmit}>
+          <div className="md:flex md:space-x-4">
+            <div className="flex-1">
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Name
+              </label>
+              <div className="mt-2 pb-3">
+                <input
+                  id="name"
+                  name="name"
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                  autoComplete="name"
+                  className="block w-full rounded-md border p-3 border-gray-300 text-gray-900 shadow-sm placeholder:text-gray-400 focus:outline-none sm:text-sm sm:leading-6"
+                />
+              </div>
+            </div>
+
+            <div className="flex-1 mt-4 md:mt-0">
+              <label
+                htmlFor="surname"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Surname
+              </label>
+              <div className="mt-2 pb-6">
+                <input
+                  id="surname"
+                  name="surname"
+                  type="text"
+                  value={surname}
+                  onChange={(e) => setSurname(e.target.value)}
+                  required
+                  autoComplete="surname"
+                  className="block w-full rounded-md border p-3 border-gray-300 text-gray-900 shadow-sm placeholder:text-gray-400 focus:outline-none sm:text-sm sm:leading-6"
+                />
+              </div>
+            </div>
+          </div>
+
           <div>
             <label
               htmlFor="email"
@@ -116,9 +172,11 @@ function SignUp() {
                 id="email"
                 name="email"
                 type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 required
                 autoComplete="email"
-                className="block w-full rounded-md border border-gray-300 p-3 text-gray-900 shadow-sm placeholder:text-gray-400 focus:outline-none sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border p-3 border-gray-300 text-gray-900 shadow-sm placeholder:text-gray-400 focus:outline-none sm:text-sm sm:leading-6"
               />
             </div>
           </div>
@@ -141,13 +199,15 @@ function SignUp() {
                 onBlur={() => setShowRequirements(false)}
                 required
                 autoComplete="new-password"
-                className="block w-full rounded-md border py-3 pl-3 pr-[45px] border-gray-300 text-gray-900 shadow-sm placeholder:text-gray-400 focus:outline-none sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border py-3 md:mr-[60px] pl-3 pr-[45px] border-gray-300 text-gray-900 shadow-sm placeholder:text-gray-400 focus:outline-none sm:text-sm sm:leading-6"
               />
-              <FontAwesomeIcon
-                icon={showPassword ? faEyeSlash : faEye}
-                className="absolute right-3 top-[25px] transform -translate-y-1/2 p-1 cursor-pointer text-gray-500"
-                onClick={toggleShowPassword}
-              />
+              <div className="absolute inset-y-0 bottom-[27px] right-0 flex items-center pr-3">
+                <FontAwesomeIcon
+                  icon={showPassword ? faEyeSlash : faEye}
+                  className="cursor-pointer text-gray-500"
+                  onClick={toggleShowPassword}
+                />
+              </div>
               {showRequirements && (
                 <div className="absolute top-[45px] left-0 mt-2 w-full rounded-md border border-gray-300 bg-white p-4 shadow-lg">
                   {renderRequirement(
@@ -196,10 +256,14 @@ function SignUp() {
                 onChange={handleConfirmPasswordChange}
                 required
                 autoComplete="new-password"
-                className="block w-full rounded-md border p-3 border-gray-300 text-gray-900 shadow-sm placeholder:text-gray-400 focus:border-[#101010] focus:outline-none sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border p-3 border-gray-300 text-gray-900 shadow-sm placeholder:text-gray-400 focus:outline-none sm:text-sm sm:leading-6"
               />
-              <div className="mt-2 h-5 text-red-500 text-sm">
-                {confirmPasswordError}
+              <div className="mt-2 h-5">
+                {confirmPasswordError && (
+                  <div className="text-red-500 text-sm">
+                    {confirmPasswordError}
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -207,18 +271,17 @@ function SignUp() {
           <div>
             <button
               type="submit"
-              className="flex w-full justify-center rounded-md bg-[#101010] px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-[#484848] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#101010]"
+              className="flex w-full justify-center rounded-md bg-[#101010] py-2 px-3 text-sm font-semibold text-white shadow-sm hover:bg-[#2e2e2e] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#101010]"
             >
               Sign up
             </button>
           </div>
         </form>
-
         <p className="mt-10 text-center text-sm text-gray-500">
           Already have an account?{" "}
           <a
-            href="./signin"
-            className="font-semibold leading-6 text-[#101010] hover:text-[#484848]"
+            href="#"
+            className="font-semibold leading-6 text-[#101010] hover:text-[#2e2e2e]"
           >
             Sign in
           </a>

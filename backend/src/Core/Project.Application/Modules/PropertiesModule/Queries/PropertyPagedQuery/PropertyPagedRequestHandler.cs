@@ -87,8 +87,7 @@ namespace Project.Application.Modules.PropertiesModule.Queries.PropertyPagedQuer
                 var propertyImageDetails = await propertyImageRepository.GetPropertyImageDetailsAsync(property.Id, cancellationToken);
                 var facilitiesDetails = await facilityRepository.GetFacilitiesByPropertyIdAsync(property.Id, cancellationToken);
                 var isLiked = await userRepository.IsPropertyLikedByUserAsync(property.Id, cancellationToken);
-                var user = await userRepository.GetAsync(x => x.Id == httpContextAccessor.HttpContext.GetUserIdExtension());
-
+               
                 var propertyDto = new PropertyFilteredDto
                 {
                     PropertyId = property.Id,

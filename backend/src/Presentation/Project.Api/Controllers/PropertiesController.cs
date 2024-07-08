@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Project.Application.Modules.PropertiesModule.Commands.PropertyAddCommand;
 using Project.Application.Modules.PropertiesModule.Commands.PropertyEditCommand;
@@ -15,6 +16,7 @@ namespace Project.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    
     public class PropertiesController : ControllerBase
     {
         private readonly IMediator mediator;
@@ -24,6 +26,7 @@ namespace Project.Api.Controllers
             this.mediator = mediator;
         }
 
+        [AllowAnonymous]
         [HttpGet("{id:int:min(1)}")]
         public async Task<IActionResult> GetById([FromRoute] PropertyGetByIdRequest request)
         {
@@ -31,7 +34,7 @@ namespace Project.Api.Controllers
             return Ok(entity);
         }
 
-
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetAll([FromRoute] PropertyGetAllRequest request)
         {
@@ -39,7 +42,8 @@ namespace Project.Api.Controllers
             return Ok(entity);
         }
 
-        [HttpGet("nearby")]
+        [AllowAnonymous]
+        [HttpPost("nearby")]
         public async Task<IActionResult> GetNearby([FromBody] PropertyGetAllNearbyRequest request)
         {
             var response = await mediator.Send(request);
@@ -47,6 +51,7 @@ namespace Project.Api.Controllers
             return Ok(response);
         }
 
+        [AllowAnonymous]
         [HttpGet("latest/{take:int:min(1)}")]
         public async Task<IActionResult> GetLatest([FromRoute] PropertyGetAllLatestRequest request)
         {
@@ -55,7 +60,7 @@ namespace Project.Api.Controllers
             return Ok(response);
         }
 
-
+        [AllowAnonymous]
         [HttpGet("rated/{take:int:min(1)}")]
         public async Task<IActionResult> GetTopRated([FromRoute] PropertyGetAllTopRatedRequest request)
         {
@@ -64,7 +69,7 @@ namespace Project.Api.Controllers
             return Ok(response);
         }
 
-
+        [AllowAnonymous]
         [HttpGet("featured/{take:int:min(1)}")]
         public async Task<IActionResult> GetFeatured([FromRoute] PropertyGetAllFeaturedRequest request)
         {
@@ -73,6 +78,7 @@ namespace Project.Api.Controllers
             return Ok(response);
         }
 
+        [AllowAnonymous]
         [HttpPost("{page:int:min(1)}/size/{size:int:min(2)}")]
         public async Task<IActionResult> GetPaged(int page, int size, [FromBody] PropertyPagedRequest request)
         {

@@ -2,7 +2,7 @@
 
 namespace Project.Application.Modules.AccountModule.Commands.SignupCommand
 {
-    public class SignupRequest : IRequest<Unit>
+    public class SignupRequest : IRequest
     {
         public string Name { get; set; }
         public string Surname { get; set; }

@@ -41,7 +41,7 @@ public class PropertyGetAllNearbyRequestHandler : IRequestHandler<PropertyGetAll
                 var propertyImageDetails = await propertyImageRepository.GetPropertyImageDetailsAsync(property.Id, cancellationToken);
                 var firstPropertyImage = propertyImageDetails.FirstOrDefault();
                 var isLiked = await userRepository.IsPropertyLikedByUserAsync(property.Id, cancellationToken);
-
+                var user = await userRepository.GetAsync(x => x.Id == property.CreatedBy);
                 var nearbyDto = new PropertyWithHeartDto
                 {
                     PropertyId = property.Id,
@@ -51,7 +51,9 @@ public class PropertyGetAllNearbyRequestHandler : IRequestHandler<PropertyGetAll
                     Address = locationDetails.Address,
                     IsLiked = isLiked,
                     Image = firstPropertyImage?.Image,
-                    Url = firstPropertyImage?.Url
+                    Url = firstPropertyImage?.Url ?? "/uploads/default/property_avatar.jpg",
+                    HostId = property.CreatedBy.Value,
+                    HostProfileImgUrl = user?.ProfileImgUrl
                 };
 
                 nearbyDtoList.Add(nearbyDto);

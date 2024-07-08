@@ -40,12 +40,12 @@ namespace Project.Api.AppCode.Pipeline
                 context.Response.ContentType = MediaTypeNames.Application.Json;
                 switch (ex)
                 {
-                    case NotFoundException:
+                    case NotFoundException :
                         statusCode = StatusCodes.Status404NotFound;
                         response = new
                         {
                             error = true,
-                            message = "Qeyd movcud deyil"
+                            message =ex.Message
                         };
                         break;
                     case CircleReferenceException:

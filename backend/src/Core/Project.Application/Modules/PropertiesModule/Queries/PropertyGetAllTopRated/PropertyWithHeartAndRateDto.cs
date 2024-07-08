@@ -17,6 +17,7 @@ namespace Project.Application.Modules.PropertiesModule.Queries.PropertyGetAllTop
         public string Image { get; set; }
         public string Url { get; set; }
         public double Rate { get; set; }
-
+        public string HostProfileImgUrl { get; set; }
+        public int HostId { get; set; }
     }
 }

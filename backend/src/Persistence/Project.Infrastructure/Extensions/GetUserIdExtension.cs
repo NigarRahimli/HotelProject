@@ -11,7 +11,7 @@ namespace Project.Infrastructure.Extensions
 
             if (userIdClaim == null || !int.TryParse(userIdClaim.Value, out int userId))
             {
-                throw new UnauthorizedAccessException("Unable to retrieve userId from token.");
+                return 0;
             }
 
             return userId;

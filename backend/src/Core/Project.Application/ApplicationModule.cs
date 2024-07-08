@@ -4,6 +4,7 @@ using Project.Infrastructure.Abstracts;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Resume.Application.Services;
+using Project.Infrastructure.Common;
 
 namespace Project.Application
 {
@@ -19,7 +20,7 @@ namespace Project.Application
 
             builder.RegisterType<CryptoService>()
                 .As<ICryptoService>()
-                .InstancePerLifetimeScope();
+                .SingleInstance();
 
             builder.RegisterType<StripePaymentService>()
              .As<IStripePaymentService>()
@@ -28,6 +29,12 @@ namespace Project.Application
             builder.RegisterType<EmailService>()
                 .As<IEmailService>()
                 .InstancePerLifetimeScope();
+
+            builder.RegisterType<SMSService>()
+                .As<ISMSService>()
+                .InstancePerLifetimeScope();
+
+
 
             builder.RegisterType<ValidatorInterceptor>()
                 .As<IValidatorInterceptor>()

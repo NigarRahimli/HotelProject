@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿
+using Microsoft.Extensions.Options;
 using Project.Infrastructure.Abstracts;
 using Project.Infrastructure.Common;
 using System.Security.Cryptography;
@@ -6,7 +7,7 @@ using System.Text;
 
 namespace Project.Application.Services
 {
-    class CryptoService : ICryptoService, IDisposable
+    public class CryptoService : ICryptoService, IDisposable
     {
         private readonly CryptoServiceOptions options;
         private readonly TripleDES provider;
@@ -16,9 +17,9 @@ namespace Project.Application.Services
         public CryptoService(IOptions<CryptoServiceOptions> options)
         {
             this.options = options.Value;
-            provider = TripleDES.Create();
-            md5 = MD5.Create();
-            sha1 = SHA1.Create();
+            this.provider = TripleDES.Create();
+            this.md5 = MD5.Create();
+            this.sha1 = SHA1.Create();
 
             byte[] keyBuffer = md5.ComputeHash(Encoding.ASCII.GetBytes($"!@#c8919d0f9{this.options.Key}20@4"));
             byte[] ivBuffer = md5.ComputeHash(Encoding.ASCII.GetBytes($"20@4{this.options.Key}808b62{this.options.Salt}e59@$#"));

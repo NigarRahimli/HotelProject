@@ -9,12 +9,11 @@ namespace Project.Repository
 {
     public class PropertyImageRepository : AsyncRepository<PropertyImage>, IPropertyImageRepository
     {
-        private readonly IMapper _mapper;
-  
+
 
         public PropertyImageRepository(DbContext db, IMapper mapper) : base(db)
         {
-            _mapper = mapper;
+         
            
         }
 
@@ -26,7 +25,7 @@ namespace Project.Repository
                 {
                     Id = pi.Id,
                     Image = pi.Image,
-                    Url = pi.Url
+                    Url = pi.Url,
                 });
 
             var dto = await query.ToListAsync(cancellationToken);

@@ -15,7 +15,7 @@ namespace Project.Repository
         {
             var facilityDtos = await (from fc in db.Set<FacilityCount>()
                                       join f in db.Set<Facility>() on fc.FacilityId equals f.Id
-                                      where fc.PropertyId == propertyId && fc.DeletedBy==null
+                                      where fc.PropertyId == propertyId && fc.DeletedBy==null &&f.DeletedBy==null
                                       select new FacilityDetailDto
                                       {
                                           Id = fc.Id,

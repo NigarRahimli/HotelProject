@@ -22,7 +22,7 @@ namespace Project.Application.Modules.FacilitiesModule.Commands.FacilityAddComma
             var entity = new Facility();
 
             entity.Name = request.Name;
-            var icon = await fileService.UploadSingleAsync(request.Image);
+            var icon = await fileService.UploadSingleAsync(request.Image,"icons");
             entity.IconUrl=icon.Url;
 
       

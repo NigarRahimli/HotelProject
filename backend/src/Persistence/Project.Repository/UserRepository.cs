@@ -28,6 +28,13 @@ namespace Project.Repository
         public async Task<bool> IsPropertyLikedByUserAsync(int propertyId, CancellationToken cancellationToken)
         {
             var userId = contextAccessor.HttpContext.GetUserIdExtension();
+
+            if (userId == 0)
+            {
+                return false;
+            }
+
+            
             return await db.Set<Like>()
                     .AnyAsync(ul => ul.UserId == userId && ul.PropertyId == propertyId, cancellationToken);
         }

@@ -55,7 +55,7 @@ namespace Project.Application.Modules.PropertiesModule.Handlers
                     var propertyImageDetails = await propertyImageRepository.GetPropertyImageDetailsAsync(property.Id, cancellationToken);
                     var facilitiesDetails = await facilityRepository.GetFacilitiesByPropertyIdAsync(property.Id, cancellationToken);
                     var isLiked = await userRepository.IsPropertyLikedByUserAsync(property.Id, cancellationToken);
-                    var user = await userRepository.GetAsync(x => x.Id == httpContextAccessor.HttpContext.GetUserIdExtension());
+                    var user = await userRepository.GetAsync(x => x.Id == property.CreatedBy);
                     
                     var featuredDto = new PropertyFeaturedDto
                     {
@@ -65,7 +65,8 @@ namespace Project.Application.Modules.PropertiesModule.Handlers
                         Country = locationDetails.Country,
                         Address = locationDetails.Address,
                         IsLiked = isLiked,
-                        ProfileImgUrl =user.ProfileImgUrl, 
+                        HostId = property.CreatedBy.Value,
+                        HostProfileImgUrl = user?.ProfileImgUrl,
                         PropertyImageDetails = propertyImageDetails,
                         FacilitiesDetails = facilitiesDetails,
                         MinPrice = property.MinPrice,

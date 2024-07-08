@@ -18,10 +18,7 @@ namespace Project.Application.Services
             this.options = options.Value;
             this.cryptoService = cryptoService;
         }
-        public int? GetPrincipialId()
-        {
-            return 1;
-        }
+
 
         public string GenerateAccessToken(ClaimsPrincipal principal)
         {
