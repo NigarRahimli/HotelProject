@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Identity.Data;
 using Project.Application.Modules.AccountModule.Commands.SendForgotPasswordEmailCommand;
 using Project.Application.Modules.AccountModule.Commands.ResetPasswordCommand;
 using System.Web;
+using Project.Application.Modules.AccountModule.Commands.ChangePasswordCommand;
 
 namespace Project.Api.Controllers
 {
@@ -147,11 +148,16 @@ namespace Project.Api.Controllers
         [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetCurrentPasswordRequest request)
         {
-            var decodedToken = HttpUtility.UrlDecode(request.Token);
-            request.Token = decodedToken;
-
             await mediator.Send(request);
-            return Ok();
+            return Ok("New password was set");
+        }
+
+        [HttpPost("change-password")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
+        {     
+                await mediator.Send(request);
+                return Ok(new { message = "Password changed successfully." });
+        
         }
 
         [HttpPost("refresh-token")]

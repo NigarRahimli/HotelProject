@@ -8,7 +8,10 @@ namespace Project.Domain.Models.Entities.Membership
         public string Surname { get; set; }
         public string ProfileImgUrl { get; set; }
         public DateTime? PhoneConfirmationCodeGeneratedAt { get; set; }
-        public string PhoneConfirmationCode { get; set; }   
+        public string PhoneConfirmationCode { get; set; }
+
+        public string PasswordResetToken { get; set; }        
+        public DateTime? PasswordResetTokenGeneratedAt { get; set; }
 
     }
 }

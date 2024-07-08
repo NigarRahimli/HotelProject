@@ -27,7 +27,9 @@ namespace Project.DataAccessLayer.Configurations.Membership
             builder.Property(m => m.AccessFailedCount).HasColumnType("int").IsRequired();
 
             builder.Property(m => m.PhoneConfirmationCodeGeneratedAt).HasColumnType("datetime");
-            builder.Property(m => m.PhoneConfirmationCode).HasColumnType("varchar").HasMaxLength(50);
+            builder.Property(m => m.PasswordResetTokenGeneratedAt).HasColumnType("datetime");
+            builder.Property(m => m.PhoneConfirmationCode).HasColumnType("varchar").HasMaxLength(400);
+            builder.Property(m => m.PasswordResetToken).HasColumnType("varchar").HasMaxLength(450);
             builder.Property(m => m.ProfileImgUrl).HasColumnType("nvarchar").HasMaxLength(255);
 
             builder.HasKey(m => m.Id);

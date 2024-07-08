@@ -5,6 +5,7 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Resume.Application.Services;
 using Project.Infrastructure.Common;
+using Microsoft.AspNetCore.Http;
 
 namespace Project.Application
 {
@@ -34,7 +35,9 @@ namespace Project.Application
                 .As<ISMSService>()
                 .InstancePerLifetimeScope();
 
-
+            builder.RegisterType<HttpContextAccessor>()
+                .As<IHttpContextAccessor>().
+                SingleInstance();
 
             builder.RegisterType<ValidatorInterceptor>()
                 .As<IValidatorInterceptor>()

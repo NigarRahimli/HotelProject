@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Project.DataAccessLayer.Contexts;
 
@@ -11,9 +12,11 @@ using Project.DataAccessLayer.Contexts;
 namespace Project.DataAccessLayer.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240708074531_PassswordReset")]
+    partial class PassswordReset
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -417,14 +420,14 @@ namespace Project.DataAccessLayer.Migrations
                         .HasColumnType("varchar");
 
                     b.Property<string>("PasswordResetToken")
-                        .HasMaxLength(450)
+                        .HasMaxLength(100)
                         .HasColumnType("varchar");
 
                     b.Property<DateTime?>("PasswordResetTokenGeneratedAt")
                         .HasColumnType("datetime");
 
                     b.Property<string>("PhoneConfirmationCode")
-                        .HasMaxLength(400)
+                        .HasMaxLength(50)
                         .HasColumnType("varchar");
 
                     b.Property<DateTime?>("PhoneConfirmationCodeGeneratedAt")
