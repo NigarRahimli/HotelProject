@@ -82,7 +82,7 @@ namespace Resume.Api.AppCode.Pipeline
                     {
                         //p.RequireClaim(item, "1");
 
-                        p.RequireAssertion(handler => handler.User.IsInRole("SUPERADMIN") || handler.User.HasClaim(item, "1"));
+                        p.RequireAssertion(handler => handler.User.IsInRole("SUPERADMIN") || handler.User.HasClaim("FirstUserClaim", "true"));
                         //p.RequireAssertion(handler => handler.User.HasClaim(item, "1"));
                     });
                 }

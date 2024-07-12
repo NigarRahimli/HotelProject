@@ -41,10 +41,19 @@ namespace Project.Api.Controllers
 
         [HttpPost("signin")]
         [AllowAnonymous]
+
         public async Task<IActionResult> Signin(SigninRequest request)
         {
             var principal = await mediator.Send(request);
 
+         
+            var firstUser = await db.Set<AppUser>().OrderBy(u => u.Id).FirstOrDefaultAsync();
+
+            if (firstUser != null && firstUser.Email == request.Email)
+            {
+                var claimsIdentity = (ClaimsIdentity)principal.Identity;
+                claimsIdentity.AddClaim(new Claim("FirstUserClaim", "true"));
+            }
             int userId = Convert.ToInt32(principal.Claims.FirstOrDefault(m => m.Type.Equals(ClaimTypes.NameIdentifier)).Value);
 
             string token = jwtService.GenerateAccessToken(principal);
@@ -61,7 +70,7 @@ namespace Project.Api.Controllers
 
             var tokenRecord = new AppUserToken
             {
-                UserId = Convert.ToInt32(principal.Claims.FirstOrDefault(m => m.Type.Equals(ClaimTypes.NameIdentifier)).Value),
+                UserId = userId,
                 LoginProvider = "REFRESH_TOKEN",
                 Name = refreshToken,
                 Value = "REFRESH_TOKEN",
