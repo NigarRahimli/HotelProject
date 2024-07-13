@@ -18,7 +18,6 @@ namespace Project.Api.AppCode.Pipeline
         {
             policies = GetPolicies();
 
-            Console.WriteLine($"AppClaimsTransformation invoked! {DateTime.Now:HH:mm:ss}");
         }
 
         public AppClaimsTransformation(IMediator mediator)
@@ -29,7 +28,10 @@ namespace Project.Api.AppCode.Pipeline
         public async Task<ClaimsPrincipal> TransformAsync(ClaimsPrincipal principal)
         {
             if (principal?.Identity is ClaimsIdentity identity && identity.IsAuthenticated)
+            {
+
                 await mediator.Send(new PrincipalFillRequest(identity));
+            }
 
             return principal;
         }

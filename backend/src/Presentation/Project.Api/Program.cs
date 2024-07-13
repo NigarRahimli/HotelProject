@@ -13,6 +13,7 @@ using Project.Infrastructure.Abstracts;
 using Project.Infrastructure.Common;
 using Project.Infrastructure.Configurations;
 using Resume.Api.AppCode.Pipeline;
+using Project.DataAccessLayer.Contexts;
 
 var builder = WebApplication.CreateBuilder(args);
 //bax nedi
@@ -50,6 +51,7 @@ builder.Services.AddControllers(cfg =>
     cfg.Filters.Add(new AuthorizeFilter(policy));
 });
 
+
 builder.Services.AddSingleton(typeof(IPipelineBehavior<,>), typeof(HeaderBinderBehaviour<,>));
 builder.Services.Configure<EmailServiceOptions>(cfg => builder.Configuration.Bind(nameof(EmailServiceOptions), cfg))
                 .AddSingleton<IEmailService, EmailService>();
@@ -71,11 +73,15 @@ builder.Services.AddAutoMapper(typeof(ApplicationModule).Assembly);
 //builder.Services.AddAuthorization();
 
 var app = builder.Build();
+
 app.UseStaticFiles();
 app.UseCors("allowAll");
 //app.UseErrorHandling();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+
+app.SeedUser(builder.Configuration);
+
 
 app.Run();

@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.Domain.Models.Entities
+namespace Project.Application.Modules.RoleModule.Commands.AssignPoliciesToRoleCommand.Queries
 {
-    public class Policy
+    public class RoleDto
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public bool isRemoved { get; set; }
     }
 }

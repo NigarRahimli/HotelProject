@@ -8,7 +8,7 @@ using Project.Infrastructure.Extensions;
 
 namespace Project.DataAccessLayer.Contexts
 {
-    class DataContext : IdentityDbContext<AppUser, AppRole, int, AppUserClaim, AppUserRole, AppUserLogin, AppRoleClaim, AppUserToken>
+    class DataContext: IdentityDbContext<AppUser, AppRole, int, AppUserClaim, AppUserRole, AppUserLogin, AppRoleClaim, AppUserToken>
     {
 
         private readonly IHttpContextAccessor httpContextAccessor;

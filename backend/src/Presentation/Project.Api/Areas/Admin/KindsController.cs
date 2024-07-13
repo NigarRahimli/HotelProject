@@ -3,11 +3,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Project.Application.Modules.KindsModule.Commands.KindAddCommand;
 using Project.Application.Modules.KindsModule.Commands.KindEditCommand;
-using Project.Application.Modules.KindsModule.Commands.KindRemoveCommand;
 using Project.Application.Modules.KindsModule.Queries.KindGetAllQuery;
 using Project.Application.Modules.KindsModule.Queries.KindGetByIdQuery;
-
-
+using Project.Application.Modules.RoleModule.Commands.RoleRemoveCommand;
 
 namespace Project.Api.Areas.Admin
 {
@@ -60,7 +58,7 @@ namespace Project.Api.Areas.Admin
 
         [Authorize("kinds.delete")]
         [HttpDelete("{id:int:min(1)}")]
-        public async Task<IActionResult> Remove([FromRoute] KindRemoveRequest request)
+        public async Task<IActionResult> Remove([FromRoute] RoleRemoveRequest request)
         {
             await mediator.Send(request);
             return NoContent();

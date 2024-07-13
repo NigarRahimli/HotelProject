@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Project.Application.Modules.AmenitiesModule.Commands.AmenityAddCommand;
 using Project.Application.Modules.AmenitiesModule.Commands.AmenityEditCommand;
@@ -19,6 +20,7 @@ namespace Project.Api.Controllers
             this.mediator = mediator;
         }
 
+
         [HttpGet("{id:int:min(1)}")]
         public async Task<IActionResult> GetById([FromRoute] AmenityGetByIdRequest request)
         {
@@ -26,7 +28,7 @@ namespace Project.Api.Controllers
             return Ok(entity);
         }
 
-
+        [Authorize("amenities.getall")]
         [HttpGet]
         public async Task<IActionResult> GetAll([FromRoute] AmenityGetAllRequest request)
         {

@@ -30,13 +30,15 @@ namespace Project.Api.Controllers
         private readonly IConfiguration configuration;
         private readonly IJwtService jwtService;
         private readonly DbContext db;
+        private readonly IWebHostEnvironment env;
 
-        public AccountController(IMediator mediator, IConfiguration configuration, IJwtService jwtService, DbContext db)
+        public AccountController(IMediator mediator, IConfiguration configuration, IJwtService jwtService, DbContext db, IWebHostEnvironment env)
         {
             this.mediator = mediator;
             this.configuration = configuration;
             this.jwtService = jwtService;
             this.db = db;
+            this.env = env;
         }
 
         [HttpPost("signin")]
@@ -47,13 +49,7 @@ namespace Project.Api.Controllers
             var principal = await mediator.Send(request);
 
          
-            var firstUser = await db.Set<AppUser>().OrderBy(u => u.Id).FirstOrDefaultAsync();
-
-            if (firstUser != null && firstUser.Email == request.Email)
-            {
-                var claimsIdentity = (ClaimsIdentity)principal.Identity;
-                claimsIdentity.AddClaim(new Claim("FirstUserClaim", "true"));
-            }
+         
             int userId = Convert.ToInt32(principal.Claims.FirstOrDefault(m => m.Type.Equals(ClaimTypes.NameIdentifier)).Value);
 
             string token = jwtService.GenerateAccessToken(principal);
@@ -123,11 +119,20 @@ namespace Project.Api.Controllers
 
         [AllowAnonymous]
         [HttpGet("confirm-email")]
-        public async Task<IActionResult> ConfirmEmail([FromQuery]EmailConfirmationRequest request)
+        public async Task<IActionResult> ConfirmEmail([FromQuery] EmailConfirmationRequest request)
         {
             await mediator.Send(request);
-            return Ok(new { message = "Email confirmation successful." });
+            string htmlPath = Path.Combine(env.WebRootPath, "EmailConfirmation.html");
+            string htmlContent = System.IO.File.ReadAllText(htmlPath);
+
+            return new ContentResult
+            {
+                Content = htmlContent,
+                ContentType = "text/html",
+                StatusCode = 200
+            };
         }
+
 
         [HttpPost("send-code")]
         public async Task<IActionResult> RequestPhoneConfirmation(SendPhoneConfirmationRequest request)

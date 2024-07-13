@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Project.Application.Modules.KindsModule.Commands.KindRemoveCommand
+namespace Project.Application.Modules.RoleModule.Commands.RoleRemoveCommand
 {
-    public class KindRemoveRequest : IRequest
+    public class RoleRemoveRequest : IRequest
     {
         public int Id { get; set; }
     }

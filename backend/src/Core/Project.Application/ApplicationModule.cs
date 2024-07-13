@@ -50,7 +50,11 @@ namespace Project.Application
             builder.RegisterType<ActionContextAccessor>()
                 .As<IActionContextAccessor>()
                 .SingleInstance();
-          
+
+
+
+
+
         }
     }
 }

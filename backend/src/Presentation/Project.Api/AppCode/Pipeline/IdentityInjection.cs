@@ -5,7 +5,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Primitives;
 using Microsoft.IdentityModel.Tokens;
 using Project.Api.AppCode.Pipeline;
+using Project.Application.Services;
 using Project.Domain.Models.Entities.Membership;
+using Project.Infrastructure.Abstracts;
 using Project.Infrastructure.Common;
 using System.IdentityModel.Tokens.Jwt;
 using System.Text;
@@ -25,10 +27,13 @@ namespace Resume.Api.AppCode.Pipeline
             services.AddScoped<SignInManager<AppUser>>();
             services.AddScoped<UserManager<AppUser>>();
             services.AddScoped<RoleManager<AppRole>>();
+
+
+            
             services.AddScoped<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped<IClaimsTransformation, AppClaimsTransformation>();
-          
 
+          
 
             services.Configure<IdentityOptions>(cfg =>
             {
@@ -82,7 +87,7 @@ namespace Resume.Api.AppCode.Pipeline
                     {
                         //p.RequireClaim(item, "1");
 
-                        p.RequireAssertion(handler => handler.User.IsInRole("SUPERADMIN") || handler.User.HasClaim("FirstUserClaim", "true"));
+                        p.RequireAssertion(handler => handler.User.IsInRole("SUPERADMIN") || handler.User.HasClaim(item, "1"));
                         //p.RequireAssertion(handler => handler.User.HasClaim(item, "1"));
                     });
                 }
