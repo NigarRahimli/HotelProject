@@ -14,11 +14,13 @@ using Project.Infrastructure.Common;
 using Project.Infrastructure.Configurations;
 using Resume.Api.AppCode.Pipeline;
 using Project.DataAccessLayer.Contexts;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 //bax nedi
 builder.Services.AddHttpContextAccessor();
 builder.Host.UseServiceProviderFactory(new ProjectServiceProviderFactory());
+builder.Host.UseSerilog((context, configuration) => configuration.ReadFrom.Configuration(context.Configuration));
 builder.Services.AddCors(cfg =>
 {
 
@@ -73,7 +75,7 @@ builder.Services.AddAutoMapper(typeof(ApplicationModule).Assembly);
 //builder.Services.AddAuthorization();
 
 var app = builder.Build();
-
+app.UseSerilogRequestLogging();
 app.UseStaticFiles();
 app.UseCors("allowAll");
 //app.UseErrorHandling();
