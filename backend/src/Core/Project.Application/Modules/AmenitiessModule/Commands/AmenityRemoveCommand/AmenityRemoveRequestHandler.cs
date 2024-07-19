@@ -1,26 +1,35 @@
 ﻿using MediatR;
+using Microsoft.Extensions.Logging;
 using Project.Application.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Project.Application.Modules.AmenitiesModule.Commands.AmenityRemoveCommand
 {
     class AmenityRemoveRequestHandler : IRequestHandler<AmenityRemoveRequest>
     {
-        private readonly IAmenityRepository AmenityRepository;
+        private readonly IAmenityRepository amenityRepository;
+        private readonly ILogger<AmenityRemoveRequestHandler> logger;
 
-        public AmenityRemoveRequestHandler(IAmenityRepository AmenityRepository)
+        public AmenityRemoveRequestHandler(IAmenityRepository amenityRepository, ILogger<AmenityRemoveRequestHandler> logger)
         {
-            this.AmenityRepository = AmenityRepository;
+            this.amenityRepository = amenityRepository;
+            this.logger = logger;
         }
+
         public async Task Handle(AmenityRemoveRequest request, CancellationToken cancellationToken)
         {
-            var entity =await AmenityRepository.GetAsync(x=>x.Id==request.Id,cancellationToken);
-            AmenityRepository.Remove(entity);
-            await AmenityRepository.SaveAsync(cancellationToken);
+            logger.LogInformation("Handling AmenityRemoveRequest for Amenity Id: {AmenityId}", request.Id);
+
+            var entity = await amenityRepository.GetAsync(x => x.Id == request.Id && x.DeletedBy==null, cancellationToken);
+            if (entity == null)
+            {
+                logger.LogWarning("Amenity with Id: {AmenityId} not found", request.Id);
+            }
+
+            amenityRepository.Remove(entity);
+            logger.LogInformation("Amenity with Id: {AmenityId} removed from repository", request.Id);
+
+            await amenityRepository.SaveAsync(cancellationToken);
+            logger.LogInformation("Changes saved successfully for Amenity Id: {AmenityId}", request.Id);
         }
     }
 }

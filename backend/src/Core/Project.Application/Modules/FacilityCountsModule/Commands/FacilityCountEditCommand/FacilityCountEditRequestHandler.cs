@@ -1,24 +1,39 @@
 ﻿using MediatR;
+using Microsoft.Extensions.Logging;
 using Project.Application.Repositories;
 using Project.Domain.Models.Entities;
-
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Project.Application.Modules.FacilityCountsModule.Commands.FacilityCountEditCommand
 {
     class FacilityCountEditRequestHandler : IRequestHandler<FacilityCountEditRequest, FacilityCount>
     {
-        private readonly IFacilityCountRepository FacilityCountRepository;
+        private readonly IFacilityCountRepository facilityCountRepository;
+        private readonly ILogger<FacilityCountEditRequestHandler> logger;
 
-        public FacilityCountEditRequestHandler(IFacilityCountRepository FacilityCountRepository)
+        public FacilityCountEditRequestHandler(IFacilityCountRepository facilityCountRepository, ILogger<FacilityCountEditRequestHandler> logger)
         {
-            this.FacilityCountRepository = FacilityCountRepository;
+            this.facilityCountRepository = facilityCountRepository;
+            this.logger = logger;
         }
+
         public async Task<FacilityCount> Handle(FacilityCountEditRequest request, CancellationToken cancellationToken)
         {
-            var entity=await FacilityCountRepository.GetAsync(m=>m.Id==request.Id);
+            logger.LogInformation("Handling FacilityCountEditRequest for Id: {Id}", request.Id);
 
+            var entity = await facilityCountRepository.GetAsync(m => m.Id == request.Id);
+            if (entity == null)
+            {
+                logger.LogWarning("FacilityCount with Id: {Id} not found", request.Id);
+                throw new Exception($"FacilityCount with Id: {request.Id} not found");
+            }
+
+            logger.LogInformation("Updating count for FacilityCount Id: {Id}", request.Id);
             entity.Count = request.Count;
-            await FacilityCountRepository.SaveAsync(cancellationToken);
+
+            await facilityCountRepository.SaveAsync(cancellationToken);
+            logger.LogInformation("FacilityCount with Id: {Id} updated successfully", request.Id);
 
             return entity;
         }

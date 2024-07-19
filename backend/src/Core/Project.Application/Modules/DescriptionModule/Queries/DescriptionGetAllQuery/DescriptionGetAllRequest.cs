@@ -1,14 +1,9 @@
 ﻿using MediatR;
-using Project.Domain.Models.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Project.Application.Modules.DescriptionModule.Queries;
 
 namespace Project.Application.Modules.DescriptionsModule.Queries.DescriptionGetAllQuery
 {
-    public class DescriptionGetAllRequest:IRequest<IEnumerable<Description>>
+    public class DescriptionGetAllRequest:IRequest<IEnumerable<DescriptionDto>>
     {
     }
 }

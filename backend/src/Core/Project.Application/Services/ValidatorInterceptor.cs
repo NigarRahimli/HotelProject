@@ -22,7 +22,7 @@ namespace Project.Application.Services
                    .ToDictionary(m => m.Key, v => v.Select(m => m.ErrorCode));
 
 
-                throw new BadRequestException("Gonderilen melumatlar serti odemir", errors);
+                throw new BadRequestException("The data sent in the request does not meet the conditions.", errors);
             }
 
             return result;

@@ -1,23 +1,40 @@
-﻿using MediatR;
+﻿using AutoMapper;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Project.Application.Repositories;
-using Project.Domain.Models.Entities;
-
 
 namespace Project.Application.Modules.FacilitiesModule.Queries.FacilityGetAllQuery
 {
-    class FacilityGetAllRequestHandler : IRequestHandler<FacilityGetAllRequest, IEnumerable<Facility>>
+    class FacilityGetAllRequestHandler : IRequestHandler<FacilityGetAllRequest, IEnumerable<FacilityAllDto>>
     {
-        private readonly IFacilityRepository FacilityRepository;
+        private readonly IFacilityRepository facilityRepository;
+        private readonly ILogger<FacilityGetAllRequestHandler> logger;
+        private readonly IMapper mapper;
 
-        public FacilityGetAllRequestHandler(IFacilityRepository FacilityRepository)
+        public FacilityGetAllRequestHandler(IFacilityRepository facilityRepository, ILogger<FacilityGetAllRequestHandler> logger, IMapper mapper)
         {
-            this.FacilityRepository = FacilityRepository;
+            this.facilityRepository = facilityRepository;
+            this.logger = logger;
+            this.mapper = mapper;
         }
-        public async Task<IEnumerable<Facility>> Handle(FacilityGetAllRequest request, CancellationToken cancellationToken)
+
+        public async Task<IEnumerable<FacilityAllDto>> Handle(FacilityGetAllRequest request, CancellationToken cancellationToken)
         {
-            var entities = await FacilityRepository.GetAll(m => m.DeletedBy == null).ToListAsync(cancellationToken);
-            return entities;
+            logger.LogInformation("Handling FacilityGetAllRequest");
+
+            var entities = await facilityRepository.GetAll(m => m.DeletedBy == null).ToListAsync(cancellationToken);
+
+            if (entities == null || !entities.Any())
+            {
+                logger.LogWarning("No facilities found or all facilities are deleted");
+            }
+            else
+            {
+                logger.LogInformation("{FacilityCount} facilities retrieved", entities.Count());
+            }
+            var facilityDtos = mapper.Map<IEnumerable<FacilityAllDto>>(entities);
+            return facilityDtos;
         }
     }
 }

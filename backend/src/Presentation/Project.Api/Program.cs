@@ -78,7 +78,7 @@ var app = builder.Build();
 app.UseSerilogRequestLogging();
 app.UseStaticFiles();
 app.UseCors("allowAll");
-//app.UseErrorHandling();
+app.UseErrorHandling();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
