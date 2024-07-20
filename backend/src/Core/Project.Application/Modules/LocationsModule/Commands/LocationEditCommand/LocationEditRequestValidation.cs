@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 
-namespace Project.Application.Modules.LocationsModule.Commands.LocationAddCommand
+namespace Project.Application.Modules.LocationsModule.Commands.LocationEditCommand
 {
-    public class LocationAddRequestValidation : AbstractValidator<LocationAddRequest>
+    public class LocationEditRequestValidation : AbstractValidator<LocationEditRequest>
     {
-        public LocationAddRequestValidation()
+        public LocationEditRequestValidation()
         {
             RuleFor(m => m.Latitude)
                 .NotEmpty().WithErrorCode("LATTITUDE_CANT_BE_EMPTY")
@@ -16,8 +16,8 @@ namespace Project.Application.Modules.LocationsModule.Commands.LocationAddComman
                 .InclusiveBetween(-180, 180).WithErrorCode("LONGITUDE_OUT_OF_RANGE");
 
             RuleFor(m => m.Address)
-                .NotNull().WithErrorCode("ADDRESS_CANT_BE_NULL")
-                .MinimumLength(2).WithErrorCode("ADDRESS_MINLENGTH_GRATHER_THAN_ONE");
+                .NotNull().WithErrorCode("EditRESS_CANT_BE_NULL")
+                .MinimumLength(2).WithErrorCode("EditRESS_MINLENGTH_GRATHER_THAN_ONE");
 
             RuleFor(m => m.City)
                 .NotNull().WithErrorCode("CITY_CANT_BE_NULL")

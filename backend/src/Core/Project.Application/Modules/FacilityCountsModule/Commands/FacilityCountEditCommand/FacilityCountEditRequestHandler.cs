@@ -22,12 +22,9 @@ namespace Project.Application.Modules.FacilityCountsModule.Commands.FacilityCoun
         {
             logger.LogInformation("Handling FacilityCountEditRequest for Id: {Id}", request.Id);
 
-            var entity = await facilityCountRepository.GetAsync(m => m.Id == request.Id);
-            if (entity == null)
-            {
-                logger.LogWarning("FacilityCount with Id: {Id} not found", request.Id);
-                throw new Exception($"FacilityCount with Id: {request.Id} not found");
-            }
+            logger.LogInformation("Retrieving FacilityCount with ID {Id}", request.Id);
+            var entity = await facilityCountRepository.GetAsync(x => x.Id == request.Id, cancellationToken);
+            logger.LogInformation("FacilityCount with Id: {Id} retrieved successfully", request.Id);
 
             logger.LogInformation("Updating count for FacilityCount Id: {Id}", request.Id);
             entity.Count = request.Count;

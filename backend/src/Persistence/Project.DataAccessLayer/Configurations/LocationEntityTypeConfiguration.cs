@@ -26,9 +26,6 @@ namespace Project.DataAccessLayer.Configurations
             builder.Property(m => m.City)
                    .IsRequired();
 
-            builder.Property(m => m.State)
-                   .IsRequired();
-
             builder.Property(m => m.Country)
                    .IsRequired();
 

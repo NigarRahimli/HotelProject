@@ -21,8 +21,6 @@ namespace Project.Application.Modules.ReservationModule.Commands.ReservationAddC
                 Name = request.Name,
                 CheckInTime = request.CheckInTime,
                 CheckOutTime = request.CheckOutTime,
-                UserId = request.UserId,
-                HostId = request.HostId,
                 PropertyId = request.PropertyId,
                 ReservationStatus = ReservationStatus.Upcoming,
                 PaymentOption = (PaymentOption)request.PaymentOption

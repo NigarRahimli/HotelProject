@@ -19,13 +19,10 @@ namespace Project.Application.Modules.KindsModule.Commands.KindRemoveCommand
         {
             logger.LogInformation("Handling KindRemoveRequest for Id: {Id}", request.Id);
 
+            logger.LogInformation("Retrieving kind with ID {KindId}", request.Id);
             var entity = await kindRepository.GetAsync(x => x.Id == request.Id && x.DeletedBy == null, cancellationToken);
+            logger.LogInformation("Kind with Id: {KindId} retrieved successfully", request.Id);
 
-            if (entity == null)
-            {
-                logger.LogWarning("Kind with Id: {Id} not found", request.Id);
-
-            }
 
             kindRepository.Remove(entity);
             await kindRepository.SaveAsync(cancellationToken);

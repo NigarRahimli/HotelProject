@@ -23,11 +23,10 @@ namespace Project.Application.Modules.FacilitiesModule.Commands.FacilityEditComm
         {
             logger.LogInformation("Handling FacilityEditRequest for Facility Id: {FacilityId}", request.Id);
 
-            var entity = await facilityRepository.GetAsync(m => m.Id == request.Id && m.DeletedBy == null, cancellationToken);
-            if (entity == null)
-            {
-                logger.LogWarning("Facility with Id: {FacilityId} not found", request.Id);
-            }
+            logger.LogInformation("Retrieving Facility with ID {Id}", request.Id);
+            var entity = await facilityRepository.GetAsync(x => x.Id == request.Id, cancellationToken);
+            logger.LogInformation("Facility with Id: {Id} retrieved successfully", request.Id);
+
 
             logger.LogInformation("Updating Facility with Id: {FacilityId}", request.Id);
             entity.Name = request.Name;

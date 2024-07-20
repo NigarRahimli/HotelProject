@@ -21,11 +21,7 @@ namespace Project.Application.Modules.DescriptionsModule.Queries.DescriptionGetB
             logger.LogInformation("Handling DescriptionGetByIdRequest for Description Id: {DescriptionId}", request.Id);
 
             var entity = await descriptionRepository.GetAsync(x => x.Id == request.Id && x.DeletedBy == null, cancellationToken);
-            if (entity == null)
-            {
-                logger.LogWarning("Description with Id: {DescriptionId} not found or deleted", request.Id);
-                throw new Exception($"Description with Id: {request.Id} not found or deleted");
-            }
+        
 
             logger.LogInformation("Successfully retrieved Description with Id: {DescriptionId}", request.Id);
             return entity;

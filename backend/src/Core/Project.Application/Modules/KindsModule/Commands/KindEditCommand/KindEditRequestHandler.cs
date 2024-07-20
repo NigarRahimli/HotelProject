@@ -21,13 +21,10 @@ namespace Project.Application.Modules.KindsModule.Commands.KindEditCommand
         {
             logger.LogInformation("Handling KindEditRequest for Id: {Id}", request.Id);
 
-            var entity = await kindRepository.GetAsync(m => m.Id == request.Id);
+            logger.LogInformation("Retrieving kind with ID {KindId}", request.Id);
+            var entity = await kindRepository.GetAsync(x => x.Id == request.Id && x.DeletedBy == null, cancellationToken);
+            logger.LogInformation("Kind with Id: {KindId} retrieved successfully", request.Id);
 
-            if (entity == null)
-            {
-                logger.LogWarning("Kind with Id: {Id} not found", request.Id);
-                
-            }
 
             entity.Name = request.Name;
             await kindRepository.SaveAsync(cancellationToken);

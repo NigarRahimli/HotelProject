@@ -10,8 +10,6 @@ namespace Project.Domain.Models.Entities
         public DateTime CheckInTime { get; set; }
         public DateTime CheckOutTime { get; set; }
         public bool IsApproved { get; set; }
-        public int UserId { get; set; } 
-        public int HostId { get; set; } 
         public int PropertyId { get; set; } 
         public ReservationStatus ReservationStatus { get; set; }
         public PaymentOption PaymentOption { get; set; }

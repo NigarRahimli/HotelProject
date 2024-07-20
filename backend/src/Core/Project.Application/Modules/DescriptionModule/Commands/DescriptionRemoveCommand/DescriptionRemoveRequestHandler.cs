@@ -19,11 +19,10 @@ namespace Project.Application.Modules.DescriptionsModule.Commands.DescriptionRem
         {
             logger.LogInformation("Handling DescriptionRemoveRequest for Description Id: {DescriptionId}", request.Id);
 
-            var entity = await descriptionRepository.GetAsync(x => x.Id == request.Id && x.DeletedBy == null, cancellationToken);
-            if (entity == null)
-            {
-                logger.LogWarning("Description with Id: {DescriptionId} not found", request.Id);
-            }
+            logger.LogInformation("Retrieving Description with ID {Id}", request.Id);
+            var entity = await descriptionRepository.GetAsync(x => x.Id == request.Id, cancellationToken);
+            logger.LogInformation("Description with Id: {Id} retrieved successfully", request.Id);
+
 
             logger.LogInformation("Removing Description with Id: {DescriptionId}", request.Id);
             descriptionRepository.Remove(entity);

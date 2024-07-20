@@ -1,10 +1,12 @@
-﻿using MediatR;
-using Project.Domain.Models.Entities;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-
-namespace Project.Application.Modules.LocationsModule.Commands.LocationAddCommand
+namespace Project.Application.Modules.LocationsModule.Queries.LocationGetByUserIdQuery
 {
-    public class LocationAddRequest : IRequest<Location>
+    public class LocationByUserDto
     {
         public double Latitude { get; set; }
         public double Longitude { get; set; }

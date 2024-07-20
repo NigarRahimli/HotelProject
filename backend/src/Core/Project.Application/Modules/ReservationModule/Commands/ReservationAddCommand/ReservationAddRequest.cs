@@ -9,8 +9,6 @@ namespace Project.Application.Modules.ReservationModule.Commands.ReservationAddC
         public string Name { get; set; }
         public DateTime CheckInTime { get; set; }
         public DateTime CheckOutTime { get; set; }
-        public int UserId { get; set; }
-        public int HostId { get; set; }
         public int PropertyId { get; set; }
         public int PaymentOption { get; set; }
     }

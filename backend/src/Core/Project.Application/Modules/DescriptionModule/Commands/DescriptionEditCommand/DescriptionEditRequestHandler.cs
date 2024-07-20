@@ -20,11 +20,10 @@ namespace Project.Application.Modules.DescriptionsModule.Commands.DescriptionEdi
         {
             logger.LogInformation("Handling DescriptionEditRequest for Description Id: {DescriptionId}", request.Id);
 
-            var entity = await descriptionRepository.GetAsync(m => m.Id == request.Id && m.DeletedBy == null,cancellationToken);
-            if (entity == null)
-            {
-                logger.LogWarning("Description with Id: {DescriptionId} not found", request.Id);
-            }
+            logger.LogInformation("Retrieving Description with ID {Id}", request.Id);
+            var entity = await descriptionRepository.GetAsync(x => x.Id == request.Id, cancellationToken);
+            logger.LogInformation("Description with Id: {Id} retrieved successfully", request.Id);
+
 
             logger.LogInformation("Editing Description with Id: {DescriptionId}", request.Id);
             entity.Name = request.Name;

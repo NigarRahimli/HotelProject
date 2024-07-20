@@ -18,12 +18,10 @@ namespace Project.Application.Modules.AmenitiesModule.Commands.AmenityRemoveComm
         public async Task Handle(AmenityRemoveRequest request, CancellationToken cancellationToken)
         {
             logger.LogInformation("Handling AmenityRemoveRequest for Amenity Id: {AmenityId}", request.Id);
-
-            var entity = await amenityRepository.GetAsync(x => x.Id == request.Id && x.DeletedBy==null, cancellationToken);
-            if (entity == null)
-            {
-                logger.LogWarning("Amenity with Id: {AmenityId} not found", request.Id);
-            }
+            
+            logger.LogInformation("Retrieving amenity with ID {Id}", request.Id);
+            var entity = await amenityRepository.GetAsync(x => x.Id == request.Id, cancellationToken);
+            logger.LogInformation("Amenity with Id: {Id} retrieved successfully", request.Id);
 
             amenityRepository.Remove(entity);
             logger.LogInformation("Amenity with Id: {AmenityId} removed from repository", request.Id);

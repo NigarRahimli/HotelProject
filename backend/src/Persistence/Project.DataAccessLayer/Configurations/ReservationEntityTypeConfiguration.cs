@@ -17,28 +17,13 @@ namespace Project.DataAccessLayer.Configurations
             builder.Property(m => m.CheckInTime).HasColumnType("datetime").IsRequired();
             builder.Property(m => m.CheckOutTime).HasColumnType("datetime").IsRequired();
             builder.Property(m => m.IsApproved).HasColumnType("bit").IsRequired();
-     
-
-            builder.Property(m => m.UserId).HasColumnType("int").IsRequired();
-
-            builder.Property(m => m.HostId).HasColumnType("int").IsRequired();
 
             builder.Property(m => m.PropertyId).HasColumnType("int").IsRequired();
 
             builder.Property(m => m.ReservationStatus).HasColumnType("int").IsRequired();
 
             builder.HasKey(m => m.Id);
-            builder.HasOne<AppUser>()
-                   .WithMany()
-                   .HasPrincipalKey(m => m.Id)
-                   .HasForeignKey(m => m.UserId)
-                   .OnDelete(DeleteBehavior.NoAction);
 
-            builder.HasOne<AppUser>()
-                   .WithMany()
-                   .HasPrincipalKey(m => m.Id)
-                   .HasForeignKey(m => m.UserId)
-                   .OnDelete(DeleteBehavior.NoAction);
             builder.HasOne<Property>()
                  .WithMany()
                  .HasPrincipalKey(m => m.Id)

@@ -19,12 +19,10 @@ namespace Project.Application.Modules.FacilityCountsModule.Commands.FacilityCoun
         {
             logger.LogInformation("Handling FacilityCountRemoveRequest for Id: {Id}", request.Id);
 
+            logger.LogInformation("Retrieving kind with ID {KindId}", request.Id);
             var entity = await facilityCountRepository.GetAsync(x => x.Id == request.Id, cancellationToken);
-            if (entity == null)
-            {
-                logger.LogWarning("FacilityCount with Id: {Id} not found", request.Id);
-                throw new Exception($"FacilityCount with Id: {request.Id} not found");
-            }
+            logger.LogInformation("Kind with Id: {KindId} retrieved successfully", request.Id);
+
 
             logger.LogInformation("Removing FacilityCount Id: {Id}", request.Id);
             facilityCountRepository.Remove(entity);

@@ -24,12 +24,6 @@ namespace Project.Application.Modules.FacilityCountsModule.Queries.FacilityCount
 
             var entity = await facilityCountRepository.GetAsync(x => x.Id == request.Id && x.DeletedBy == null, cancellationToken);
 
-            if (entity == null)
-            {
-                logger.LogWarning("FacilityCount with Id: {Id} not found", request.Id);
-                throw new Exception($"FacilityCount with Id: {request.Id} not found");
-            }
-
             logger.LogInformation("Retrieved FacilityCount with Id: {Id}", request.Id);
 
             return entity;

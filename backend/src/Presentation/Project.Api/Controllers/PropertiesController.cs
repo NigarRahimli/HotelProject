@@ -43,9 +43,10 @@ namespace Project.Api.Controllers
         }
 
         [AllowAnonymous]
-        [HttpPost("nearby")]
-        public async Task<IActionResult> GetNearby([FromBody] PropertyGetAllNearbyRequest request)
+        [HttpPost("nearby/{take:int:min(1)}")]
+        public async Task<IActionResult> GetNearby(int take,[FromBody] PropertyGetAllNearbyRequest request)
         {
+            request.Take = take;
             var response = await mediator.Send(request);
 
             return Ok(response);

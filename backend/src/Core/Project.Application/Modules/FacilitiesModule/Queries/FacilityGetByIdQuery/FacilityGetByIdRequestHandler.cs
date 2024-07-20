@@ -22,12 +22,6 @@ namespace Project.Application.Modules.FacilitiesModule.Queries.FacilityGetByIdQu
 
             var entity = await facilityRepository.GetAsync(x => x.Id == request.Id && x.DeletedBy == null, cancellationToken);
 
-            if (entity == null)
-            {
-                logger.LogWarning("Facility with Id: {FacilityId} not found or deleted", request.Id);
-                throw new Exception($"Facility with Id: {request.Id} not found or deleted");
-            }
-
             logger.LogInformation("Facility with Id: {FacilityId} retrieved successfully", request.Id);
             return entity;
         }

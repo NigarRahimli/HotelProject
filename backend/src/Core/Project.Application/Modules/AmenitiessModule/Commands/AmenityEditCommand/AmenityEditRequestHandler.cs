@@ -23,11 +23,10 @@ namespace Project.Application.Modules.AmenitiesModule.Commands.AmenityEditComman
         {
             logger.LogInformation("Handling AmenityEditRequest for Amenity Id: {AmenityId}", request.Id);
 
-            var entity = await amenityRepository.GetAsync(m => m.Id == request.Id && m.DeletedBy == null);
-            if (entity == null)
-            {
-                logger.LogWarning("Amenity with Id: {AmenityId} not found or deleted", request.Id);
-            }
+            logger.LogInformation("Retrieving amenity with ID {Id}", request.Id);
+            var entity = await amenityRepository.GetAsync(x => x.Id == request.Id, cancellationToken);
+            logger.LogInformation("Amenity with Id: {Id} retrieved successfully", request.Id);
+
 
             entity.Name = request.Name;
             if (request.Image != null)

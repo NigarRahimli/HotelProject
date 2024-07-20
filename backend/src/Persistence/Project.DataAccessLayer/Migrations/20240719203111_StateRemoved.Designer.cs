@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Project.DataAccessLayer.Contexts;
 
@@ -11,9 +12,11 @@ using Project.DataAccessLayer.Contexts;
 namespace Project.DataAccessLayer.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240719203111_StateRemoved")]
+    partial class StateRemoved
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -710,6 +713,9 @@ namespace Project.DataAccessLayer.Migrations
                     b.Property<int?>("DeletedBy")
                         .HasColumnType("int");
 
+                    b.Property<int>("HostId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsApproved")
                         .HasColumnType("bit");
 
@@ -733,9 +739,14 @@ namespace Project.DataAccessLayer.Migrations
                     b.Property<int>("ReservationStatus")
                         .HasColumnType("int");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("PropertyId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Reservations", (string)null);
                 });
@@ -1028,6 +1039,12 @@ namespace Project.DataAccessLayer.Migrations
                     b.HasOne("Project.Domain.Models.Entities.Property", null)
                         .WithMany()
                         .HasForeignKey("PropertyId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Project.Domain.Models.Entities.Membership.AppUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
                 });

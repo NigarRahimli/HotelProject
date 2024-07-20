@@ -20,16 +20,10 @@ namespace Project.Application.Modules.KindsModule.Queries.KindGetByIdQuery
         public async Task<Kind> Handle(KindGetByIdRequest request, CancellationToken cancellationToken)
         {
             logger.LogInformation("Handling KindGetByIdRequest for KindId: {KindId}", request.Id);
-
+            logger.LogInformation("Retrieving kind with ID {KindId}", request.Id);
             var entity = await kindRepository.GetAsync(x => x.Id == request.Id && x.DeletedBy == null, cancellationToken);
-            if (entity == null)
-            {
-                logger.LogWarning("Kind with Id: {KindId} not found", request.Id);
-            }
-            else
-            {
-                logger.LogInformation("Kind with Id: {KindId} retrieved successfully", request.Id);
-            }
+            logger.LogInformation("Kind with Id: {KindId} retrieved successfully", request.Id);
+           
 
             return entity;
         }
