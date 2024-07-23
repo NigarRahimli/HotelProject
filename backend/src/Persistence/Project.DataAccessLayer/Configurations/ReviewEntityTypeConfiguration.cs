@@ -8,10 +8,7 @@ namespace Project.DataAccessLayer.Configurations
     {
         public void Configure(EntityTypeBuilder<Review> builder)
         {
-
-
             builder.Property(r => r.Id).HasColumnType("int").UseIdentityColumn(1, 1);
-
 
             builder.Property(r => r.Stars).IsRequired().HasColumnType("int");
 
@@ -29,8 +26,12 @@ namespace Project.DataAccessLayer.Configurations
 
             builder.ConfigureAuditable();
 
-           
             builder.HasKey(r => r.Id);
+
+            builder.HasIndex(r => new { r.CreatedBy, r.PropertyId, r.CategoryId })
+                   .IsUnique()
+                   .HasDatabaseName("IX_Unique_User_Property_Category");
+
             builder.ToTable("Reviews", t =>
             {
                 t.HasCheckConstraint("CK_Review_Stars", "[Stars] BETWEEN 1 AND 5");

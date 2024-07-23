@@ -1,10 +1,5 @@
 ﻿using MediatR;
 using Project.Application.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Project.Application.Modules.ReviewCategoriesModule.Commands.ReviewCategoryRemoveCommand
 {
@@ -18,7 +13,7 @@ namespace Project.Application.Modules.ReviewCategoriesModule.Commands.ReviewCate
         }
         public async Task Handle(ReviewCategoryRemoveRequest request, CancellationToken cancellationToken)
         {
-            var entity =await ReviewCategoryRepository.GetAsync(x=>x.Id==request.Id,cancellationToken);
+            var entity =await ReviewCategoryRepository.GetAsync(x=>x.Id==request.Id && x.DeletedBy==null,cancellationToken);
             ReviewCategoryRepository.Remove(entity);
             await ReviewCategoryRepository.SaveAsync(cancellationToken);
         }

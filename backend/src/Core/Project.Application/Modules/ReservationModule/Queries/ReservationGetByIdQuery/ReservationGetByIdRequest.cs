@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Project.Application.Modules.ReservationModule.Queries.ReservationGetByIdQuery
 {
-    public class ReservationGetByIdRequest : IRequest<Reservation>
+    public class ReservationGetByIdRequest : IRequest<ReservationDetailedDto>
     {
         public int Id { get; set; }
     }

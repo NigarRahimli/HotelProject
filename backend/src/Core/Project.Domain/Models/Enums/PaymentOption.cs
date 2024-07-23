@@ -1,8 +1,10 @@
-﻿namespace Project.Domain.Models.Enums
+﻿
+namespace Project.Domain.Models.Enums
 {
-    public enum  PaymentOption
+
+    public enum PaymentOption
     {
-        Full,
-        Monthly
+       OneTake,
+       Monthly
     }
 }

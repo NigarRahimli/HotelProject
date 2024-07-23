@@ -13,7 +13,8 @@ namespace Project.Application.Modules.KindsModule.Commands.KindAddCommand
         {
             RuleFor(m => m.Name)
                 .NotNull().WithErrorCode("NAME_CANT_BE_NULL")
-                .MinimumLength(2).WithErrorCode("NAME_MINLENGTH_GRATHER_THAN_ONE");
+                .MinimumLength(2).WithErrorCode("NAME_MINLENGTH_GRATHER_THAN_ONE")
+                .MaximumLength(100).WithErrorCode("NAME_TOO_LONG");
         }
     }
 }

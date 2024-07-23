@@ -9,9 +9,9 @@ namespace Project.Domain.Models.Entities
         public string Name { get; set; }
         public DateTime CheckInTime { get; set; }
         public DateTime CheckOutTime { get; set; }
-        public bool IsApproved { get; set; }
-        public int PropertyId { get; set; } 
         public ReservationStatus ReservationStatus { get; set; }
+        public int PropertyId { get; set; } 
         public PaymentOption PaymentOption { get; set; }
+        public double TotalAmount { get; set; }
     }
 }

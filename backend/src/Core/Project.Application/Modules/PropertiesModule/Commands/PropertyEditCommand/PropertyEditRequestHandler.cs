@@ -51,7 +51,7 @@ namespace Project.Application.Modules.PropertiesModule.Commands.PropertyEditComm
             property.GuestNum = request.GuestNum;
             property.IsPetFriendly = request.IsPetFriendly;
             property.LocationId = request.LocationId;
-            property.LongPrice = request.LongPrice;
+            property.LongPrice = request.MaxPrice;
             property.MedPrice = request.MedPrice;
             property.MinPrice = request.MinPrice;
 

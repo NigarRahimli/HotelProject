@@ -56,7 +56,7 @@ namespace Project.Application.Modules.PropertiesModule.Commands.PropertyAddComma
                 KindId = request.KindId,
                 LocationId = request.LocationId,
                 IsPetFriendly = request.IsPetFriendly,
-                LongPrice = request.LongPrice,
+                LongPrice = request.MaxPrice,
                 MedPrice = request.MedPrice,
                 MinPrice = request.MinPrice,
             };

@@ -51,7 +51,7 @@ namespace Project.Api.Controllers
         }
 
         [HttpPut("{propertyId:int:min(1)}")]
-        public async Task<IActionResult> Edit([FromRoute] int propertyId, [FromForm] PropertyImageEditRequest request)
+        public async Task<IActionResult> Edit([FromRoute] int propertyId, [FromForm] PropertyImagesEditRequest request)
         {
             request.PropertyId = propertyId;
             var entity = await mediator.Send(request);

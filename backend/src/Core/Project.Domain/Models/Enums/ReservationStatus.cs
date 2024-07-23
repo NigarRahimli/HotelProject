@@ -1,9 +1,11 @@
-﻿namespace Project.Domain.Models.Enums
+﻿
+
+namespace Project.Domain.Models.Enums
 {
     public enum ReservationStatus
     {
-        Upcoming,
-        Past,
-
+      Waiting,
+      Approved,
+      Rejected
     }
 }

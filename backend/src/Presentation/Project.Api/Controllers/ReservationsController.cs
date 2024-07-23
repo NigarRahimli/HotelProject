@@ -1,6 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Project.Application.Modules.ReservationModule.Commands.ReservationAddCommand;
+using Project.Application.Modules.ReservationModule.Commands.ReservationChangeStatusCommand;
+using Project.Application.Modules.ReservationModule.Queries.ReservationGetAllByPropertyIdQuery;
 using Project.Application.Modules.ReservationModule.Queries.ReservationGetAllQuery;
 using Project.Application.Modules.ReservationModule.Queries.ReservationGetByIdQuery;
 using Project.Application.Modules.ReservationsModule.Commands.ReservationEditCommand;
@@ -26,7 +28,12 @@ namespace Project.Api.Controllers
             var entity = await mediator.Send(request);
             return Ok(entity);
         }
-
+        [HttpGet("property/{propertyId:int:min(1)}")]
+        public async Task<IActionResult> GetByPropertyId([FromRoute] ReservationGetAllByPropertyIdRequest request)
+        {
+            var entity = await mediator.Send(request);
+            return Ok(entity);
+        }
 
         [HttpGet]
         public async Task<IActionResult> GetAll([FromRoute] ReservationGetAllRequest request)
@@ -43,7 +50,13 @@ namespace Project.Api.Controllers
             var entity = await mediator.Send(request);
             return CreatedAtAction(nameof(GetById), new { entity.Id }, entity);
         }
-
+        [HttpPut("change-status/{reservationId:int:min(1)}")]
+        public async Task<IActionResult> ChangeStatus([FromRoute] int reservationId, [FromBody] ReservationChangeStatusRequest request)
+        {
+            request.ReservationId = reservationId;
+            await mediator.Send(request);
+            return Ok ("Reservation status changed successfully");
+        }
         [HttpPut("{id:int:min(1)}")]
         public async Task<IActionResult> Edit([FromRoute] int id, [FromBody] ReservationEditRequest request)
         {

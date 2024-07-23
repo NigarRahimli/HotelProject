@@ -710,9 +710,6 @@ namespace Project.DataAccessLayer.Migrations
                     b.Property<int?>("DeletedBy")
                         .HasColumnType("int");
 
-                    b.Property<bool>("IsApproved")
-                        .HasColumnType("bit");
-
                     b.Property<DateTime?>("LastModifiedAt")
                         .HasColumnType("datetime");
 
@@ -733,9 +730,14 @@ namespace Project.DataAccessLayer.Migrations
                     b.Property<int>("ReservationStatus")
                         .HasColumnType("int");
 
+                    b.Property<double>("TotalAmount")
+                        .HasColumnType("float");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("PropertyId");
+                    b.HasIndex("PropertyId", "CheckInTime", "CheckOutTime")
+                        .IsUnique()
+                        .HasFilter("[ReservationStatus] = 1");
 
                     b.ToTable("Reservations", (string)null);
                 });
@@ -780,6 +782,11 @@ namespace Project.DataAccessLayer.Migrations
                     b.HasIndex("CategoryId");
 
                     b.HasIndex("PropertyId");
+
+                    b.HasIndex("CreatedBy", "PropertyId", "CategoryId")
+                        .IsUnique()
+                        .HasDatabaseName("IX_Unique_User_Property_Category")
+                        .HasFilter("[CreatedBy] IS NOT NULL");
 
                     b.ToTable("Reviews", null, t =>
                         {

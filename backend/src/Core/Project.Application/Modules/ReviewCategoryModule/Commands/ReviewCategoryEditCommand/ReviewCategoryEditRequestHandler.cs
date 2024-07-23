@@ -1,28 +1,34 @@
 ﻿using MediatR;
+using Microsoft.Extensions.Logging;
 using Project.Application.Repositories;
 using Project.Domain.Models.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Project.Application.Modules.ReviewCategoriesModule.Commands.ReviewCategoryEditCommand
 {
     class ReviewCategoryEditRequestHandler : IRequestHandler<ReviewCategoryEditRequest, ReviewCategory>
     {
-        private readonly IReviewCategoryRepository ReviewCategoryRepository;
+        private readonly IReviewCategoryRepository reviewCategoryRepository;
+        private readonly ILogger<ReviewCategoryEditRequestHandler> logger;
 
-        public ReviewCategoryEditRequestHandler(IReviewCategoryRepository ReviewCategoryRepository)
+        public ReviewCategoryEditRequestHandler(IReviewCategoryRepository reviewCategoryRepository, ILogger<ReviewCategoryEditRequestHandler> logger)
         {
-            this.ReviewCategoryRepository = ReviewCategoryRepository;
+            this.reviewCategoryRepository = reviewCategoryRepository;
+            this.logger = logger;
         }
+
         public async Task<ReviewCategory> Handle(ReviewCategoryEditRequest request, CancellationToken cancellationToken)
         {
-            var entity=await ReviewCategoryRepository.GetAsync(m=>m.Id==request.Id,cancellationToken);
+            logger.LogInformation("Handling ReviewCategoryEditRequest for Id: {Id}", request.Id);
 
-            entity.Name=request.Name;
-            await ReviewCategoryRepository.SaveAsync(cancellationToken);
+            var entity = await reviewCategoryRepository.GetAsync(m => m.Id == request.Id && m.DeletedBy==null, cancellationToken);
+            
+            logger.LogWarning("ReviewCategory with Id: {Id} found", request.Id);
+              
+            entity.Name = request.Name;
+            logger.LogInformation("Updating ReviewCategory entity with new Name: {Name}", request.Name);
+            await reviewCategoryRepository.SaveAsync(cancellationToken);
+
+            logger.LogInformation("ReviewCategory entity updated successfully");
 
             return entity;
         }

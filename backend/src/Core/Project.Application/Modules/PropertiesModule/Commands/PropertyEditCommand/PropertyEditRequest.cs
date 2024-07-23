@@ -15,7 +15,7 @@ namespace Project.Application.Modules.PropertiesModule.Commands.PropertyEditComm
         public int LocationId { get; set; }
         public bool IsPetFriendly { get; set; }
         public int KindId { get; set; }
-        public float LongPrice { get; set; }
+        public float MaxPrice { get; set; }
         public float MedPrice { get; set; }
         public float MinPrice { get; set; }
     }

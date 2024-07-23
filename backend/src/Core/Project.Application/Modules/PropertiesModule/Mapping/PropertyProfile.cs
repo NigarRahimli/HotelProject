@@ -7,9 +7,9 @@ using Project.Infrastructure.Concretes;
 
 namespace Project.Application.Modules.PropertiesModule.Mapping
 {
-    public class PropertyImageProfile : Profile
+    public class PropertyProfile : Profile
     {
-        public PropertyImageProfile()
+        public PropertyProfile()
         {
             CreateMap<Property, PropertyDto>();
                 //.ForMember(dest => dest.PropertyName, src => src.MapFrom(m => m.Name))

@@ -105,6 +105,22 @@ namespace Project.Api.AppCode.Pipeline
                             message = ecfEx.Message
                         };
                         break;
+                    case InvalidOperationException invalidOpEx:
+                        statusCode = StatusCodes.Status400BadRequest; 
+                        response = new
+                        {
+                            error = true,
+                            message = invalidOpEx.Message
+                        };
+                        break;
+                    case OwnerAccessException ownerEx:
+                        statusCode = StatusCodes.Status403Forbidden;
+                        response = new
+                        {
+                            error = true,
+                            message = ownerEx.Message
+                        };
+                        break;
                     default:
                         response = new
                         {

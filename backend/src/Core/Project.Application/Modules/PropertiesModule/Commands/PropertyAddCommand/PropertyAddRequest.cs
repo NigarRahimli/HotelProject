@@ -12,7 +12,7 @@ namespace Project.Application.Modules.PropertiesModule.Commands.PropertyAddComma
         public bool IsPetFriendly { get; set; }
         public int KindId { get; set; }
         public int LocationId { get; set; }
-        public float LongPrice { get; set; }
+        public float MaxPrice { get; set; }
         public float MedPrice { get; set; }
         public float MinPrice { get; set; }
         

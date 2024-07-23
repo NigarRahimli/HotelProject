@@ -3,7 +3,7 @@ using Project.Application.Modules.PropertyImagesModule.Query.PropertyImagesGetBy
 using Project.Domain.Models.Entities;
 
 
-namespace Project.Application.Modules.PropertieImagesModule.Mapping
+namespace Project.Application.Modules.PropertyImagesModule.Mapping
 {
     public class PropertyImageProfile : Profile
     {
