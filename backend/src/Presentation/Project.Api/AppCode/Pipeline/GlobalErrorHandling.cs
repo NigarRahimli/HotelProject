@@ -40,12 +40,12 @@ namespace Project.Api.AppCode.Pipeline
                 context.Response.ContentType = MediaTypeNames.Application.Json;
                 switch (ex)
                 {
-                    case NotFoundException :
+                    case NotFoundException:
                         statusCode = StatusCodes.Status404NotFound;
                         response = new
                         {
                             error = true,
-                            message =ex.Message
+                            message = ex.Message
                         };
                         break;
                     case CircleReferenceException:
@@ -106,7 +106,7 @@ namespace Project.Api.AppCode.Pipeline
                         };
                         break;
                     case InvalidOperationException invalidOpEx:
-                        statusCode = StatusCodes.Status400BadRequest; 
+                        statusCode = StatusCodes.Status400BadRequest;
                         response = new
                         {
                             error = true,
@@ -119,6 +119,14 @@ namespace Project.Api.AppCode.Pipeline
                         {
                             error = true,
                             message = ownerEx.Message
+                        };
+                        break;
+                    case OperationFailedException ofEx:
+                        statusCode = StatusCodes.Status500InternalServerError;
+                        response = new
+                        {
+                            error = true,
+                            message = ofEx.Message
                         };
                         break;
                     default:

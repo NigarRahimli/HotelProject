@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace Project.Api.Areas.Admin
 {
-    [Route("api/admin/[controller]")]
+    [Route("api/[controller]")]
     [ApiController]
     public class PoliciesController : ControllerBase
     {

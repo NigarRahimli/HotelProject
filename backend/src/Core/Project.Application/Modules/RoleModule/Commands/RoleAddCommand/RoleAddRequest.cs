@@ -6,6 +6,6 @@ namespace Project.Application.Modules.RoleModule.Commands.RoleAddCommand
 {
     public class RoleAddRequest : IRequest<AppRole>
     {
-        public string RoleName { get; set; }
+        public string Name { get; set; }
     }
 }

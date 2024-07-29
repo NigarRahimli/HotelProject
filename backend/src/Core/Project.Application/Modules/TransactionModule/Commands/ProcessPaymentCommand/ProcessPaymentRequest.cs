@@ -8,7 +8,7 @@ namespace Project.Application.Modules.TransactionModule.Commands.ProcessPaymentC
     {
         public int ReservationId { get; set; }
         public decimal Amount { get; set; }
-        /*public int PaymentMethod { get; set; }*/ // Integer representation of PaymentMethod enum
+        public int PaymentMethod { get; set; }
         public string Token { get; set; }
     }
 }
