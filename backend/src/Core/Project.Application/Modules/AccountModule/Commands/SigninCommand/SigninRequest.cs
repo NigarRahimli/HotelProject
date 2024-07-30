@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using System.Security.Claims;
 
-namespace Resume.Application.Modules.AccountModule.Commands.SigninCommand
+namespace Project.Application.Modules.AccountModule.Commands.SigninCommand
 {
     public class SigninRequest : IRequest<ClaimsPrincipal>
     {

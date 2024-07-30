@@ -48,6 +48,8 @@ namespace Project.Api.AppCode.Pipeline
                             message = ex.Message
                         };
                         break;
+
+                    
                     case CircleReferenceException:
                         statusCode = StatusCodes.Status400BadRequest;
                         response = new
@@ -127,6 +129,14 @@ namespace Project.Api.AppCode.Pipeline
                         {
                             error = true,
                             message = ofEx.Message
+                        };
+                        break;
+                    case NotConfirmedException notConfirmedEx:
+                        statusCode = StatusCodes.Status400BadRequest; 
+                        response = new
+                        {
+                            error = true,
+                            message = notConfirmedEx.Message
                         };
                         break;
                     default:

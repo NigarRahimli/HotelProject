@@ -1,14 +1,10 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Project.Application.Repositories;
-using Project.Application.Services;
 using Project.Infrastructure.Abstracts;
+using Project.Infrastructure.Exceptions;
 using Project.Infrastructure.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Project.Application.Modules.AccountModule.Commands.SendPhoneConfirmationCommand
 {
@@ -18,32 +14,57 @@ namespace Project.Application.Modules.AccountModule.Commands.SendPhoneConfirmati
         private readonly ISMSService smsService;
         private readonly ICryptoService cryptoService;
         private readonly IHttpContextAccessor contextAccessor;
-        public SendPhoneConfirmationRequestHandler(IUserRepository userRepository, ISMSService smsService, ICryptoService cryptoService, IHttpContextAccessor contextAccessor)
+        private readonly ILogger<SendPhoneConfirmationRequestHandler> logger;
+
+        public SendPhoneConfirmationRequestHandler(
+            IUserRepository userRepository,
+            ISMSService smsService,
+            ICryptoService cryptoService,
+            IHttpContextAccessor contextAccessor,
+            ILogger<SendPhoneConfirmationRequestHandler> logger)
         {
             this.userRepository = userRepository;
             this.smsService = smsService;
             this.cryptoService = cryptoService;
             this.contextAccessor = contextAccessor;
+            this.logger = logger;
         }
-
 
         public async Task Handle(SendPhoneConfirmationRequest request, CancellationToken cancellationToken)
         {
-            var userId=contextAccessor.HttpContext.GetUserIdExtension();
-            var user = await userRepository.GetAsync(x=>x.Id==userId);
+            logger.LogInformation("SendPhoneConfirmationRequestHandler started handling request for user");
+
+            var userId = contextAccessor.HttpContext.GetUserIdExtension();
+            var user = await userRepository.GetAsync(x => x.Id == userId);
             if (user == null)
             {
+                logger.LogError("User not found with ID '{UserId}'", userId);
                 throw new Exception("User not found.");
             }
 
-            var confirmationCode = new Random().Next(1000, 9999).ToString();
+            if (user.PhoneNumber == request.PhoneNumber && user.PhoneNumberConfirmed)
+            {
+                logger.LogWarning("Phone number {PhoneNumber} is already confirmed for user with ID '{UserId}'", request.PhoneNumber, userId);
+                throw new BadRequestException("Phone number already confirmed.");
+            }
+
+            var existingUserWithPhoneNumber = userRepository.GetAll(x => x.PhoneNumber == request.PhoneNumber).FirstOrDefault();
+            if (existingUserWithPhoneNumber != null && existingUserWithPhoneNumber.Id != userId)
+            {
+                logger.LogWarning("Phone number {PhoneNumber} is already used by another user with ID '{ExistingUserId}'", request.PhoneNumber, existingUserWithPhoneNumber.Id);
+                throw new BadRequestException("Phone number already used by another user.");
+            }
+
+            var confirmationCode = new Random().Next(1000, 999999).ToString();
             user.PhoneConfirmationCode = cryptoService.Encrypt(confirmationCode);
             user.PhoneNumber = request.PhoneNumber;
-            user.PhoneConfirmationCodeGeneratedAt = DateTime.UtcNow; 
+            user.PhoneConfirmationCodeGeneratedAt = DateTime.UtcNow;
 
             await userRepository.SaveAsync(cancellationToken);
 
             await smsService.SendSmsAsync(user.PhoneNumber, $"Your confirmation code is {confirmationCode}");
+
+            logger.LogInformation("SendPhoneConfirmationRequestHandler successfully sent confirmation code to user with ID '{UserId}'", userId);
         }
     }
 }

@@ -8,7 +8,7 @@ using Project.Infrastructure.Abstracts;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace Resume.Application.Modules.AccountModule.Commands.TokenRefreshCommand
+namespace Project.Application.Modules.AccountModule.Commands.TokenRefreshCommand
 {
     class TokenRefreshRequestHandler : IRequestHandler<TokenRefreshRequest, TokenRefreshRequestDto>
     {

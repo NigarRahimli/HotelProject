@@ -1,4 +1,4 @@
-﻿namespace Resume.Application.Modules.AccountModule.Commands.TokenRefreshCommand
+﻿namespace Project.Application.Modules.AccountModule.Commands.TokenRefreshCommand
 {
     public class TokenRefreshRequestDto
     {

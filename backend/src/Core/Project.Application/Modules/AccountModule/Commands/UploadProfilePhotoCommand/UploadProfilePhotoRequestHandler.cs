@@ -1,16 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Http;
-using Project.Application.Modules.AmenitiesModule.Commands.AmenityEditCommand;
 using Project.Application.Repositories;
-using Project.Domain.Models.Entities;
 using Project.Infrastructure.Abstracts;
 using Project.Infrastructure.Extensions;
-using Resume.Application.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Project.Application.Modules.AccountModule.Commands.UploadProfilePhotoCommand
 {
@@ -19,23 +12,43 @@ namespace Project.Application.Modules.AccountModule.Commands.UploadProfilePhotoC
         private readonly IHttpContextAccessor contextAccessor;
         private readonly IUserRepository userRepository;
         private readonly IFileService fileService;
+        private readonly ILogger<UploadProfileRequestHandler> logger;
 
-        public UploadProfileRequestHandler(IHttpContextAccessor contextAccessor, IUserRepository userRepository, IFileService fileService)
+        public UploadProfileRequestHandler(
+            IHttpContextAccessor contextAccessor,
+            IUserRepository userRepository,
+            IFileService fileService,
+            ILogger<UploadProfileRequestHandler> logger)
         {
             this.contextAccessor = contextAccessor;
             this.userRepository = userRepository;
             this.fileService = fileService;
+            this.logger = logger;
         }
 
         public async Task Handle(UploadProfilePhotoRequest request, CancellationToken cancellationToken)
         {
-        
-            var userId=contextAccessor.HttpContext!.GetUserIdExtension();
+            logger.LogInformation("UploadProfileRequestHandler started handling request for user profile photo upload");
+
+            var userId = contextAccessor.HttpContext!.GetUserIdExtension();
+            logger.LogDebug("Retrieved user ID: {UserId}", userId);
+
             var user = await userRepository.GetAsync(x => x.Id == userId);
-            var profileImg = await fileService.UploadSingleAsync(request.ProfileImg,"profile");
-            user.ProfileImgUrl =profileImg.Url;
+            if (user == null)
+            {
+                logger.LogError("User not found with ID '{UserId}'", userId);
+                throw new Exception("User not found.");
+            }
+
+            logger.LogDebug("User found with ID: {UserId}. Current profile image URL: {ProfileImgUrl}", userId, user.ProfileImgUrl);
+
+            var profileImg = await fileService.UploadSingleAsync(request.ProfileImg, "profile");
+            logger.LogDebug("Profile image uploaded for user ID: {UserId}. New profile image URL: {NewProfileImgUrl}", userId, profileImg.Url);
+
+            user.ProfileImgUrl = profileImg.Url;
             await userRepository.SaveAsync(cancellationToken);
-            
+
+            logger.LogInformation("Profile photo uploaded successfully for user ID: {UserId}", userId);
         }
     }
 }

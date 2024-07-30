@@ -2,23 +2,22 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Project.Application.Modules.AccountModule.Commands.ChangePasswordCommand;
+using Project.Application.Modules.AccountModule.Commands.ConfirmPhoneCommand;
+using Project.Application.Modules.AccountModule.Commands.EditProfilePhotoCommand;
+using Project.Application.Modules.AccountModule.Commands.EmailConfirmationCommand;
+using Project.Application.Modules.AccountModule.Commands.RemoveProfilePhotoCommand;
+using Project.Application.Modules.AccountModule.Commands.ResetPasswordCommand;
+using Project.Application.Modules.AccountModule.Commands.SendForgotPasswordEmailCommand;
+using Project.Application.Modules.AccountModule.Commands.SendPhoneConfirmationCommand;
+using Project.Application.Modules.AccountModule.Commands.SigninCommand;
+using Project.Application.Modules.AccountModule.Commands.SignupCommand;
+using Project.Application.Modules.AccountModule.Commands.TokenRefreshCommand;
+using Project.Application.Modules.AccountModule.Commands.UploadProfilePhotoCommand;
 using Project.Domain.Models.Entities.Membership;
 using Project.Infrastructure.Abstracts;
 using System.Security.Claims;
-using Project.Application.Modules.AccountModule.Commands.SignupCommand;
-using Resume.Application.Modules.AccountModule.Commands.SigninCommand;
-using Resume.Application.Modules.AccountModule.Commands.TokenRefreshCommand;
-using Project.Application.Modules.AccountModule.Commands.EmailConfirmationCommand;
-using Project.Application.Modules.AccountModule.Commands.UploadProfilePhotoCommand;
-using Project.Application.Modules.AccountModule.Commands.EditProfilePhotoCommand;
-using Project.Application.Modules.AccountModule.Commands.RemoveProfilePhotoCommand;
-using Project.Application.Modules.AccountModule.Commands.SendPhoneConfirmationCommand;
-using Project.Application.Modules.AccountModule.Commands.ConfirmPhoneCommand;
-using Microsoft.AspNetCore.Identity.Data;
-using Project.Application.Modules.AccountModule.Commands.SendForgotPasswordEmailCommand;
-using Project.Application.Modules.AccountModule.Commands.ResetPasswordCommand;
-using System.Web;
-using Project.Application.Modules.AccountModule.Commands.ChangePasswordCommand;
+using ResendConfirmationEmailRequest = Project.Application.Modules.AccountModule.Commands.ResendConfirmationEmailCommand.ResendConfirmationEmailRequest;
 
 namespace Project.Api.Controllers
 {
@@ -116,7 +115,6 @@ namespace Project.Api.Controllers
             return Ok(new { message = "Profile image removed" });
         }
 
-
         [AllowAnonymous]
         [HttpGet("confirm-email")]
         public async Task<IActionResult> ConfirmEmail([FromQuery] EmailConfirmationRequest request)
@@ -132,7 +130,6 @@ namespace Project.Api.Controllers
                 StatusCode = 200
             };
         }
-
 
         [HttpPost("send-code")]
         public async Task<IActionResult> RequestPhoneConfirmation(SendPhoneConfirmationRequest request)
@@ -151,8 +148,7 @@ namespace Project.Api.Controllers
         
         }
 
-        [HttpPost]
-        [Route("forgot-password")]
+        [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword([FromBody] SendForgotPasswordEmailRequest request)
         {
             await mediator.Send(request);
@@ -181,9 +177,13 @@ namespace Project.Api.Controllers
             var response = await mediator.Send(request);
             return Ok(response);
         }
-
-
-
+     
+        [HttpPost("resend-confirmation")]
+        public async Task<IActionResult> ResendConfirmationEmail([FromBody] ResendConfirmationEmailRequest request)
+        {
+            await mediator.Send(request);
+            return Ok(new { message = "Confirmation email has been resent." });
+        }
 
 
     }
