@@ -11,12 +11,12 @@ const BlackSlider = styled(Slider)(({ theme }) => ({
     },
   },
 }));
-
-const PriceRangeSlider = () => {
+const PriceRangeSlider = ({ onPriceChange }) => {
   const [value, setValue] = useState([0, 3000]); 
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
+    onPriceChange(newValue);
   };
 
   return (

@@ -155,6 +155,13 @@ function Properties() {
     });
   };
 
+  const handlePriceChange = (newPriceRange) => {
+    router.push({
+      pathname: router.pathname,
+      query: { ...router.query, minPrice: newPriceRange[0], maxPrice: newPriceRange[1] },
+    });
+  };
+
   return (
     <Layout>
       <div className="mx-auto sm:w-[620px] md:w-[728px] lg:w-[994px] text-[#484848] py-[50px] lg:py-[90px] md:py-[60px] px-[15px] lg:px-0 xl:w-[1210px]">
@@ -223,7 +230,7 @@ function Properties() {
           >
             <div className="p-6">
               <h2 className="text-xl font-bold mb-4">Filter Options</h2>
-              <PriceRangeSlider/>
+              <PriceRangeSlider onPriceChange={handlePriceChange} />
             </div>
           </div>
         )}
