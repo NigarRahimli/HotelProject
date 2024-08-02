@@ -44,7 +44,9 @@ namespace Project.DataAccessLayer.Contexts
                     {
                         UserName = superAdminEmail,
                         Email = superAdminEmail,
-                        EmailConfirmed = true
+                        EmailConfirmed = true,
+                        ProfileImgUrl= "/uploads/default/profile_avatar.png"
+                        
                     };
 
                     var result = userManager.CreateAsync(user, superAdminPassword).Result;

@@ -6,7 +6,7 @@ import { baseUrl } from "@/components/constant";
 const FilterCard = ({ imgSrc, userSrc, isFavourite, name, location, minPrice, maxPrice, propertyImageDetails }) => {
   const [activeStep, setActiveStep] = React.useState(0);
   const maxSteps = propertyImageDetails.length;
-  const defaultImage = "/images/property_avatar.jpg"; // Default image path
+  const defaultImage = "/images/property_avatar.jpg"; 
 
   React.useEffect(() => {
     const interval = setInterval(() => {
@@ -32,7 +32,7 @@ const FilterCard = ({ imgSrc, userSrc, isFavourite, name, location, minPrice, ma
         sx={{
           position: "relative",
           maxWidth: 382,
-          width: 382, // Fixed width for the container
+          width: 382, 
           borderRadius: "12px",
           overflow: "hidden",
         }}

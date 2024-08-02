@@ -10,7 +10,7 @@ const NearbyProperties = () => {
   useEffect(() => {
     const fetchNearbyProperties = async (latitude, longitude) => {
       try {
-        const response = await fetch(`${baseUrl}/api/properties/nearby`, {
+        const response = await fetch(`${baseUrl}/api/properties/nearby/4`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

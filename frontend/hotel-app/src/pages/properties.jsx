@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useRouter } from "next/router"; // Import useRouter
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useRouter } from "next/router";
 import Layout from "./Layout";
 import FilterCard from "@/components/card/FilterCard";
-import PriceRangeSlider from "@/components/filter/PriceRangeSlider ";
+import PriceRangeSlider from "@/components/filter/PriceRangeSlider";
+import SkeletonCard from "@/components/card/SkeletonCard"; // Import SkeletonCard
 import { baseUrl } from "@/components/constant";
 
 function Properties() {
@@ -12,7 +13,11 @@ function Properties() {
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null); // State for error message
+  const [page, setPage] = useState(1);
+  const [hasNext, setHasNext] = useState(true);
   const sidebarRef = useRef(null);
+  const footerRef = useRef(null);
+  const observer = useRef();
   const router = useRouter();
 
   const toggleSidebar = () => {
@@ -61,38 +66,38 @@ function Properties() {
     }
   }, [router.query.kindId]);
 
-  useEffect(() => {
-    const fetchProperties = async () => {
-      const { location, checkInDate, checkOutDate, guests, kindId } = router.query;
+  const fetchProperties = useCallback(
+    async (page) => {
+      const { location, checkInDate, checkOutDate, guests, kindId, minPrice, maxPrice } = router.query;
       if (!location || !checkInDate || !checkOutDate || !guests) {
         setLoading(false);
-        return; 
+        return;
       }
-      
+
       try {
-        const response = await fetch(
-          `${baseUrl}/api/properties/1/size/3`,
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              checkInTime: checkInDate,
-              checkOutTime: checkOutDate,
-              GuestNum: guests,
-              KindId: kindId,
-              CityName: location,
-            }),
-          }
-        );
+        const response = await fetch(`${baseUrl}/api/properties/${page}/size/3`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            checkInTime: checkInDate,
+            checkOutTime: checkOutDate,
+            GuestNum: guests,
+            KindId: kindId,
+            CityName: location,
+            MinPrice: minPrice, // Add minPrice to request body
+            MaxPrice: maxPrice, // Add maxPrice to request body
+          }),
+        });
 
         if (response.status === 404) {
           setProperties([]);
           setError("Property not found with this filter");
         } else {
           const data = await response.json();
-          setProperties(data.items);
+          setProperties((prev) => (page === 1 ? data.items : [...prev, ...data.items]));
+          setHasNext(data.hasNext);
           setError(null); // Clear error if data is found
         }
       } catch (error) {
@@ -101,16 +106,52 @@ function Properties() {
         setError("An error occurred while fetching properties");
       }
       setLoading(false);
+    },
+    [router.query]
+  );
+
+  useEffect(() => {
+    setPage(1);
+    fetchProperties(1);
+  }, [router.query.location, router.query.checkInDate, router.query.checkOutDate, router.query.guests, router.query.kindId, router.query.minPrice, router.query.maxPrice]);
+
+  useEffect(() => {
+    if (loading || !hasNext) return;
+
+    const options = {
+      root: null,
+      rootMargin: "20px",
+      threshold: 1.0,
     };
 
-    fetchProperties();
-  }, [router.query.location, router.query.checkInDate, router.query.checkOutDate, router.query.guests, router.query.kindId]);
+    observer.current = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        setPage((prev) => prev + 1);
+      }
+    }, options);
+
+    if (footerRef.current) {
+      observer.current.observe(footerRef.current);
+    }
+
+    return () => {
+      if (observer.current && footerRef.current) {
+        observer.current.unobserve(footerRef.current);
+      }
+    };
+  }, [loading, hasNext]);
+
+  useEffect(() => {
+    if (page > 1) {
+      fetchProperties(page);
+    }
+  }, [page]);
 
   const handleKindClick = (id) => {
     setActiveKindId(id);
     router.push({
       pathname: router.pathname,
-      query: { ...router.query, kindId: id }
+      query: { ...router.query, kindId: id },
     });
   };
 
@@ -123,12 +164,10 @@ function Properties() {
               {kinds.map((kind) => (
                 <li
                   key={kind.id}
-                  className={`relative cursor-pointer ${kind.id === activeKindId ? 'border-b-2 border-[#484848]' : ''}`}
+                  className={`relative cursor-pointer ${kind.id === activeKindId ? "border-b-2 border-[#484848]" : ""}`}
                   onClick={() => handleKindClick(kind.id)}
                 >
-                  <h1>
-                    {capitalizeFirstLetter(kind.name)}
-                  </h1>
+                  <h1>{capitalizeFirstLetter(kind.name)}</h1>
                 </li>
               ))}
             </ul>
@@ -142,14 +181,18 @@ function Properties() {
           </div>
         </div>
         <div className="flex gap-[30px] flex-wrap content-center items-center mx-auto sm:w-full w-[279px]">
-          {loading ? (
-            <p>Loading...</p>
-          ) : error ? ( 
+          {loading && page === 1 ? (
+            <>
+              <SkeletonCard />
+              <SkeletonCard />
+              <SkeletonCard />
+            </>
+          ) : error ? (
             <p>{error}</p>
           ) : properties.length > 0 ? (
             properties.map((property) => (
               <FilterCard
-                key={property.id}
+                key={property.propertyId}
                 imgSrc={property.mainImageUrl}
                 userSrc={property.userImageUrl}
                 isFavourite={property.isFavourite}
@@ -164,6 +207,15 @@ function Properties() {
             <p>No properties found</p>
           )}
         </div>
+        <div ref={footerRef} className="footer">
+          {loading && page > 1 && (
+            <>
+              <SkeletonCard />
+              <SkeletonCard />
+              <SkeletonCard />
+            </>
+          )}
+        </div>
         {isSidebarVisible && (
           <div
             ref={sidebarRef}
@@ -171,8 +223,7 @@ function Properties() {
           >
             <div className="p-6">
               <h2 className="text-xl font-bold mb-4">Filter Options</h2>
-              <PriceRangeSlider />
-              {/* Add more filter options here */}
+              <PriceRangeSlider/>
             </div>
           </div>
         )}
