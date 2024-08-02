@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Project.Application.Modules.DescriptionsModule.Commands.DescriptionAddCommand;
 using Project.Application.Modules.DescriptionsModule.Commands.DescriptionEditCommand;
@@ -19,6 +20,7 @@ namespace Project.Api.Controllers
             this.mediator = mediator;
         }
 
+        [AllowAnonymous]
         [HttpGet("{id:int:min(1)}")]
         public async Task<IActionResult> GetById([FromRoute] DescriptionGetByIdRequest request)
         {
@@ -26,7 +28,7 @@ namespace Project.Api.Controllers
             return Ok(entity);
         }
 
-
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetAll([FromRoute] DescriptionGetAllRequest request)
         {
@@ -34,7 +36,7 @@ namespace Project.Api.Controllers
             return Ok(entity);
         }
 
-
+        [Authorize("descriptions.add")]
         [HttpPost]
         public async Task<IActionResult> Add(DescriptionAddRequest request) {
         
@@ -42,6 +44,8 @@ namespace Project.Api.Controllers
         return CreatedAtAction(nameof(GetById), new {entity.Id},entity);
         }
 
+
+        [Authorize("descriptions.edit")]
         [HttpPut("{id:int:min(1)}")]
         public async Task<IActionResult> Edit([FromRoute]int id,[FromBody]DescriptionEditRequest request)
         {
@@ -50,7 +54,7 @@ namespace Project.Api.Controllers
             return Ok(entity);
         }
 
-
+        [Authorize("descriptions.delete")]
         [HttpDelete("{id:int:min(1)}")]
         public async Task<IActionResult> Remove([FromRoute]DescriptionRemoveRequest request)
         {

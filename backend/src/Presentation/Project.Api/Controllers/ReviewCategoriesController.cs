@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Project.Application.Modules.ReviewCategoriesModule.Commands.ReviewCategoryAddCommand;
 using Project.Application.Modules.ReviewCategoriesModule.Commands.ReviewCategoryEditCommand;
@@ -19,6 +20,7 @@ namespace Project.Api.Controllers
             this.mediator = mediator;
         }
 
+        [Authorize("reviewcategories.getall")]
         [HttpGet("{id:int:min(1)}")]
         public async Task<IActionResult> GetById([FromRoute] ReviewCategoryGetByIdRequest request)
         {
@@ -26,7 +28,7 @@ namespace Project.Api.Controllers
             return Ok(entity);
         }
 
-
+        [Authorize("reviewcategories.getall")]
         [HttpGet]
         public async Task<IActionResult> GetAll([FromRoute] ReviewCategoryGetAllRequest request)
         {
@@ -34,7 +36,7 @@ namespace Project.Api.Controllers
             return Ok(entity);
         }
 
-
+        [Authorize("reviewcategories.add")]
         [HttpPost]
         public async Task<IActionResult> Add(ReviewCategoryAddRequest request)
         {
@@ -43,6 +45,7 @@ namespace Project.Api.Controllers
             return CreatedAtAction(nameof(GetById), new { entity.Id }, entity);
         }
 
+        [Authorize("reviewcategories.edit")]
         [HttpPut("{id:int:min(1)}")]
         public async Task<IActionResult> Edit([FromRoute] int id, [FromBody] ReviewCategoryEditRequest request)
         {
@@ -51,7 +54,7 @@ namespace Project.Api.Controllers
             return Ok(entity);
         }
 
-
+        [Authorize("reviewcategories.remove")]
         [HttpDelete("{id:int:min(1)}")]
         public async Task<IActionResult> Remove([FromRoute] ReviewCategoryRemoveRequest request)
         {

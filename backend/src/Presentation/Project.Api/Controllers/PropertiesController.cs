@@ -91,6 +91,7 @@ namespace Project.Api.Controllers
             return Ok(response);
         }
 
+        [Authorize("properties.add")]
         [HttpPost]
         public async Task<IActionResult> Add(PropertyAddRequest request) {
         
@@ -98,6 +99,7 @@ namespace Project.Api.Controllers
         return CreatedAtAction(nameof(GetById), new {entity.Id},entity);
         }
 
+        [Authorize("properties.edit")]
         [HttpPut("{id:int:min(1)}")]
         public async Task<IActionResult> Edit([FromRoute]int id,[FromBody]PropertyEditRequest request)
         {
@@ -106,7 +108,7 @@ namespace Project.Api.Controllers
             return Ok(entity);
         }
 
-
+        [Authorize("properties.remove")]
         [HttpDelete("{id:int:min(1)}")]
         public async Task<IActionResult> Remove([FromRoute]PropertyRemoveRequest request)
         {

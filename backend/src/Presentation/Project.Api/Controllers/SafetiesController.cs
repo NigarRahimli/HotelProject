@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Project.Application.Modules.SafetiesModule.Commands.SafetyAddCommand;
 using Project.Application.Modules.SafetiesModule.Commands.SafetyEditCommand;
@@ -19,6 +20,7 @@ namespace Project.Api.Controllers
             this.mediator = mediator;
         }
 
+        [AllowAnonymous]
         [HttpGet("{id:int:min(1)}")]
         public async Task<IActionResult> GetById([FromRoute] SafetyGetByIdRequest request)
         {
@@ -26,7 +28,7 @@ namespace Project.Api.Controllers
             return Ok(entity);
         }
 
-
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetAll([FromRoute] SafetyGetAllRequest request)
         {
@@ -34,7 +36,7 @@ namespace Project.Api.Controllers
             return Ok(entity);
         }
 
-
+        [Authorize("safeties.add")]
         [HttpPost]
         public async Task<IActionResult> Add([FromForm]SafetyAddRequest request)
         {
@@ -43,6 +45,7 @@ namespace Project.Api.Controllers
             return CreatedAtAction(nameof(GetById), new { entity.Id }, entity);
         }
 
+        [Authorize("safeties.edit")]
         [HttpPut("{id:int:min(1)}")]
         public async Task<IActionResult> Edit([FromRoute] int id, [FromForm] SafetyEditRequest request)
         {
@@ -51,7 +54,7 @@ namespace Project.Api.Controllers
             return Ok(entity);
         }
 
-
+        [Authorize("safeties.remove")]
         [HttpDelete("{id:int:min(1)}")]
         public async Task<IActionResult> Remove([FromRoute] SafetyRemoveRequest request)
         {

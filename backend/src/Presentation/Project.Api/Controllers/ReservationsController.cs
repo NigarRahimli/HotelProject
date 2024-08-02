@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Project.Application.Modules.ReservationModule.Commands.ReservationAddCommand;
 using Project.Application.Modules.ReservationModule.Commands.ReservationChangeStatusCommand;
@@ -22,12 +23,16 @@ namespace Project.Api.Controllers
             this.mediator = mediator;
         }
 
+
+        [AllowAnonymous]
         [HttpGet("{id:int:min(1)}")]
         public async Task<IActionResult> GetById([FromRoute] ReservationGetByIdRequest request)
         {
             var entity = await mediator.Send(request);
             return Ok(entity);
         }
+
+        [Authorize("reservations.getbypropid")]
         [HttpGet("property/{propertyId:int:min(1)}")]
         public async Task<IActionResult> GetByPropertyId([FromRoute] ReservationGetAllByPropertyIdRequest request)
         {
@@ -35,6 +40,7 @@ namespace Project.Api.Controllers
             return Ok(entity);
         }
 
+        [Authorize("reservations.getbypropid")]
         [HttpGet]
         public async Task<IActionResult> GetAll([FromRoute] ReservationGetAllRequest request)
         {
@@ -42,7 +48,7 @@ namespace Project.Api.Controllers
             return Ok(entity);
         }
 
-
+        [Authorize]
         [HttpPost]
         public async Task<IActionResult> Add([FromBody]ReservationAddRequest request)
         {
@@ -50,6 +56,7 @@ namespace Project.Api.Controllers
             var entity = await mediator.Send(request);
             return CreatedAtAction(nameof(GetById), new { entity.Id }, entity);
         }
+        [Authorize("reservations.changestatus")]
         [HttpPut("change-status/{reservationId:int:min(1)}")]
         public async Task<IActionResult> ChangeStatus([FromRoute] int reservationId, [FromBody] ReservationChangeStatusRequest request)
         {
@@ -57,6 +64,8 @@ namespace Project.Api.Controllers
             await mediator.Send(request);
             return Ok ("Reservation status changed successfully");
         }
+
+        [Authorize]
         [HttpPut("{id:int:min(1)}")]
         public async Task<IActionResult> Edit([FromRoute] int id, [FromBody] ReservationEditRequest request)
         {
@@ -65,7 +74,7 @@ namespace Project.Api.Controllers
             return Ok(entity);
         }
 
-
+        [Authorize]
         [HttpDelete("{id:int:min(1)}")]
         public async Task<IActionResult> Remove([FromRoute] ReservationRemoveRequest request)
         {

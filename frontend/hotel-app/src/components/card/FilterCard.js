@@ -1,25 +1,12 @@
+import React from "react";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
-import React from "react";
+import { baseUrl } from "@/components/constant";
 
-const steps = [
-  {
-    imgPath: "https://via.placeholder.com/400x255?text=Image+1",
-  },
-  {
-    imgPath: "https://via.placeholder.com/400x255?text=Image+2",
-  },
-  {
-    imgPath: "https://via.placeholder.com/400x255?text=Image+3",
-  },
-  {
-    imgPath: "https://via.placeholder.com/400x255?text=Image+4",
-  },
-];
-
-const FilterCard = ({ imgSrc, userSrc, isFavourite, name, location }) => {
+const FilterCard = ({ imgSrc, userSrc, isFavourite, name, location, minPrice, maxPrice, propertyImageDetails }) => {
   const [activeStep, setActiveStep] = React.useState(0);
-  const maxSteps = steps.length;
+  const maxSteps = propertyImageDetails.length;
+  const defaultImage = "/images/property_avatar.jpg"; // Default image path
 
   React.useEffect(() => {
     const interval = setInterval(() => {
@@ -31,13 +18,21 @@ const FilterCard = ({ imgSrc, userSrc, isFavourite, name, location }) => {
   const handleStepChange = (step) => {
     setActiveStep(step);
   };
+
+  const getImageSrc = (index) => {
+    if (propertyImageDetails.length > 0) {
+      return `${baseUrl}/${propertyImageDetails[index].url}`;
+    }
+    return defaultImage;
+  };
+
   return (
     <div>
       <Box
         sx={{
           position: "relative",
           maxWidth: 382,
-          flexGrow: 1,
+          width: 382, // Fixed width for the container
           borderRadius: "12px",
           overflow: "hidden",
         }}
@@ -50,15 +45,14 @@ const FilterCard = ({ imgSrc, userSrc, isFavourite, name, location }) => {
             alignItems: "center",
             justifyContent: "center",
             height: 340,
-            maxWidth: 382,
             width: "100%",
             bgcolor: "background.default",
           }}
         >
           <img
-            src={steps[activeStep].imgPath}
-            alt={`step ${activeStep + 1}`}
-            style={{ width: "100%", height: "100%" }}
+            src={getImageSrc(activeStep)}
+            alt={`Image ${activeStep + 1}`}
+            style={{ width: "100%", height: "100%", objectFit: "cover" }} // Adjust to cover the container
           />
         </Paper>
         <Box
@@ -74,7 +68,7 @@ const FilterCard = ({ imgSrc, userSrc, isFavourite, name, location }) => {
             mt: 1,
           }}
         >
-          {[...Array(maxSteps)].map((_, index) => (
+          {propertyImageDetails.map((_, index) => (
             <Box
               key={index}
               onClick={() => handleStepChange(index)}
@@ -96,18 +90,18 @@ const FilterCard = ({ imgSrc, userSrc, isFavourite, name, location }) => {
         </Box>
 
         <img
-          src="./icons/empty_heart.png"
-          className=" cursor-pointer absolute top-[20px] right-[20px]"
+          src={isFavourite ? "./icons/full_heart.png" : "./icons/empty_heart.png"}
+          className="cursor-pointer absolute top-[20px] right-[20px]"
+          alt="Favourite Icon"
         />
-        <p className=" font-semibold text-[18px] text-[#9A9A9A] absolute left-[20px] bottom-[15px]">
-          $ 1000 - 5000 USD
+        <p className="font-semibold text-[18px] text-[#9A9A9A] absolute left-[20px] bottom-[15px]">
+          ${minPrice} - ${maxPrice} USD
         </p>
       </Box>
 
       <div>
-        <h1 className=" font-bold text-[#484848] text-[18px] mt-[25px]">{name}</h1>
-        <p className="font-medium text-[#9A9A9A] text-[14px ] py-[7px]">{location}</p>
-    
+        <h1 className="font-bold text-[#484848] text-[18px] mt-[25px]">{name}</h1>
+        <p className="font-medium text-[#9A9A9A] text-[14px] py-[7px]">{location}</p>
       </div>
     </div>
   );

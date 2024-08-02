@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Project.Application.Modules.PropertyImagesModule.Commands.PropertyImageAddCommand;
 using Project.Application.Modules.PropertyImagesModule.Commands.PropertyImageEditCommand;
@@ -19,6 +20,7 @@ namespace Project.Api.Controllers
             this.mediator = mediator;
         }
 
+        [Authorize("propertyimages.getall")]
         [HttpGet("{propertyid:int:min(1)}")]
         public async Task<IActionResult> GetByPropertyId([FromRoute] PropertyImagesGetByPropertyIdRequest request)
         {
@@ -26,7 +28,7 @@ namespace Project.Api.Controllers
             return Ok(entity);
         }
 
-
+        [Authorize("propertyimages.getall")]
         [HttpGet]
         public async Task<IActionResult> GetAll([FromRoute] PropertyImageGetAllRequest request)
         {
@@ -34,7 +36,7 @@ namespace Project.Api.Controllers
             return Ok(entity);
         }
 
-
+        [Authorize("propertyimages.add")]
         [HttpPost("{propertyId:int:min(1)}")]
         public async Task<IActionResult> Add([FromRoute]int propertyId,[FromForm] PropertyImagesAddRequest request)
         {
@@ -50,6 +52,8 @@ namespace Project.Api.Controllers
             return CreatedAtAction(nameof(GetByPropertyId), new { propertyId = request.PropertyId }, createdEntities);
         }
 
+        [Authorize("propertyimages.edit")]
+
         [HttpPut("{propertyId:int:min(1)}")]
         public async Task<IActionResult> Edit([FromRoute] int propertyId, [FromForm] PropertyImagesEditRequest request)
         {
@@ -59,12 +63,7 @@ namespace Project.Api.Controllers
         }
 
 
-        //[HttpDelete("{id:int:min(1)}")]
-        //public async Task<IActionResult> Remove([FromRoute] PropertyImageRemoveRequest request)
-        //{
-        //    await mediator.Send(request);
-        //    return NoContent();
-        //}
+      
 
     }
 }

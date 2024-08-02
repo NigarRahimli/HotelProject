@@ -5,7 +5,7 @@ using Project.Api.AppCode.Pipeline;
 using Project.Application.Modules.RoleModule.Commands.AssignPoliciesToRoleCommand;
 using System.Reflection;
 
-namespace Project.Api.Areas.Admin
+namespace Project.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -18,6 +18,8 @@ namespace Project.Api.Areas.Admin
             this.mediator = mediator;
         }
 
+
+        [Authorize("policies.getall")]
         [HttpGet()]
         public IActionResult GetAllPolicies()
         {
@@ -27,8 +29,8 @@ namespace Project.Api.Areas.Admin
         }
 
 
-       
+
     }
-   
+
 
 }

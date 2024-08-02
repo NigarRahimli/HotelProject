@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Project.Application.Modules.LocationsModule.Commands.LocationAddCommand;
 using Project.Application.Modules.LocationsModule.Commands.LocationEditCommand;
@@ -20,6 +21,7 @@ namespace Project.Api.Controllers
             this.mediator = mediator;
         }
 
+        [AllowAnonymous]
         [HttpGet("{id:int:min(1)}")]
         public async Task<IActionResult> GetById([FromRoute] LocationGetByIdRequest request)
         {
@@ -27,6 +29,7 @@ namespace Project.Api.Controllers
             return Ok(entity);
         }
 
+        [AllowAnonymous]
         [HttpGet("byuser")]
         public async Task<IActionResult> GetByUserId([FromRoute] LocationGetByUserIdRequest request)
         {
@@ -34,6 +37,7 @@ namespace Project.Api.Controllers
             return Ok(entity);
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetAll([FromRoute] LocationGetAllRequest request)
         {
@@ -41,7 +45,7 @@ namespace Project.Api.Controllers
             return Ok(entity);
         }
 
-
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Add(LocationAddRequest request)
         {
@@ -50,6 +54,7 @@ namespace Project.Api.Controllers
             return CreatedAtAction(nameof(GetById), new { entity.Id }, entity);
         }
 
+        [AllowAnonymous]
         [HttpPut("{id:int:min(1)}")]
         public async Task<IActionResult> Edit([FromRoute] int id, [FromBody] LocationEditRequest request)
         {
@@ -58,7 +63,7 @@ namespace Project.Api.Controllers
             return Ok(entity);
         }
 
-
+        [AllowAnonymous]
         [HttpDelete("{id:int:min(1)}")]
         public async Task<IActionResult> Remove([FromRoute] LocationRemoveRequest request)
         {

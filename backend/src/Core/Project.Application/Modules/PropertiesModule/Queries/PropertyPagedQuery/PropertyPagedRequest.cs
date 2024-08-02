@@ -13,6 +13,8 @@ namespace Project.Application.Modules.PropertiesModule.Queries.PropertyPagedQuer
         public int? GuestNum { get; set; }
         public int? KindId { get; set; }
         public string? CityName { get; set; }
+        public float? MinPrice { get; set; }
+        public float? MaxPrice { get; set; }
 
     }
 }

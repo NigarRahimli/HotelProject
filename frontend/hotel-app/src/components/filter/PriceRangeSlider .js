@@ -13,7 +13,7 @@ const BlackSlider = styled(Slider)(({ theme }) => ({
 }));
 
 const PriceRangeSlider = () => {
-  const [value, setValue] = useState([0, 100]); 
+  const [value, setValue] = useState([0, 3000]); 
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -30,7 +30,7 @@ const PriceRangeSlider = () => {
         valueLabelDisplay="auto"
         aria-labelledby="priceRange"
         min={0}
-        max={100}
+        max={3000}
       />
       <Typography variant="subtitle1" gutterBottom>
         Min Price: {value[0]}

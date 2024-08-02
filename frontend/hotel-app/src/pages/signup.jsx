@@ -280,7 +280,7 @@ function SignUp() {
         <p className="mt-10 text-center text-sm text-gray-500">
           Already have an account?{" "}
           <a
-            href="#"
+            href="./signin"
             className="font-semibold leading-6 text-[#101010] hover:text-[#2e2e2e]"
           >
             Sign in

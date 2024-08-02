@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Project.Application.Modules.FacilityCountsModule.Commands.FacilityCountAddCommand;
 using Project.Application.Modules.FacilityCountsModule.Commands.FacilityCountEditCommand;
@@ -19,6 +20,7 @@ namespace Project.Api.Controllers
             this.mediator = mediator;
         }
 
+        [AllowAnonymous]
         [HttpGet("{id:int:min(1)}")]
         public async Task<IActionResult> GetById([FromRoute] FacilityCountGetByIdRequest request)
         {
@@ -26,7 +28,7 @@ namespace Project.Api.Controllers
             return Ok(entity);
         }
 
-
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetAll([FromRoute] FacilityCountGetAllRequest request)
         {
@@ -34,7 +36,7 @@ namespace Project.Api.Controllers
             return Ok(entity);
         }
 
-
+        [Authorize("facilitycounts.add")]
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] FacilityCountAddRequest request) {
         
@@ -42,6 +44,7 @@ namespace Project.Api.Controllers
         return CreatedAtAction(nameof(GetById), new {entity.Id},entity);
         }
 
+        [Authorize("facilitycounts.edit")]
         [HttpPut("{id:int:min(1)}")]
         public async Task<IActionResult> Edit([FromRoute]int id,[FromBody]FacilityCountEditRequest request)
         {
@@ -50,7 +53,7 @@ namespace Project.Api.Controllers
             return Ok(entity);
         }
 
-
+        [Authorize("facilitycounts.remove")]
         [HttpDelete("{id:int:min(1)}")]
         public async Task<IActionResult> Remove([FromRoute]FacilityCountRemoveRequest request)
         {

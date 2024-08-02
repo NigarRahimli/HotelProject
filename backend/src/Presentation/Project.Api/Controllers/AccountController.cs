@@ -42,7 +42,6 @@ namespace Project.Api.Controllers
 
         [HttpPost("signin")]
         [AllowAnonymous]
-
         public async Task<IActionResult> Signin(SigninRequest request)
         {
             var principal = await mediator.Send(request);
@@ -131,6 +130,7 @@ namespace Project.Api.Controllers
             };
         }
 
+        [AllowAnonymous]
         [HttpPost("send-code")]
         public async Task<IActionResult> RequestPhoneConfirmation(SendPhoneConfirmationRequest request)
         {
@@ -139,6 +139,8 @@ namespace Project.Api.Controllers
                 return Ok("Confirmation code sent successfully.");
           
         }
+
+        [AllowAnonymous]
         [HttpPost("confirm-phone")]
         public async Task<IActionResult> ConfirmPhone(ConfirmCodeRequest request)
         {
@@ -148,6 +150,7 @@ namespace Project.Api.Controllers
         
         }
 
+        [AllowAnonymous]
         [HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword([FromBody] SendForgotPasswordEmailRequest request)
         {
@@ -155,6 +158,7 @@ namespace Project.Api.Controllers
             return Ok("Forgot pasword email was sent successfully.");
         }
 
+        [AllowAnonymous]
         [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword([FromBody] ResetCurrentPasswordRequest request)
         {
@@ -162,6 +166,7 @@ namespace Project.Api.Controllers
             return Ok("New password was set");
         }
 
+        [AllowAnonymous]
         [HttpPost("change-password")]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest request)
         {     
@@ -170,14 +175,16 @@ namespace Project.Api.Controllers
         
         }
 
-        [HttpPost("refresh-token")]
+
         [AllowAnonymous]
+        [HttpPost("refresh-token")]
         public async Task<IActionResult> RefreshToken([FromRoute] TokenRefreshRequest request)
         {
             var response = await mediator.Send(request);
             return Ok(response);
         }
-     
+
+        [AllowAnonymous]
         [HttpPost("resend-confirmation")]
         public async Task<IActionResult> ResendConfirmationEmail([FromBody] ResendConfirmationEmailRequest request)
         {

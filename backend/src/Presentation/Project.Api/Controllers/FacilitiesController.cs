@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Project.Application.Modules.FacilitiesModule.Commands.FacilityAddCommand;
 using Project.Application.Modules.FacilitiesModule.Commands.FacilityEditCommand;
@@ -20,12 +21,14 @@ namespace Project.Api.Controllers
             this.mediator = mediator;
         }
 
+        [AllowAnonymous]
         [HttpGet("{id:int:min(1)}")]
         public async Task<IActionResult> GetById([FromRoute] FacilityGetByIdRequest request)
         {
             var entity = await mediator.Send(request);
             return Ok(entity);
         }
+        [AllowAnonymous]
         [HttpGet("byproperty/{propertyid:int:min(1)}")]
         public async Task<IActionResult> GetByPropertyId([FromRoute] FacilityGetByPropertyIdRequest request)
         {
@@ -33,7 +36,7 @@ namespace Project.Api.Controllers
             return Ok(entity);
         }
 
-
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetAll([FromRoute] FacilityGetAllRequest request)
         {
@@ -41,7 +44,7 @@ namespace Project.Api.Controllers
             return Ok(entity);
         }
 
-
+        [Authorize("facilities.add")]
         [HttpPost]
         public async Task<IActionResult> Add([FromForm] FacilityAddRequest request)
         {
@@ -50,6 +53,7 @@ namespace Project.Api.Controllers
             return CreatedAtAction(nameof(GetById), new { entity.Id }, entity);
         }
 
+        [Authorize("facilities.edit")]
         [HttpPut("{id:int:min(1)}")]
         public async Task<IActionResult> Edit([FromRoute] int id, [FromForm] FacilityEditRequest request)
         {
@@ -59,6 +63,7 @@ namespace Project.Api.Controllers
         }
 
 
+        [Authorize("facilities.remove")]
         [HttpDelete("{id:int:min(1)}")]
         public async Task<IActionResult> Remove([FromRoute] FacilityRemoveRequest request)
         {

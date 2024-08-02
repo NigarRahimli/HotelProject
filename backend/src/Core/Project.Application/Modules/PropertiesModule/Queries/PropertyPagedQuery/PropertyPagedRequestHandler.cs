@@ -7,9 +7,6 @@ using Project.Application.Repositories;
 using Project.Infrastructure.Abstracts;
 using Project.Infrastructure.Concretes;
 using Project.Infrastructure.Extensions;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Project.Application.Modules.PropertiesModule.Queries.PropertyPagedQuery
 {
@@ -87,6 +84,18 @@ namespace Project.Application.Modules.PropertiesModule.Queries.PropertyPagedQuer
                 query = query.Where(m => m.GuestNum >= request.GuestNum.Value);
             }
 
+            if (request.MinPrice.HasValue)
+            {
+                logger.LogInformation("Filtering properties by MinPrice: {MinPrice}", request.MinPrice.Value);
+                query = query.Where(m => m.MinPrice >= request.MinPrice.Value);
+            }
+
+            if (request.MaxPrice.HasValue)
+            {
+                logger.LogInformation("Filtering properties by MaxPrice: {MaxPrice}", request.MaxPrice.Value);
+                query = query.Where(m => m.LongPrice <= request.MaxPrice.Value);
+            }
+
             logger.LogInformation("Paginating properties");
             var paginatedProperties = await query.OrderByDescending(m => m.Id).ToPaginateAsync(request, cancellationToken);
 
@@ -124,5 +133,6 @@ namespace Project.Application.Modules.PropertiesModule.Queries.PropertyPagedQuer
 
             return paginatedDto;
         }
+
     }
 }

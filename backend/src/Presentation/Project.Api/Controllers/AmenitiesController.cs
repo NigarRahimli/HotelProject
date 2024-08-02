@@ -20,7 +20,7 @@ namespace Project.Api.Controllers
             this.mediator = mediator;
         }
 
-
+        [AllowAnonymous]
         [HttpGet("{id:int:min(1)}")]
         public async Task<IActionResult> GetById([FromRoute] AmenityGetByIdRequest request)
         {
@@ -28,7 +28,7 @@ namespace Project.Api.Controllers
             return Ok(entity);
         }
 
-        [Authorize("amenities.getall")]
+        [AllowAnonymous]
         [HttpGet]
         public async Task<IActionResult> GetAll([FromRoute] AmenityGetAllRequest request)
         {
@@ -36,7 +36,7 @@ namespace Project.Api.Controllers
             return Ok(entity);
         }
 
-
+        [Authorize("amenities.add")]
         [HttpPost]
         public async Task<IActionResult> Add([FromForm]AmenityAddRequest request)
         {
@@ -45,6 +45,8 @@ namespace Project.Api.Controllers
             return CreatedAtAction(nameof(GetById), new { entity.Id }, entity);
         }
 
+
+        [Authorize("amenities.edit")]
         [HttpPut("{id:int:min(1)}")]
         public async Task<IActionResult> Edit([FromRoute] int id, [FromForm] AmenityEditRequest request)
         {
@@ -53,7 +55,7 @@ namespace Project.Api.Controllers
             return Ok(entity);
         }
 
-
+        [Authorize("amenities.remove")]
         [HttpDelete("{id:int:min(1)}")]
         public async Task<IActionResult> Remove([FromRoute] AmenityRemoveRequest request)
         {

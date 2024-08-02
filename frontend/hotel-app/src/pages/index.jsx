@@ -1,19 +1,30 @@
 import React, { useEffect, useState } from "react";
+import { useRouter } from 'next/router';
+import Swal from 'sweetalert2';
 import Layout from "./Layout";
-import ArticleCard from "@/components/card/ArticleCard";
-import { baseUrl, colors } from "@/components/constant";
+import { baseUrl } from "@/components/constant";
 import LatestProperties from "@/components/sections/LatestProperties";
 import NearbyProperties from "@/components/sections/NearbyProperties";
 import TopRatedProperties from "@/components/sections/TopRatedProperties";
 import FeaturedProperties from "@/components/sections/FeaturedProperties";
+import ArticleCard from "@/components/card/ArticleCard";
+import withReactContent from 'sweetalert2-react-content';
+
+const MySwal = withReactContent(Swal);
+
 function Index() {
   const [kinds, setKinds] = useState([]);
   const [activeKind, setActiveKind] = useState(null);
+  const [location, setLocation] = useState('');
+  const [checkInDate, setCheckInDate] = useState('');
+  const [checkOutDate, setCheckOutDate] = useState('');
+  const [guests, setGuests] = useState('');
+  const router = useRouter();
 
   function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
   }
-  
+
   useEffect(() => {
     fetch(`${baseUrl}/api/kinds`)
       .then((response) => response.json())
@@ -24,6 +35,76 @@ function Index() {
   const handleKindClick = (id) => {
     setActiveKind(id);
   };
+
+  const showValidationMessage = (message) => {
+    MySwal.fire({
+      background: '#6B7280',
+      color: '#FFFFFF',
+      html: `
+        <div class="flex items-center">
+          <span class="text-2xl mr-2"><i class="fas fa-exclamation"></i></span>
+          <span>${message}</span>
+        </div>`,
+      showConfirmButton: false,
+      timer: 3000,
+      toast: true,
+      position: 'top-end',
+      customClass: {
+        container: 'overflow-hidden',
+        title: 'text-white',
+        content: 'text-white',
+      }
+    });
+  };
+
+  const handleSearch = () => {
+    const cityRegex = /^[^\d]*$/;
+    const guestsNumber = parseInt(guests, 10);
+
+    if (!activeKind) {
+      showValidationMessage("Please select a kind of property you want to stay in.");
+      return;
+    }
+
+    if (!cityRegex.test(location)) {
+      showValidationMessage("City name cannot contain numbers.");
+      return;
+    }
+
+    if (!location.trim()) {
+      showValidationMessage("Please add city name that are you looking for property.");
+      return;
+    }
+
+    if (isNaN(new Date(checkInDate).getTime()) || isNaN(new Date(checkOutDate).getTime())) {
+      showValidationMessage("Please enter valid dates for check-in and check-out.");
+      return;
+    }
+
+    if (new Date(checkInDate) >= new Date(checkOutDate)) {
+      showValidationMessage("Check-out date must be after check-in date.");
+      return;
+    }
+
+    if (!Number.isInteger(guestsNumber) || guestsNumber <= 0) {
+      showValidationMessage("Please enter a valid number of guests.");
+      return;
+    }
+
+    const query = {
+      location,
+      checkInDate,
+      checkOutDate,
+      guests,
+      kindId: activeKind,
+    };
+    router.push({
+      pathname: '/properties',
+      query,
+    });
+  };
+
+  const today = new Date().toISOString().split('T')[0];
 
   return (
     <Layout>
@@ -46,7 +127,7 @@ function Index() {
                     activeKind === kind.id ? "text-black" : "text-[#101010]"
                   } cursor-pointer hover:text-black`}
                 >
-                {capitalizeFirstLetter( kind.name)}
+                {capitalizeFirstLetter(kind.name)}
                 </h1>
               </li>
             ))}
@@ -56,40 +137,61 @@ function Index() {
           <div className="pl-[15px] py-[8px] location">
             <h2 className=" text-[12px] text-[#0f0f0f] ">Location</h2>
             <input
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
               placeholder="Which city do you prefer?"
               className=" w-[223px] lg:w-[223px]  md:w-[190px] outline-none text-[14px] text-[#484848] placeholder:text-[14px] placeholder:text-[#C2C6CC] "
             />
           </div>
           <div className="bar my-[10px] md:mt-[15px] bg-[#DDDDDD] h-[2px] w-full md:h-[30px] md:w-[1px]"></div>
-          <div className="checkIn  pl-[15px] md:pl-0 py-[8px]">
+          <div className="checkIn  pl-[15px] py-[8px]">
             <h2 className=" text-[12px] text-[#0f0f0f]">Check In</h2>
-            <input
-              placeholder="Add Dates"
-              className="outline-none w-full text-[14px] text-[#484848] placeholder:text-[14px] placeholder:text-[#C2C6CC] "
-            />
+        <input
+          type="datetime-local"
+           value={checkInDate}
+           onChange={(e) => {
+           setCheckInDate(e.target.value);
+            setCheckOutDate('');
+             }}
+           min={today}
+          placeholder="Add Dates"
+          className="outline-none w-[150px] text-[12px] text-[#484848] placeholder:text-[12px] placeholder:text-[#C2C6CC] "
+/>
+
           </div>
           <div className="bar my-[10px] md:mt-[15px] bg-[#DDDDDD] h-[2px] w-full md:h-[30px] md:w-[1px]"></div>
-          <div className="checkOut  pl-[15px] md:pl-0 py-[8px]">
+          <div className="checkOut  pl-[15px] py-[8px]">
             <h2 className=" text-[12px] text-[#0f0f0f]">Check Out</h2>
             <input
+              type="datetime-local"
+              value={checkOutDate}
+              onChange={(e) => setCheckOutDate(e.target.value)}
+              min={checkInDate}
               placeholder="Add Dates"
-              className="outline-none w-full text-[14px] text-[#484848] placeholder:text-[14px] placeholder:text-[#C2C6CC] "
+              className="outline-none w-[150px] text-[12px] text-[#484848] placeholder:text-[12px] placeholder:text-[#C2C6CC] "
             />
           </div>
           <div className="bar my-[10px] md:mt-[15px] bg-[#DDDDDD] h-[1px] w-full md:h-[30px] md:w-[1px]"></div>
-          <div className="guests  pl-[15px] md:pl-0  py-[8px]">
+          <div className="guests  pl-[15px] py-[8px]">
             <h2 className=" text-[12px] text-[#0f0f0f]">Guests</h2>
             <input
+              type="text"
+              value={guests}
+              onChange={(e) => setGuests(e.target.value.replace(/\D/, ''))}
               placeholder="Add Guests"
               className="outline-none w-full text-[14px] text-[#484848] placeholder:text-[14px] placeholder:text-[#C2C6CC] "
             />
           </div>
-          <div className="button cursor-pointer ml-[230px] md:ml-0 hover:bg-black focus:ring focus:ring-slate-200  bg-[#484848] p-[15px] w-[54px] h-[54px] flex content-center items-center rounded-full">
+          <div
+            className="button cursor-pointer ml-[230px] md:ml-0 hover:bg-black focus:ring focus:ring-slate-200 bg-[#484848] p-[15px] w-[54px] h-[54px] flex content-center items-center rounded-full"
+            onClick={handleSearch}
+          >
             <img src="./icons/fe_search.png" />
           </div>
         </div>
       </div>
-      <div className="mx-auto sm:w-[620px] md:w-[728px] lg:w-[994px] xl:w-[1210px]">
+
+       <div className="mx-auto sm:w-[620px] md:w-[728px] lg:w-[994px] xl:w-[1210px]">
         <LatestProperties />
         <NearbyProperties />
         <TopRatedProperties />

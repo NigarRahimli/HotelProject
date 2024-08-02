@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Project.Application.Modules.TransactionModule.Commands.ProcessPaymentCommand;
 
@@ -17,10 +18,10 @@ namespace Project.Api.Controllers
             this.mediator = mediator;
         }
 
-    
 
 
 
+       
         [HttpPost("payment")]
         public async Task<IActionResult> Payment([FromBody] ProcessPaymentRequest request)
         {

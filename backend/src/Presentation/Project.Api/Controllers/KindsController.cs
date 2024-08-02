@@ -6,9 +6,8 @@ using Project.Application.Modules.KindsModule.Commands.KindEditCommand;
 using Project.Application.Modules.KindsModule.Commands.KindRemoveCommand;
 using Project.Application.Modules.KindsModule.Queries.KindGetAllQuery;
 using Project.Application.Modules.KindsModule.Queries.KindGetByIdQuery;
-using Project.Application.Modules.RoleModule.Commands.RoleRemoveCommand;
 
-namespace Project.Api.Areas.Admin
+namespace Project.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -21,8 +20,8 @@ namespace Project.Api.Areas.Admin
             this.mediator = mediator;
         }
 
+        [AllowAnonymous]
         [HttpGet("{id:int:min(1)}")]
-        [Authorize("kinds.getall")]
         public async Task<IActionResult> GetById([FromRoute] KindGetByIdRequest request)
         {
             var entity = await mediator.Send(request);
@@ -30,8 +29,8 @@ namespace Project.Api.Areas.Admin
         }
 
 
-        [HttpGet]
         [AllowAnonymous]
+        [HttpGet]
         public async Task<IActionResult> GetAll([FromRoute] KindGetAllRequest request)
         {
             var entity = await mediator.Send(request);
@@ -39,8 +38,8 @@ namespace Project.Api.Areas.Admin
         }
 
 
-        [HttpPost]
         [Authorize("kinds.add")]
+        [HttpPost]
         public async Task<IActionResult> Add(KindAddRequest request)
         {
 
@@ -48,8 +47,8 @@ namespace Project.Api.Areas.Admin
             return CreatedAtAction(nameof(GetById), new { entity.Id }, entity);
         }
 
-        [HttpPut("{id:int:min(1)}")]
         [Authorize("kinds.edit")]
+        [HttpPut("{id:int:min(1)}")]
         public async Task<IActionResult> Edit([FromRoute] int id, [FromBody] KindEditRequest request)
         {
             request.Id = id;
@@ -57,7 +56,7 @@ namespace Project.Api.Areas.Admin
             return Ok(entity);
         }
 
-        [Authorize("kinds.delete")]
+        [Authorize("kinds.remove")]
         [HttpDelete("{id:int:min(1)}")]
         public async Task<IActionResult> Remove([FromRoute] KindRemoveRequest request)
         {
