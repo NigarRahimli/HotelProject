@@ -1,18 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Slider from '@mui/material/Slider';
 import Typography from '@mui/material/Typography';
 import { styled } from '@mui/system';
 
 const BlackSlider = styled(Slider)(({ theme }) => ({
-  color: '#484848', 
+  color: '#484848',
   '& .MuiSlider-thumb': {
     '&:hover, &.Mui-focusVisible': {
-      boxShadow: '0px 0px 0px 8px rgba(0, 0, 0, 0.16)', 
+      boxShadow: '0px 0px 0px 8px rgba(0, 0, 0, 0.16)',
     },
   },
 }));
-const PriceRangeSlider = ({ onPriceChange }) => {
-  const [value, setValue] = useState([0, 3000]); 
+
+const PriceRangeSlider = ({ onPriceChange, minPrice = 0, maxPrice = 3000 }) => {
+  const [value, setValue] = useState([minPrice, maxPrice]);
+
+  useEffect(() => {
+    setValue([minPrice, maxPrice]);
+  }, [minPrice, maxPrice]);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);

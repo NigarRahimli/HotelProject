@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import Layout from "./Layout";
 import FilterCard from "@/components/card/FilterCard";
 import PriceRangeSlider from "@/components/filter/PriceRangeSlider";
-import SkeletonCard from "@/components/card/SkeletonCard"; // Import SkeletonCard
+import SkeletonCard from "@/components/card/SkeletonCard";
 import { baseUrl } from "@/components/constant";
 
 function Properties() {
@@ -12,7 +12,7 @@ function Properties() {
   const [activeKindId, setActiveKindId] = useState(null);
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null); // State for error message
+  const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
   const [hasNext, setHasNext] = useState(true);
   const sidebarRef = useRef(null);
@@ -86,8 +86,8 @@ function Properties() {
             GuestNum: guests,
             KindId: kindId,
             CityName: location,
-            MinPrice: minPrice, // Add minPrice to request body
-            MaxPrice: maxPrice, // Add maxPrice to request body
+            MinPrice: minPrice,
+            MaxPrice: maxPrice,
           }),
         });
 
@@ -98,7 +98,7 @@ function Properties() {
           const data = await response.json();
           setProperties((prev) => (page === 1 ? data.items : [...prev, ...data.items]));
           setHasNext(data.hasNext);
-          setError(null); // Clear error if data is found
+          setError(null);
         }
       } catch (error) {
         console.error("Error fetching properties:", error);
@@ -161,6 +161,9 @@ function Properties() {
       query: { ...router.query, minPrice: newPriceRange[0], maxPrice: newPriceRange[1] },
     });
   };
+
+  const minPrice = router.query.minPrice ? parseInt(router.query.minPrice, 10) : 0;
+  const maxPrice = router.query.maxPrice ? parseInt(router.query.maxPrice, 10) : 3000;
 
   return (
     <Layout>
@@ -230,7 +233,11 @@ function Properties() {
           >
             <div className="p-6">
               <h2 className="text-xl font-bold mb-4">Filter Options</h2>
-              <PriceRangeSlider onPriceChange={handlePriceChange} />
+              <PriceRangeSlider
+                onPriceChange={handlePriceChange}
+                minPrice={minPrice}
+                maxPrice={maxPrice}
+              />
             </div>
           </div>
         )}
