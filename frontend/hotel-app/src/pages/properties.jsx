@@ -15,6 +15,10 @@ function Properties() {
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
   const [hasNext, setHasNext] = useState(true);
+  const [checkInTime, setCheckInTime] = useState("");
+  const [checkOutTime, setCheckOutTime] = useState("");
+  const [guestNum, setGuestNum] = useState("");
+  const [cityName, setCityName] = useState("");
   const sidebarRef = useRef(null);
   const footerRef = useRef(null);
   const observer = useRef();
@@ -64,11 +68,41 @@ function Properties() {
     if (router.query.kindId) {
       setActiveKindId(parseInt(router.query.kindId, 10));
     }
-  }, [router.query.kindId]);
+    if (router.query.checkInTime) {
+      setCheckInTime(router.query.checkInTime);
+    }
+    if (router.query.checkOutTime) {
+      setCheckOutTime(router.query.checkOutTime);
+    }
+    if (router.query.guestNum) {
+      setGuestNum(router.query.guestNum);
+    }
+    if (router.query.cityName) {
+      setCityName(router.query.cityName);
+    }
+  }, [
+    router.query.kindId,
+    router.query.checkInTime,
+    router.query.checkOutTime,
+    router.query.guestNum,
+    router.query.cityName,
+  ]);
 
   const fetchProperties = useCallback(
     async (page) => {
-      const { location, checkInDate, checkOutDate, guests, kindId, minPrice, maxPrice } = router.query;
+      const {
+        location,
+        checkInDate,
+        checkOutDate,
+        guests,
+        kindId,
+        minPrice,
+        maxPrice,
+        checkInTime,
+        checkOutTime,
+        guestNum,
+        cityName,
+      } = router.query;
       if (!location || !checkInDate || !checkOutDate || !guests) {
         setLoading(false);
         return;
@@ -81,11 +115,11 @@ function Properties() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            checkInTime: checkInDate,
-            checkOutTime: checkOutDate,
-            GuestNum: guests,
+            checkInTime,
+            checkOutTime,
+            GuestNum: guestNum || guests,
             KindId: kindId,
-            CityName: location,
+            CityName: cityName || location,
             MinPrice: minPrice,
             MaxPrice: maxPrice,
           }),
@@ -113,7 +147,19 @@ function Properties() {
   useEffect(() => {
     setPage(1);
     fetchProperties(1);
-  }, [router.query.location, router.query.checkInDate, router.query.checkOutDate, router.query.guests, router.query.kindId, router.query.minPrice, router.query.maxPrice]);
+  }, [
+    router.query.location,
+    router.query.checkInDate,
+    router.query.checkOutDate,
+    router.query.guests,
+    router.query.kindId,
+    router.query.minPrice,
+    router.query.maxPrice,
+    router.query.checkInTime,
+    router.query.checkOutTime,
+    router.query.guestNum,
+    router.query.cityName,
+  ]);
 
   useEffect(() => {
     if (loading || !hasNext) return;
@@ -159,6 +205,38 @@ function Properties() {
     router.push({
       pathname: router.pathname,
       query: { ...router.query, minPrice: newPriceRange[0], maxPrice: newPriceRange[1] },
+    });
+  };
+
+  const handleCheckInTimeChange = (event) => {
+    setCheckInTime(event.target.value);
+    router.push({
+      pathname: router.pathname,
+      query: { ...router.query, checkInTime: event.target.value },
+    });
+  };
+
+  const handleCheckOutTimeChange = (event) => {
+    setCheckOutTime(event.target.value);
+    router.push({
+      pathname: router.pathname,
+      query: { ...router.query, checkOutTime: event.target.value },
+    });
+  };
+
+  const handleGuestNumChange = (event) => {
+    setGuestNum(event.target.value);
+    router.push({
+      pathname: router.pathname,
+      query: { ...router.query, guestNum: event.target.value },
+    });
+  };
+
+  const handleCityNameChange = (event) => {
+    setCityName(event.target.value);
+    router.push({
+      pathname: router.pathname,
+      query: { ...router.query, cityName: event.target.value },
     });
   };
 
@@ -233,6 +311,42 @@ function Properties() {
           >
             <div className="p-6">
               <h2 className="text-xl font-bold mb-4">Filter Options</h2>
+              <div>
+                <label>Check-In Time:</label>
+                <input
+                  type="datetime-local"
+                  value={checkInTime}
+                  onChange={handleCheckInTimeChange}
+                  className="w-full p-2 border rounded"
+                />
+              </div>
+              <div>
+                <label>Check-Out Time:</label>
+                <input
+                  type="datetime-local"
+                  value={checkOutTime}
+                  onChange={handleCheckOutTimeChange}
+                  className="w-full p-2 border rounded"
+                />
+              </div>
+              <div>
+                <label>Guest Number:</label>
+                <input
+                  type="number"
+                  value={guestNum}
+                  onChange={handleGuestNumChange}
+                  className="w-full p-2 border rounded"
+                />
+              </div>
+              <div>
+                <label>City Name:</label>
+                <input
+                  type="text"
+                  value={cityName}
+                  onChange={handleCityNameChange}
+                  className="w-full p-2 border rounded"
+                />
+              </div>
               <PriceRangeSlider
                 onPriceChange={handlePriceChange}
                 minPrice={minPrice}
