@@ -242,6 +242,10 @@ function Properties() {
 
   const minPrice = router.query.minPrice ? parseInt(router.query.minPrice, 10) : 0;
   const maxPrice = router.query.maxPrice ? parseInt(router.query.maxPrice, 10) : 3000;
+  const today = new Date().toISOString().slice(0, 16); 
+  const minCheckOutTime = checkInTime 
+   ? new Date(new Date(checkInTime).getTime() + 24 * 60 * 60 * 1000).toISOString().slice(0, 16)
+   : today;
 
   return (
     <Layout>
@@ -277,7 +281,7 @@ function Properties() {
             </>
           ) : error ? (
             <p>{error}</p>
-          ) : properties.length > 0 ? (
+          ) :properties && properties.length > 0 ? (
             properties.map((property) => (
               <FilterCard
                 key={property.propertyId}
@@ -315,6 +319,7 @@ function Properties() {
                 <label>Check-In Time:</label>
                 <input
                   type="datetime-local"
+                  min={today}
                   value={checkInTime}
                   onChange={handleCheckInTimeChange}
                   className="w-full p-2 border rounded"
@@ -324,6 +329,7 @@ function Properties() {
                 <label>Check-Out Time:</label>
                 <input
                   type="datetime-local"
+                  min={minCheckOutTime}
                   value={checkOutTime}
                   onChange={handleCheckOutTimeChange}
                   className="w-full p-2 border rounded"
@@ -333,6 +339,7 @@ function Properties() {
                 <label>Guest Number:</label>
                 <input
                   type="number"
+                  min={1}
                   value={guestNum}
                   onChange={handleGuestNumChange}
                   className="w-full p-2 border rounded"

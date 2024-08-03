@@ -104,7 +104,8 @@ function Index() {
     });
   };
 
-  const today = new Date().toISOString().split('T')[0];
+  const today = new Date();
+  const todayISOString = today.toISOString().split('.')[0]; // format as YYYY-MM-DDTHH:MM:SS
 
   return (
     <Layout>
@@ -146,18 +147,17 @@ function Index() {
           <div className="bar my-[10px] md:mt-[15px] bg-[#DDDDDD] h-[2px] w-full md:h-[30px] md:w-[1px]"></div>
           <div className="checkIn  pl-[15px] py-[8px]">
             <h2 className=" text-[12px] text-[#0f0f0f]">Check In</h2>
-        <input
-          type="datetime-local"
-           value={checkInDate}
-           onChange={(e) => {
-           setCheckInDate(e.target.value);
-            setCheckOutDate('');
-             }}
-           min={today}
-          placeholder="Add Dates"
-          className="outline-none w-[150px] text-[12px] text-[#484848] placeholder:text-[12px] placeholder:text-[#C2C6CC] "
-/>
-
+            <input
+              type="datetime-local"
+              value={checkInDate}
+              onChange={(e) => {
+                setCheckInDate(e.target.value);
+                setCheckOutDate('');
+              }}
+              min={todayISOString}
+              placeholder="Add Dates"
+              className="outline-none w-[150px] text-[12px] text-[#484848] placeholder:text-[12px] placeholder:text-[#C2C6CC] "
+            />
           </div>
           <div className="bar my-[10px] md:mt-[15px] bg-[#DDDDDD] h-[2px] w-full md:h-[30px] md:w-[1px]"></div>
           <div className="checkOut  pl-[15px] py-[8px]">
@@ -183,7 +183,7 @@ function Index() {
             />
           </div>
           <div
-            className="button cursor-pointer ml-[230px] md:ml-0 hover:bg-black focus:ring focus:ring-slate-200 bg-[#484848] p-[15px] w-[54px] h-[54px] flex content-center items-center rounded-full"
+            className="button cursor-pointer ml-[230px] md:ml-0 hover:bg-black bg-[#484848] flex justify-center items-center h-[35px] rounded-[23px] px-[10px] mt-[8px] "
             onClick={handleSearch}
           >
             <img src="./icons/fe_search.png" />
@@ -191,7 +191,7 @@ function Index() {
         </div>
       </div>
 
-       <div className="mx-auto sm:w-[620px] md:w-[728px] lg:w-[994px] xl:w-[1210px]">
+      <div className="mx-auto sm:w-[620px] md:w-[728px] lg:w-[994px] xl:w-[1210px]">
         <LatestProperties />
         <NearbyProperties />
         <TopRatedProperties />
@@ -211,7 +211,7 @@ function Index() {
           </a>
         </div>
 
-     <FeaturedProperties/>
+        <FeaturedProperties />
         <div className="browse h-[395px] w-[279px] md:w-full mt-[80px] rounded-[12px] flex flex-col gap-y-[30px] py-[40px] px-[50px] mx-auto  md:mx-0 bg-center bg-[url('/images/violet.jpg')] bg-no-repeat bg-cover bg-origin-padding hover:bg-bottom">
           <h1 className="font-bold text-[25px] text-[#101010] md:w-[320px] w-full md:text-[38px] mx-auto md:mx-0 ">
             Browse For More Properties

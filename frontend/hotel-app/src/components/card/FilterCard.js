@@ -3,16 +3,27 @@ import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import { baseUrl } from "@/components/constant";
 
-const FilterCard = ({ imgSrc, userSrc, isFavourite, name, location, minPrice, maxPrice, propertyImageDetails }) => {
+const FilterCard = ({
+  imgSrc,
+  userSrc,
+  isFavourite,
+  name,
+  location,
+  minPrice,
+  maxPrice,
+  propertyImageDetails = [], // Default value
+}) => {
   const [activeStep, setActiveStep] = React.useState(0);
   const maxSteps = propertyImageDetails.length;
-  const defaultImage = "/images/property_avatar.jpg"; 
+  const defaultImage = "/images/property_avatar.jpg";
 
   React.useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveStep((prevActiveStep) => (prevActiveStep + 1) % maxSteps);
-    }, 5000);
-    return () => clearInterval(interval);
+    if (maxSteps > 0) {
+      const interval = setInterval(() => {
+        setActiveStep((prevActiveStep) => (prevActiveStep + 1) % maxSteps);
+      }, 5000);
+      return () => clearInterval(interval);
+    }
   }, [maxSteps]);
 
   const handleStepChange = (step) => {
@@ -21,7 +32,7 @@ const FilterCard = ({ imgSrc, userSrc, isFavourite, name, location, minPrice, ma
 
   const getImageSrc = (index) => {
     if (propertyImageDetails.length > 0) {
-      return `${baseUrl}/${propertyImageDetails[index].url}`;
+      return `${baseUrl}/${propertyImageDetails[index]?.url}`; // Optional chaining
     }
     return defaultImage;
   };
@@ -32,7 +43,7 @@ const FilterCard = ({ imgSrc, userSrc, isFavourite, name, location, minPrice, ma
         sx={{
           position: "relative",
           maxWidth: 382,
-          width: 382, 
+          width: 382,
           borderRadius: "12px",
           overflow: "hidden",
         }}
