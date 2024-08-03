@@ -3,14 +3,14 @@ import { useRouter } from 'next/router';
 import { useAuth } from '../components/AuthProvider'; 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-
+import { baseUrl } from '@/components/constant';
 
 function SignIn() {
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [resendEmailStatus, setResendEmailStatus] = useState('');
   const { login } = useAuth();
   const router = useRouter();
   const { redirect } = router.query;
@@ -21,12 +21,35 @@ function SignIn() {
     try {
       await login(email, password);
       if (redirect) {
-        router.push(redirect); // Redirect to the target page after login
+        router.push(redirect); 
       } else {
-        router.push('/'); // Default redirect if no target is specified
+        router.push('/'); 
       }
     } catch (error) {
-      setError(error.message); 
+     
+        setError(error.message); 
+      
+    }
+  };
+
+  const resendConfirmationEmail = async () => {
+    try {
+      const response = await fetch(`${baseUrl}/api/account/resend-confirmation`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      if (response.ok) {
+        setResendEmailStatus("Confirmation email sent successfully!");
+      } else {
+        const data = await response.json();
+        setResendEmailStatus(data.message || "Failed to send confirmation email.");
+      }
+    } catch (error) {
+      setResendEmailStatus("An error occurred while sending the confirmation email.");
     }
   };
 
@@ -87,6 +110,7 @@ function SignIn() {
 
           <div className="h-6">
             {error && <div className="text-red-500 text-sm">{error}</div>}
+            {resendEmailStatus && <div className="text-green-500 text-sm">{resendEmailStatus}</div>}
           </div>
 
           <button
@@ -96,8 +120,14 @@ function SignIn() {
             Sign in
           </button>
         </form>
+        <button
+          onClick={resendConfirmationEmail}
+          className="mt-4 flex w-full justify-center rounded-md bg-[#101010] px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-[#484848] focus:outline-none"
+        >
+          Resend Confirmation Email
+        </button>
         <p className="mt-10 text-center text-sm text-gray-500">
-        {"Don't have an account? "}
+          {"Don't have an account? "}
           <a
             href="./signup"
             className="font-semibold leading-6 text-[#101010] hover:text-[#484848]"

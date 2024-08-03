@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       const response = await axios.post(`${baseUrl}/api/account/signin`, {
-        email: email,
+        login: email,
         password: password,
       });
 
@@ -49,7 +49,10 @@ export const AuthProvider = ({ children }) => {
       if (error.response) {
         if (error.response.status === 404) {
           throw new Error('Invalid email or password');
-        } else {
+        } if(error.response.status === 400){
+          throw new Error("Email is not confirmed");
+        }
+        else {
           throw new Error('Server error');
         }
       } else {
@@ -69,7 +72,7 @@ export const AuthProvider = ({ children }) => {
       });
 
       if (response.status === 200) {
-        await login(email, password);
+        // await login(email, password);
         console.log('Signup successful:', response.data); // Debug log
       } else {
         throw new Error('Signup failed');

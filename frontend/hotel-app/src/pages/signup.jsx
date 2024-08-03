@@ -94,7 +94,7 @@ function SignUp() {
     if (valid) {
       try {
         await signup(name, surname, email, password, confirmPassword);
-        router.push("/");
+        router.push("/signin");
       } catch (error) {
         setConfirmPasswordError(error.message);
       }
